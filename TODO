@@ -1,0 +1,48 @@
+System Requirements
+
+- Domestic Delivery
+    => Customer menyerahkan SPB (Surat Pengiriman Barang)
+    => Rubarta create resi penerimaan
+        - Nomor resi (untuk tracking)
+
+- Internatinal Delivery
+    - PLB
+    - Non PLB
+    - Bikin Master Proses (urutan )
+
+
+- Bikin table: domestic delivery progress
+
+Dashboard
+    - Halaman utama aplikasi.
+    - Menampilkan summary report (chart & table)
+        - Jumlah pengiriman bulan ini
+        - Jumlah kiriman terkirim
+        - Jumlah kiriman delay
+    - Menampilkan 10 pengiriman terkahir
+    - dsb
+
+Domestic Delivery
+    - Halaman untuk input domestic Delivery
+        - Input pengiriman baru
+        - Update progress pengiriman
+        - Print resi
+
+International
+    - Halaman untuk input international Delivery
+        - Input pengiriman baru
+        - Update progress pengiriman
+        - Print resi
+
+Report : Manampilkan semua bentuk report
+Agents : Data Master untuk agent / vendor / forwarders
+Companies : Data master perushaan (milsa KLM, Rubarta Prima Abadi, Rubarta Logistic Indonesia)
+Customer : Data master customer (contoh: Hexindo)
+Delivery Status : Data master Status pengiriman (misal : PICK UP, ON DELIVERY, ON TRANSIT, DELIVERED)
+Delivery Services : Data master jenis layanan pengiriman
+Delivery Type : Data master Jenis pengiriman (Darat, Laut, Udara)
+Users : Master data pengguna aplikasi
+
+» HDD: 1 x 1 TB HDD
+» RAM: 16 GB
+» Bandwidth: 20Mbps IIX/OpenIXP Shared + 10 Mb Internasional Shared
