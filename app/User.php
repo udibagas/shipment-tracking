@@ -11,13 +11,24 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
+    const ROLE_SUPERADMIN = 11;
+
+    const ROLE_ADMIN = 21;
+
+    const ROLE_OPERATOR = 31;
+
+    const ROLE_CUSTOMER = 41;
+
+    const ROLE_AGENT = 51;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'active', 'phone'
+        'name', 'email', 'password', 'role', 'active', 'phone',
+        'customer_id', 'company_id', 'agent_id'
     ];
 
     /**
@@ -46,6 +57,37 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function scopeSuperAdmin($q) {
+        return $q->where('role', self::ROLE_SUPERADMIN);
+    }
+
+    public function scopeAdmin($q) {
+        return $q->where('role', self::ROLE_ADMIN);
+    }
+
+    public function scopeOperator($q) {
+        return $q->where('role', self::ROLE_OPERATOR);
+    }
+
+    public function scopeCustomer($q) {
+        return $q->where('role', self::ROLE_CUSTOMER);
+    }
+
+    public function scopeAgent($q) {
+        return $q->where('role', self::ROLE_AGENT);
+    }
+
+    public static function roleList()
+    {
+        return [
+            self::ROLE_SUPERADMIN => 'SUPER ADMIN',
+            self::ROLE_ADMIN => 'ADMIN',
+            self::ROLE_OPERATOR => 'OPERATOR',
+            self::ROLE_CUSTOMER => 'CUSTOMER',
+            self::ROLE_AGENT => 'AGENT'
+        ];
     }
 
 }

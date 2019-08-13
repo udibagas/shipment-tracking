@@ -62,4 +62,11 @@ class ServiceTypeController extends Controller
         $serviceType->delete();
         return ['message' => 'Data telah dihapus'];
     }
+
+    public function getList()
+    {
+        return ServiceType::select(['id', 'code', 'name'])
+            ->orderBy('code', 'asc')
+            ->get();
+    }
 }

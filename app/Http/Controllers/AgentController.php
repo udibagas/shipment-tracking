@@ -75,4 +75,11 @@ class AgentController extends Controller
         $agent->delete();
         return ['message' => 'Data telah dihapus'];
     }
+
+    public function getList()
+    {
+        return Agent::select(['id', 'code', 'name'])
+            ->orderBy('code', 'asc')
+            ->get();
+    }
 }

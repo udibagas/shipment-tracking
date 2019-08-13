@@ -95,6 +95,19 @@ body {
     background-color: $cyan;
 }
 
+.td-label {
+    font-weight: bold;
+    width: 200px !important;
+    background-color: #dfdfdf;
+    padding: 5px 10px !important;
+}
+
+.td-value {
+    background-color: #efefef;
+    padding: 5px 10px !important;
+    min-width: 400px !important;
+}
+
 // .el-table th {
 //     background-color: #e77431;
 //     color: #fff;

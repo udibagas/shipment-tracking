@@ -1,10 +1,8 @@
 <template>
     <div>
-        <el-page-header @back="$emit('back')" content="DELIVERY TYPES"> </el-page-header>
-        <el-divider></el-divider>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
-                <el-button @click="openForm({role: 0, password: ''})" type="primary"><i class="el-icon-plus"></i> ADD NEW DELIVERY TYPE</el-button>
+                <el-button icon="el-icon-plus" @click="openForm({role: 0, password: ''})" type="primary">ADD NEW DELIVERY TYPE</el-button>
             </el-form-item>
             <el-form-item style="margin-right:0;">
                 <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
@@ -15,14 +13,13 @@
 
         <el-table :data="tableData.data" stripe
         :default-sort = "{prop: sort, order: order}"
-        height="calc(100vh - 290px)"
+        height="calc(100vh - 345px)"
         v-loading="loading"
         @sort-change="sortChange">
             <el-table-column prop="code" label="Code" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column prop="name" label="Name" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column prop="description" label="Description" sortable="custom" show-overflow-tooltip></el-table-column>
-
-            <el-table-column fixed="right" width="40px">
+            <el-table-column width="40px">
                 <template slot-scope="scope">
                     <el-dropdown>
                         <span class="el-dropdown-link">

@@ -62,4 +62,11 @@ class DeliveryTypeController extends Controller
         $deliveryType->delete();
         return ['message' => 'Data telah dihapus'];
     }
+
+    public function getList()
+    {
+        return DeliveryType::select(['id', 'code', 'name'])
+            ->orderBy('code', 'asc')
+            ->get();
+    }
 }

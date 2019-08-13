@@ -75,4 +75,11 @@ class CompanyController extends Controller
         $company->delete();
         return ['message' => 'Data telah dihapus'];
     }
+
+    public function getList()
+    {
+        return Company::select(['id', 'code', 'name'])
+            ->orderBy('code', 'asc')
+            ->get();
+    }
 }

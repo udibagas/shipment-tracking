@@ -18,9 +18,13 @@ class UserController extends Controller
         $sort = $request->sort ? $request->sort : 'name';
         $order = $request->order == 'ascending' ? 'asc' : 'desc';
 
-        return User::when($request->keyword, function ($q) use ($request) {
-                return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
+        return User::selectRaw('users.*, companies.name AS company, customers.name AS customer, agents.name AS agent')
+            ->join('companies', 'companies.id', '=', 'users.company_id', 'LEFT')
+            ->join('customers', 'customers.id', '=', 'users.customer_id', 'LEFT')
+            ->join('agents', 'agents.id', '=', 'users.agent_id', 'LEFT')
+            ->when($request->keyword, function ($q) use ($request) {
+                return $q->where('users.name', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('users.email', 'LIKE', '%' . $request->keyword . '%');
             })->when($request->role, function ($q) use ($request) {
                 return $q->whereIn('role', $request->role);
             })->when($request->status, function ($q) use ($request) {
@@ -90,5 +94,17 @@ class UserController extends Controller
 
         $user->delete();
         return ['message' => 'User telah dihapus'];
+    }
+
+    public function getList()
+    {
+        return User::select(['id', 'name'])
+            ->orderBy('name', 'asc')
+            ->get();
+    }
+
+    public function getRoleList()
+    {
+        return User::roleList();
     }
 }

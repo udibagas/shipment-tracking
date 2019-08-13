@@ -1,10 +1,8 @@
 <template>
     <div>
-        <el-page-header @back="$emit('back')" content="USERS"> </el-page-header>
-        <el-divider></el-divider>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
-                <el-button @click="openForm({role: 0, password: ''})" type="primary"><i class="el-icon-plus"></i> ADD NEW USER</el-button>
+                <el-button icon="el-icon-plus" @click="openForm({password: ''})" type="primary">ADD NEW USER</el-button>
             </el-form-item>
             <el-form-item style="margin-right:0;">
                 <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
@@ -15,20 +13,39 @@
 
         <el-table :data="tableData.data" stripe
         :default-sort = "{prop: sort, order: order}"
-        height="calc(100vh - 290px)"
+        height="calc(100vh - 345px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column prop="name" label="Name" sortable="custom"></el-table-column>
-            <el-table-column prop="email" label="Email" sortable="custom"></el-table-column>
-            <el-table-column prop="phone" label="Phone" sortable="custom"></el-table-column>
-            <el-table-column prop="role" label="Role" sortable="custom">
+            <el-table-column type="expand">
                 <template slot-scope="scope">
-                    {{scope.row.role ? 'Admin' : 'User'}}
+                    <table>
+                        <tbody>
+                            <tr><td class="td-label">Name</td><td class="td-value">{{scope.row.name}}</td></tr>
+                            <tr><td class="td-label">Email</td><td class="td-value">{{scope.row.email}}</td></tr>
+                            <tr><td class="td-label">Phone</td><td class="td-value">{{scope.row.phone}}</td></tr>
+                            <tr><td class="td-label">Role</td><td class="td-value">{{$store.state.roleList[scope.row.role]}}</td></tr>
+                            <tr><td class="td-label">Company</td><td class="td-value">{{scope.row.company}}</td></tr>
+                            <tr><td class="td-label">Customer</td><td class="td-value">{{scope.row.customer}}</td></tr>
+                            <tr><td class="td-label">Agent</td><td class="td-value">{{scope.row.agent}}</td></tr>
+                            <tr><td class="td-label">Status</td><td class="td-value">{{scope.row.active ? 'Active' : 'Inactive'}}</td></tr>
+                        </tbody>
+                    </table>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="Status" sortable="custom">
+            <el-table-column prop="name" label="Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="role" label="Role" sortable="custom" min-width="100px" show-overflow-tooltip>
                 <template slot-scope="scope">
-                    <el-tag size="mini" :type="scope.row.status ? 'success' : 'info'">{{scope.row.status ? 'Active' : 'Inactive'}}</el-tag>
+                    {{$store.state.roleList[scope.row.role]}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="company" label="Company" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="customer" label="Customer" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="agent" label="Agent" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="active" label="Status" sortable="custom" min-width="100px">
+                <template slot-scope="scope">
+                    <el-tag size="mini" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Active' : 'Inactive'}}</el-tag>
                 </template>
             </el-table-column>
 
@@ -83,13 +100,46 @@
 
                 <el-form-item label="Role" :class="formErrors.role ? 'is-error' : ''">
                     <el-select v-model="formModel.role" placeholder="Role" style="width:100%">
-                        <el-option v-for="(t, i) in [{value: 0, label: 'User'}, {value: 1, label: 'Admin'}]"
-                        :value="t.value"
-                        :label="t.label"
+                        <el-option v-for="(t, i) in $store.state.roleList"
+                        :value="i"
+                        :label="t"
                         :key="i">
                         </el-option>
                     </el-select>
-                    <div class="el-form-item__error" v-if="formErrors.type">{{formErrors.role[0]}}</div>
+                    <div class="el-form-item__error" v-if="formErrors.role">{{formErrors.role[0]}}</div>
+                </el-form-item>
+
+                <el-form-item v-show="formModel.role == 21 || formModel.role == 31" label="Company" :class="formErrors.company_id ? 'is-error' : ''">
+                    <el-select v-model="formModel.company_id" placeholder="Company" filterable default-first-option style="width:100%">
+                        <el-option v-for="(t, i) in $store.state.companyList"
+                        :value="t.id"
+                        :label="t.code + ' - ' + t.name"
+                        :key="i">
+                        </el-option>
+                    </el-select>
+                    <div class="el-form-item__error" v-if="formErrors.company_id">{{formErrors.company_id[0]}}</div>
+                </el-form-item>
+
+                <el-form-item v-show="formModel.role == 41" label="Customer" :class="formErrors.customer_id ? 'is-error' : ''">
+                    <el-select v-model="formModel.customer_id" placeholder="Customer" filterable default-first-option style="width:100%">
+                        <el-option v-for="(t, i) in $store.state.customerList"
+                        :value="t.id"
+                        :label="t.code + ' - ' + t.name"
+                        :key="i">
+                        </el-option>
+                    </el-select>
+                    <div class="el-form-item__error" v-if="formErrors.customer_id">{{formErrors.customer_id[0]}}</div>
+                </el-form-item>
+
+                <el-form-item v-show="formModel.role == 51" label="Agent" :class="formErrors.agent_id ? 'is-error' : ''">
+                    <el-select v-model="formModel.agent_id" placeholder="Agent" filterable default-first-option style="width:100%">
+                        <el-option v-for="(t, i) in $store.state.agentList"
+                        :value="t.id"
+                        :label="t.code + ' - ' + t.name"
+                        :key="i">
+                        </el-option>
+                    </el-select>
+                    <div class="el-form-item__error" v-if="formErrors.agent_id">{{formErrors.agent_id[0]}}</div>
                 </el-form-item>
 
                 <el-form-item label="Password" :class="formErrors.password ? 'is-error' : ''">
@@ -135,7 +185,7 @@ export default {
             tableData: {},
             sort: 'name',
             order: 'ascending',
-            loading: false
+            loading: false,
         }
     },
     methods: {
@@ -243,6 +293,10 @@ export default {
     },
     mounted() {
         this.requestData();
+        this.$store.commit('getAgentList');
+        this.$store.commit('getCompanyList');
+        this.$store.commit('getCustomerList');
+        this.$store.commit('getRoleList');
     }
 }
 </script>

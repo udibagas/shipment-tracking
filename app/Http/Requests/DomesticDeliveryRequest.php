@@ -13,7 +13,7 @@ class DomesticDeliveryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -24,7 +24,23 @@ class DomesticDeliveryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'customer_id' => 'required|exists:customers,id',
+            'agent_id' => 'required|exists:agents,id',
+            'service_type_id' => 'required|exists:service_types,id',
+            'origin' => 'required|exists:cities,name',
+            'destination' => 'required|exists:cities,name',
+            'delivery_status_id' => 'required|exists:delivery_statuses,id',
+            'pick_up_date' => 'required|date',
+            'spb_number' => 'required',
+            'resi_number' => 'required',
+            'volume' => 'numeric',
+            'quantity' => 'numeric',
+            'company_id' => 'required|exists:companies,id',
+            'delivery_type_id' => 'required|exists:delivery_types,id',
+            'etd' => 'required|date',
+            'eta' => 'required|date',
+            'charge_to' => 'required',
+            'delivery_address' => 'required'
         ];
     }
 }

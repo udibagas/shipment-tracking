@@ -23,7 +23,7 @@
         <el-container>
             <el-aside width="auto">
                 <el-menu
-                :router="true"
+                router
                 :collapse="collapse"
                 default-active="1"
                 background-color="#060446"
@@ -58,12 +58,13 @@ export default {
                 {label: 'International Deliveries', icon: 'el-icon-ship', path: 'international-delivery' },
                 {label: 'Reports', icon: 'el-icon-data-analysis', path: 'report' },
                 {label: 'Agents', icon: 'el-icon-s-custom', path: 'agent' },
-                {label: 'Companies', icon: 'el-icon-office-building', path: 'company' },
                 {label: 'Customers', icon: 'el-icon-connection', path: 'customer' },
-                {label: 'Delivery Statuses', icon: 'el-icon-s-flag', path: 'delivery-status' },
-                {label: 'Delivery Services', icon: 'el-icon-document-copy', path: 'service-type' },
-                {label: 'Delivery Types', icon: 'el-icon-collection-tag', path: 'delivery-type' },
-                {label: 'Users', icon: 'el-icon-user', path: 'user' },
+                {label: 'Master Data', icon: 'el-icon-coin', path: 'master-data' },
+                // {label: 'Companies', icon: 'el-icon-office-building', path: 'company' },
+                // {label: 'Delivery Statuses', icon: 'el-icon-s-flag', path: 'delivery-status' },
+                // {label: 'Delivery Services', icon: 'el-icon-document-copy', path: 'service-type' },
+                // {label: 'Delivery Types', icon: 'el-icon-collection-tag', path: 'delivery-type' },
+                // {label: 'Users', icon: 'el-icon-user', path: 'user' },
             ]
         }
     },

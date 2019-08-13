@@ -8,7 +8,7 @@
             </el-col>
             <el-col :span="6">
                 <el-card class="summary-container bg-pink">
-                    <h1 class="summary-info">Rp 200.000.000,-</h1>
+                    <h1 class="summary-info"></h1>
                 </el-card>
             </el-col>
             <el-col :span="6">

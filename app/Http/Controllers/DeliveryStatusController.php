@@ -64,4 +64,11 @@ class DeliveryStatusController extends Controller
         $deliveryStatus->delete();
         return ['message' => 'Data telah dihapus'];
     }
+
+    public function getList()
+    {
+        return DeliveryStatus::select(['id', 'code', 'name'])
+            ->orderBy('code', 'asc')
+            ->get();
+    }
 }

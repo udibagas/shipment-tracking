@@ -28,7 +28,10 @@ class UserRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'sometimes|required|alpha_num|confirmed|min:6',
             'is_active' => 'boolean',
-            'role' => 'required|numeric|in:0,1'
+            'role' => 'required|numeric|in:11,21,31,41,51',
+            'company_id' => 'required_if:role,21,31|exists:companies,id',
+            'customer_id' => 'required_if:role,41|exists:customers,id',
+            'agent_id' => 'required_if:role,51|exists:agents,id'
         ];
     }
 }
