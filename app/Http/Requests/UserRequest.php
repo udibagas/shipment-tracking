@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
             'is_active' => 'boolean',
             'role' => 'required|numeric|in:11,21,31,41,51',
             'company_id' => 'required_if:role,21,31|exists:companies,id',
-            'customer_id' => 'required_if:role,41|exists:customers,id',
+            // 'customer_id' => 'required_if:role,41|exists:customers,id',
             'agent_id' => 'required_if:role,51|exists:agents,id'
         ];
     }
