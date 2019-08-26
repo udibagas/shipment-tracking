@@ -3,7 +3,7 @@
 
         <el-form style="width:300px;margin: 40px auto 0;text-align:center;">
             <img src="images/logo.jpeg" alt="" style="width:70px">
-            <h1>{{appName}}</h1>
+            <h2>{{appName}}</h2>
             <br>
             <el-divider><h3>LOGIN</h3></el-divider>
 
@@ -56,6 +56,7 @@ export default {
                 this.$store.state.is_logged_in = true
                 this.email = ''
                 this.password = ''
+                this.$router.push('home')
             }).catch(e => {
                 this.$message({
                     message: e.response.data.message || e.response.message,

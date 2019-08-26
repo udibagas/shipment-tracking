@@ -18,7 +18,7 @@
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column type="expand">
+            <el-table-column fixed="left" type="expand">
                 <template slot-scope="scope">
                     <table>
                         <tbody>
@@ -37,8 +37,8 @@
                     </table>
                 </template>
             </el-table-column>
-            <el-table-column prop="code" label="Code" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="name" label="Name" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
+            <el-table-column fixed="left" prop="code" label="Code" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
+            <el-table-column fixed="left" prop="name" label="Name" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="address" label="Address" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>

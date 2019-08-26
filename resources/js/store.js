@@ -17,7 +17,15 @@ export default new Vuex.Store({
         customerList: [],
         deliveryTypeList: [],
         serviceTypeList: [],
-        deliveryStatusList: [],
+        deliveryStatusList: [
+            {id: 0, name: 'Registered' },
+            {id: 1, name: 'Ready For Delivery' },
+            {id: 2, name: 'On Delivery' },
+            {id: 3, name: 'Delivered' },
+            {id: 4, name: 'Received' },
+            {id: 5, name: 'Invoice Sent' },
+            {id: 6, name: 'Invoice Paid' }
+        ],
         userList: [],
         roleList: [],
     },
@@ -52,11 +60,11 @@ export default new Vuex.Store({
                 state.serviceTypeList = r.data
             }).catch(e => console.log(e))
         },
-        getDeliveryStatusList(state) {
-            axios.get('/deliveryStatus/getList').then(r => {
-                state.deliveryStatusList = r.data
-            }).catch(e => console.log(e))
-        },
+        // getDeliveryStatusList(state) {
+        //     axios.get('/deliveryStatus/getList').then(r => {
+        //         state.deliveryStatusList = r.data
+        //     }).catch(e => console.log(e))
+        // },
         getUserList(state) {
             axios.get('/user/getList').then(r => {
                 state.userList = r.data

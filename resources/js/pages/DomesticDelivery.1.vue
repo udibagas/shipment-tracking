@@ -3,7 +3,15 @@
         <el-page-header @back="$emit('back')" content="DOMESTIC DELIVERIES"> </el-page-header>
         <el-divider></el-divider>
 
-        <Table />
+        <el-tabs type="card">
+            <el-tab-pane v-for="status in statuses" :key="status.id">
+                <span slot="label">
+                    {{status.name}}
+                    <el-badge v-if="total[status.id] > 0" type="warning" :value="total[status.id]" />
+                </span>
+                <Table :timestamp="ts" :status="status.id" @loaded="(data) => { total[status.id] = data.total; ts = new Date(); }" />
+            </el-tab-pane>
+        </el-tabs>
     </div>
 </template>
 

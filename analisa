@@ -1,0 +1,48 @@
+Pick Up
+Register
+    - Nomor SPB
+    - Nama yg pickup (driver)
+    - PIC Customer yg menyerahkan
+    - Jam & Tanggal barang diserahkan
+    - Penerima di kantor
+    - Jam & tanggal diterima
+    - Data item barang yang di terima
+    - Terbit resi
+    - dari
+    - tujuan
+    - customer
+
+Packing
+    - Jam & tanggal
+    - PIC yg packing
+    - Foto barang
+    - Ukuran
+    - Dimensi
+    - Quantity
+    - Berat
+
+Delivery Process
+    - Jam & Tanggal
+    - Plat Nomor unit yg deliver
+    - Nama driver
+    - No HP driver
+    - Nama agent / vendor
+    - Terbit nomor tracking
+
+
+Delivery update
+    - Lokasi GPS terakhir
+    - Jam & tanggal
+
+In Transit (kalau ada)
+
+Delivered (diupdate oleh driver jika memungkinkan)
+    - Tanggal & jam
+    - Nama driver
+    - No HP
+    - Penerima
+
+Received (diupdate oleh agent yg menerima)
+    - Tanggal & jam
+    - Nama penerima
+    - No HP

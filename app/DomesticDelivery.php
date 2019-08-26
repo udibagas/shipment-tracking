@@ -6,6 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class DomesticDelivery extends Model
 {
+
+    const STATUS_REGISTERED = 0;
+
+    const STATUS_READY_FOR_DELIVERY = 1;
+
+    const STATUS_ON_DELIVERY = 2;
+
+    const STATUS_DELIVERED = 3;
+
+    const STATUS_RECEIVED = 4;
+
+    const STATUS_INVOICE_SENT = 5;
+
+    const STATUS_INVOICE_PAID = 6;
+
     protected $fillable = [
         'customer_id', 'agent_id', 'user_id', 'service_type_id',
         'status_note', 'last_geolocation_coord', 'last_geolocation_timestamp',
@@ -16,4 +31,17 @@ class DomesticDelivery extends Model
         'delivery_type_id', 'etd', 'eta', 'tracking_number',
         'tracking_number', 'delivery_address', 'charge_to'
     ];
+
+    protected $appends = ['statusName'];
+
+    public function getStatusNameAttribute()
+    {
+        $statuses = [
+            'Registered', 'Ready For Delivery',
+            'On Delivery', 'Delivered', 'Received',
+            'Invoice Sent', 'Invoice Paid'
+        ];
+
+        return $statuses[$this->delivery_status_id];
+    }
 }

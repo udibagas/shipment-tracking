@@ -10,16 +10,21 @@
     font-family: "MyriadMM", sans-serif;
 }
 
-html {
-    height: 100%;
-}
-
 body {
     font-family: "MyriadMM", sans-serif;
     min-height: 100%;
     color: #505050;
     margin: 0;
     padding: 0;
+}
+
+.el-dialog__header, .el-dialog__footer {
+        background-color: #324057;
+        padding: 15px;
+}
+
+.el-dialog__title {
+    color: #fff;
 }
 
 .el-icon-more {

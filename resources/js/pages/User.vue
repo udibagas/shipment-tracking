@@ -16,7 +16,7 @@
         height="calc(100vh - 345px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column type="expand">
+            <el-table-column fixed="left" type="expand">
                 <template slot-scope="scope">
                     <table>
                         <tbody>
@@ -32,7 +32,7 @@
                     </table>
                 </template>
             </el-table-column>
-            <el-table-column prop="name" label="Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column fixed="left" prop="name" label="Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="role" label="Role" sortable="custom" min-width="100px" show-overflow-tooltip>
@@ -43,7 +43,7 @@
             <el-table-column prop="company" label="Company" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="customer" label="Customer" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="agent" label="Agent" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="active" label="Status" sortable="custom" min-width="100px">
+            <el-table-column fixed="right" prop="active" label="Status" sortable="custom" min-width="100px">
                 <template slot-scope="scope">
                     <el-tag size="mini" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Active' : 'Inactive'}}</el-tag>
                 </template>

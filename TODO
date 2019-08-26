@@ -1,3 +1,19 @@
+Hak akses
+
+11 : Super Admin
+    - Akses all menu & data
+    - Manage user
+    - Manage master data
+    - Manage Data company
+21 : Admin :
+    - Bisa mengakses semua menu di perusahaan dia
+    - Manage user non admin di perusahaan dia
+31 : Operator :
+    - Bisa akses (create, update, delete, export) data pengiriman & report
+    - manage data agent & customer di perusahaan dia
+41 : Customer : Bisa update status penerimaan, akses data pengiriman & lihat report
+51: Agent : Bisa update status pengiriman, akses data pengiriman & lihat report
+
 System Requirements
 
 - Domestic Delivery
