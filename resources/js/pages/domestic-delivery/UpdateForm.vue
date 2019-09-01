@@ -208,6 +208,7 @@ export default {
                         type: 'success',
                         showClose: true
                     });
+                    this.formModel = {}
                     this.$emit('close')
                     this.$emit('submitted')
                 }).catch(e => {
