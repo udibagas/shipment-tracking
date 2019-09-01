@@ -15,6 +15,7 @@ import Customer from './pages/Customer'
 import Agent from './pages/Agent'
 import DomesticDelivery from './pages/DomesticDelivery'
 import MasterData from './pages/MasterData'
+import Report from './pages/Report'
 
 Vue.use(VueRouter)
 
@@ -52,6 +53,14 @@ const router = new VueRouter({
             }
         },
         {
+            path: '/report',
+            component: Report,
+            name: 'report',
+            meta: {
+                roles: [11, 21, 31]
+            }
+        },
+        {
             path: '/master-data',
             component: MasterData,
             name: 'master-data',
@@ -67,28 +76,25 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    // if (to.matched.some(record => record.meta.requiresAuth)) {
-    //     if (!auth.loggedIn()) {
-
-    //     } else {
-    //         next()
-    //     }
-    // } else {
-    //     next()
-    // }
-
-    let params = { route: to.path }
-    axios.get('/checkAuth', { params: params }).then(r => {
+    if (to.path == '/') {
         next()
-    }).catch(e => {
-        Message({
-            message: 'Anda tidak berhak mengakses halaman ini.',
-            type: 'error',
-            showClose: true,
-            duration: 10000
+    }
+
+    else {
+        let params = { route: to.path }
+        axios.get('/checkAuth', { params: params }).then(r => {
+            next()
+        }).catch(e => {
+            Message({
+                message: 'Anda tidak berhak mengakses halaman ini.',
+                type: 'error',
+                showClose: true,
+                duration: 10000
+            })
+            next(false)
         })
-        next(false)
-    })
+    }
+
 });
 
 export default router

@@ -1,5 +1,4 @@
 <?php
-use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +33,8 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('deliveryType/getList', 'DeliveryTypeController@getList');
     Route::get('user/getList', 'UserController@getList');
     Route::get('user/getRoleList', 'UserController@getRoleList');
+    Route::get('report/leadTime', 'ReportController@leadTime');
+
 
     // super admin only
     // Route::group(['middleware' => 'role:11'], function() {

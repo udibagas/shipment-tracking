@@ -1,33 +1,33 @@
 <template>
-    <el-dialog center title="" fullscreen :show-close="false" :close-on-click-modal="false" :visible.sync="visible" :close-on-press-escape="false">
+    <el-container id="login-form">
+        <el-main>
+            <div style="text-align:center;margin:60px 0">
+                <img src="images/logo.jpeg" alt="" style="width:70px">
+                <h2>{{appName}}</h2>
+            </div>
+            <el-form style="width:300px;margin: 0px auto;text-align:center;">
+                <el-divider><h3>LOGIN</h3></el-divider>
 
-        <el-form style="width:300px;margin: 40px auto 0;text-align:center;">
-            <img src="images/logo.jpeg" alt="" style="width:70px">
-            <h2>{{appName}}</h2>
-            <br>
-            <el-divider><h3>LOGIN</h3></el-divider>
+                <el-form-item>
+                    <el-input v-model="email" placeholder="Email/Username"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input type="password" v-model="password" placeholder="Password"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="login" style="width:100%">LOGIN</el-button>
+                </el-form-item>
 
-            <el-form-item>
-                <el-input v-model="email" placeholder="Email/Username"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-input type="password" v-model="password" placeholder="Password"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="login" style="width:100%">LOGIN</el-button>
-            </el-form-item>
-
-            <el-divider>&copy; {{year}}</el-divider>
-        </el-form>
-
-    </el-dialog>
+                <el-divider>&copy; {{year}}</el-divider>
+            </el-form>
+        </el-main>
+    </el-container>
 </template>
 
 <script>
 import moment from 'moment'
 
 export default {
-    props: ['visible'],
     data() {
         return {
             appName: APP_NAME,
@@ -64,6 +64,13 @@ export default {
                     showClose: true
                 })
             })
+        }
+    },
+    mounted() {
+        document.getElementById('login-form').onkeypress = (e) => {
+            if (e.key == 'Enter') {
+                this.login()
+            }
         }
     }
 }
