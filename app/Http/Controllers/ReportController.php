@@ -13,8 +13,8 @@ class ReportController extends Controller
         {
             $sql = "SELECT
                 MONTH(pick_up_date) AS `month`,
-                CAST(SUM(CASE WHEN delivered_date <= etd THEN 1 ELSE 0 END) AS UNSIGNED) AS `ontime`,
-                CAST(SUM(CASE WHEN delivered_date > etd THEN 1 ELSE 0 END) AS UNSIGNED) AS `delay`,
+                CAST(SUM(CASE WHEN delivered_date <= eta THEN 1 ELSE 0 END) AS UNSIGNED) AS `ontime`,
+                CAST(SUM(CASE WHEN delivered_date > eta THEN 1 ELSE 0 END) AS UNSIGNED) AS `delay`,
                 CAST(SUM(CASE WHEN delivered_date IS NOT NULL THEN 1 ELSE 0 END) AS UNSIGNED) AS `total`
             FROM domestic_deliveries
             WHERE customer_id = :customer_id
