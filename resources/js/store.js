@@ -15,6 +15,7 @@ export default new Vuex.Store({
         cityList: [],
         companyList: [],
         customerList: [],
+        delayCauseList: [],
         deliveryTypeList: [],
         serviceTypeList: [],
         deliveryStatusList: [
@@ -28,6 +29,8 @@ export default new Vuex.Store({
         ],
         userList: [],
         roleList: [],
+        navigation: [],
+        filterYearList: []
     },
     mutations: {
         getAgentList(state) {
@@ -55,6 +58,11 @@ export default new Vuex.Store({
                 state.deliveryTypeList = r.data
             }).catch(e => console.log(e))
         },
+        getDelayCauseList(state) {
+            axios.get('/delayCause/getList').then(r => {
+                state.delayCauseList = r.data
+            }).catch(e => console.log(e))
+        },
         getServiceTypeList(state) {
             axios.get('/serviceType/getList').then(r => {
                 state.serviceTypeList = r.data
@@ -73,6 +81,16 @@ export default new Vuex.Store({
         getRoleList(state) {
             axios.get('/user/getRoleList').then(r => {
                 state.roleList = r.data
+            }).catch(e => console.log(e))
+        },
+        getFilterYear(state) {
+            axios.get('/report/getFilterYear').then(r => {
+                state.filterYearList = r.data
+            }).catch(e => console.log(e))
+        },
+        getNavigation(state) {
+            axios.get('/getNavigation').then(r => {
+                state.navigation = r.data
             }).catch(e => console.log(e))
         },
     }

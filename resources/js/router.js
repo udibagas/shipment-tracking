@@ -1,12 +1,3 @@
-/*
-ROLE USER:
-11 : SUPER ADMIN
-21 : ADMIN
-31 : OPERATOR
-41 : CUSTOMER
-51 : AGENT
-*/
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { Message } from 'element-ui';
@@ -14,8 +5,10 @@ import Home from './pages/Home'
 import Customer from './pages/Customer'
 import Agent from './pages/Agent'
 import DomesticDelivery from './pages/DomesticDelivery'
-import MasterData from './pages/MasterData'
+import Setting from './pages/Setting'
 import Report from './pages/Report'
+import User from './pages/User'
+import Company from './pages/Company'
 
 Vue.use(VueRouter)
 
@@ -24,49 +17,42 @@ const router = new VueRouter({
         {
             path: '/',
             component: Home,
-            name: 'home',
-            meta: {
-                roles: [11, 21, 31, 41, 51]
-            }
+            name: 'home'
         },
         {
             path: '/agent',
             component: Agent,
-            name: 'agent',
-            meta: {
-                roles: [11, 21, 31] }
+            name: 'agent'
+        },
+        {
+            path: '/company',
+            component: Company,
+            name: 'company'
         },
         {
             path: '/customer',
             component: Customer,
-            name: 'customer',
-            meta: {
-                roles: [11, 21, 31]
-            }
+            name: 'customer'
         },
         {
             path: '/domestic-delivery',
             component: DomesticDelivery,
-            name: 'domestic-delivery',
-            meta: {
-                roles: [11, 21, 31]
-            }
+            name: 'domestic-delivery'
         },
         {
             path: '/report',
             component: Report,
-            name: 'report',
-            meta: {
-                roles: [11, 21, 31]
-            }
+            name: 'report'
         },
         {
-            path: '/master-data',
-            component: MasterData,
-            name: 'master-data',
-            meta: {
-                roles : [11, 21]
-            }
+            path: '/setting',
+            component: Setting,
+            name: 'setting'
+        },
+        {
+            path: '/user',
+            component: User,
+            name: 'user',
         },
         {
             path: '*',

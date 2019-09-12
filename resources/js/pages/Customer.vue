@@ -81,7 +81,7 @@
         top="60px"
         :visible.sync="showForm"
         :title="!!formModel.id ? 'EDIT CUSTOMER' : 'ADD NEW CUSTOMER'"
-        width="550px"
+        width="90%"
         v-loading="loading"
         :close-on-click-modal="false">
 
@@ -91,72 +91,75 @@
                 style="margin-bottom:15px;">
             </el-alert>
 
-            <el-form label-width="170px" style="height:calc(100vh - 320px);overflow-y:scroll;padding-right:20px;">
-                <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
-                    <el-input placeholder="Code" v-model="formModel.code"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
-                </el-form-item>
+            <el-form label-width="150px" label-position="left">
+                <el-row :gutter="30">
+                    <el-col :span="8">
+                        <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
+                            <el-input placeholder="Code" v-model="formModel.code"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
+                        </el-form-item>
 
-                <el-form-item label="Name" :class="formErrors.name ? 'is-error' : ''">
-                    <el-input placeholder="Name" v-model="formModel.name"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>
-                </el-form-item>
+                        <el-form-item label="Name" :class="formErrors.name ? 'is-error' : ''">
+                            <el-input placeholder="Name" v-model="formModel.name"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>
+                        </el-form-item>
 
-                <el-form-item label="Status" :class="formErrors.active ? 'is-error' : ''">
-                    <el-switch
-                    :active-value="1"
-                    :inactive-value="0"
-                    v-model="formModel.active"
-                    active-color="#13ce66">
-                    </el-switch>
-                    <el-tag :type="formModel.active ? 'success' : 'info'" size="small" style="margin-left:10px">{{!!formModel.active ? 'Active' : 'Inactive'}}</el-tag>
+                        <el-form-item label="Status" :class="formErrors.active ? 'is-error' : ''">
+                            <el-switch
+                            :active-value="1"
+                            :inactive-value="0"
+                            v-model="formModel.active"
+                            active-color="#13ce66">
+                            </el-switch>
+                            <el-tag :type="formModel.active ? 'success' : 'info'" size="small" style="margin-left:10px">{{!!formModel.active ? 'Active' : 'Inactive'}}</el-tag>
 
-                    <div class="el-form-item__error" v-if="formErrors.active">{{formErrors.active[0]}}</div>
-                </el-form-item>
+                            <div class="el-form-item__error" v-if="formErrors.active">{{formErrors.active[0]}}</div>
+                        </el-form-item>
 
-                <el-divider></el-divider>
+                        <el-form-item label="Address" :class="formErrors.address ? 'is-error' : ''">
+                            <el-input type="textarea" rows="5" placeholder="Address" v-model="formModel.address"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.address">{{formErrors.address[0]}}</div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Phone" :class="formErrors.phone ? 'is-error' : ''">
+                            <el-input placeholder="Phone" v-model="formModel.phone"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.phone">{{formErrors.phone[0]}}</div>
+                        </el-form-item>
 
-                <el-form-item label="Address" :class="formErrors.address ? 'is-error' : ''">
-                    <el-input type="textarea" rows="3" placeholder="Address" v-model="formModel.address"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.address">{{formErrors.address[0]}}</div>
-                </el-form-item>
+                        <el-form-item label="Fax" :class="formErrors.fax ? 'is-error' : ''">
+                            <el-input placeholder="Fax" v-model="formModel.fax"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.fax">{{formErrors.fax[0]}}</div>
+                        </el-form-item>
 
-                <el-form-item label="Phone" :class="formErrors.phone ? 'is-error' : ''">
-                    <el-input placeholder="Phone" v-model="formModel.phone"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.phone">{{formErrors.phone[0]}}</div>
-                </el-form-item>
+                        <el-form-item label="Email" :class="formErrors.email ? 'is-error' : ''">
+                            <el-input placeholder="Email" v-model="formModel.email"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.email">{{formErrors.email[0]}}</div>
+                        </el-form-item>
 
-                <el-form-item label="Fax" :class="formErrors.fax ? 'is-error' : ''">
-                    <el-input placeholder="Fax" v-model="formModel.fax"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.fax">{{formErrors.fax[0]}}</div>
-                </el-form-item>
+                        <el-form-item label="Website" :class="formErrors.website ? 'is-error' : ''">
+                            <el-input placeholder="Email" v-model="formModel.website"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.website">{{formErrors.website[0]}}</div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Contact Person Name" :class="formErrors.contact_person ? 'is-error' : ''">
+                            <el-input placeholder="Contact Person" v-model="formModel.contact_person"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.contact_person">{{formErrors.contact_person[0]}}</div>
+                        </el-form-item>
 
-                <el-form-item label="Email" :class="formErrors.email ? 'is-error' : ''">
-                    <el-input placeholder="Email" v-model="formModel.email"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.email">{{formErrors.email[0]}}</div>
-                </el-form-item>
+                        <el-form-item label="Contact Person Email" :class="formErrors.contact_person_email ? 'is-error' : ''">
+                            <el-input placeholder="Contact Person Email" v-model="formModel.contact_person_email"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.contact_person_email">{{formErrors.contact_person_email[0]}}</div>
+                        </el-form-item>
 
-                <el-form-item label="Website" :class="formErrors.website ? 'is-error' : ''">
-                    <el-input placeholder="Email" v-model="formModel.website"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.website">{{formErrors.website[0]}}</div>
-                </el-form-item>
+                        <el-form-item label="Contact Person Phone" :class="formErrors.contact_person_phone ? 'is-error' : ''">
+                            <el-input placeholder="Contact Person Phone" v-model="formModel.contact_person_phone"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.contact_person_phone">{{formErrors.contact_person_phone[0]}}</div>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
 
-                <el-divider></el-divider>
-
-                <el-form-item label="Contact Person Name" :class="formErrors.contact_person ? 'is-error' : ''">
-                    <el-input placeholder="Contact Person" v-model="formModel.contact_person"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.contact_person">{{formErrors.contact_person[0]}}</div>
-                </el-form-item>
-
-                <el-form-item label="Contact Person Email" :class="formErrors.contact_person_email ? 'is-error' : ''">
-                    <el-input placeholder="Contact Person Email" v-model="formModel.contact_person_email"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.contact_person_email">{{formErrors.contact_person_email[0]}}</div>
-                </el-form-item>
-
-                <el-form-item label="Contact Person Phone" :class="formErrors.contact_person_phone ? 'is-error' : ''">
-                    <el-input placeholder="Contact Person Phone" v-model="formModel.contact_person_phone"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.contact_person_phone">{{formErrors.contact_person_phone[0]}}</div>
-                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="() => !!formModel.id ? update() : store()"><i class="el-icon-success"></i> SAVE</el-button>

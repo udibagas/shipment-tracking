@@ -52,7 +52,7 @@
                 style="margin-bottom:15px;">
             </el-alert>
 
-            <el-form label-width="120px">
+            <el-form label-width="120px" label-position="left">
                 <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
                     <el-input placeholder="Code" v-model="formModel.code"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>

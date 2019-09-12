@@ -1,5 +1,7 @@
 <template>
     <div>
+        <el-page-header @back="$emit('back')" content="USERS"> </el-page-header>
+        <el-divider></el-divider>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
                 <el-button icon="el-icon-plus" @click="openForm({password: ''})" type="primary">ADD NEW USER</el-button>
@@ -13,7 +15,7 @@
 
         <el-table :data="tableData.data" stripe
         :default-sort = "{prop: sort, order: order}"
-        height="calc(100vh - 345px)"
+        height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
             <el-table-column fixed="left" type="expand">
@@ -75,14 +77,14 @@
         :total="tableData.total">
         </el-pagination>
 
-        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT USER' : 'ADD NEW USER'" width="550px" v-loading="loading" :close-on-click-modal="false">
+        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT USER' : 'ADD NEW USER'" width="500px" v-loading="loading" :close-on-click-modal="false">
             <el-alert type="error" title="ERROR"
                 :description="error.message + '\n' + error.file + ':' + error.line"
                 v-show="error.message"
                 style="margin-bottom:15px;">
             </el-alert>
 
-            <el-form label-width="170px">
+            <el-form label-width="170px" label-position="left">
                 <el-form-item label="Name" :class="formErrors.name ? 'is-error' : ''">
                     <el-input placeholder="Name" v-model="formModel.name"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>

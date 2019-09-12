@@ -4,7 +4,7 @@
         <el-form inline style="text-align:center">
             <el-form-item>
                 <el-select v-model="year" placeholder="Pilih Tahun" @change="requestData">
-                    <el-option v-for="y in years" :key="y" :value="y" :label="y"></el-option>
+                    <el-option v-for="y in $store.state.filterYearList.map(y => y.year).filter(y => !!y)" :key="y" :value="y" :label="y"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -15,7 +15,7 @@
         </el-form>
         <v-chart style="height: 300px;width:100%" :options="chart"></v-chart>
         <br>
-        <el-table stripe :data="summaries" height="calc(100vh - 600px)">
+        <el-table stripe :data="summaries" height="calc(100vh - 580px)">
             <el-table-column prop="month" label="Bulan" header-align="center"> </el-table-column>
             <el-table-column label="Ontime" header-align="center">
                 <el-table-column prop="ontime" label="Total" header-align="center" align="center"></el-table-column>
@@ -60,7 +60,6 @@ export default {
             year: moment().format('YYYY'),
             monthsShort: moment.monthsShort(),
             months: moment.months(),
-            years: [2017, 2018, 2019],
             customer_id: '',
             summaries: [],
             chart: {
@@ -133,6 +132,7 @@ export default {
     },
     mounted() {
         this.$store.commit('getCustomerList')
+        this.$store.commit('getFilterYear')
         this.requestData()
     }
 }

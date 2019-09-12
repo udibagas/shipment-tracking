@@ -30,38 +30,43 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('customer/getList', 'CustomerController@getList');
     Route::get('deliveryStatus/getList', 'DeliveryStatusController@getList');
     Route::get('serviceType/getList', 'ServiceTypeController@getList');
+    Route::get('delayCause/getList', 'DelayCauseController@getList');
     Route::get('deliveryType/getList', 'DeliveryTypeController@getList');
     Route::get('user/getList', 'UserController@getList');
     Route::get('user/getRoleList', 'UserController@getRoleList');
     Route::get('report/leadTime', 'ReportController@leadTime');
+    Route::get('report/getFilterYear', 'ReportController@getFilterYear');
 
 
     // super admin only
-    // Route::group(['middleware' => 'role:11'], function() {
+    Route::group(['middleware' => 'role:11'], function() {
         Route::resource('company', 'CompanyController')->except(['create', 'edit']);
         Route::resource('deliveryStatus', 'DeliveryStatusController')->except(['create', 'edit', 'show']);
         Route::resource('serviceType', 'ServiceTypeController')->except(['create', 'edit', 'show']);
+        Route::resource('delayCause', 'DelayCauseController')->except(['create', 'edit', 'show']);
         Route::resource('deliveryType', 'DeliveryTypeController')->except(['create', 'edit', 'show']);
-    // });
+    });
 
     // superadmin & admin
-    // Route::group(['middleware' => 'role:11, 21'], function() {
+    Route::group(['middleware' => 'role:11, 21'], function() {
         Route::resource('user', 'UserController')->except(['create', 'edit']);
-    // });
-
-    // superadmin, admin, operator only
-    // Route::group(['middleware' => 'role:11, 21, 31'], function() {
         Route::resource('agent', 'AgentController')->except(['create', 'edit']);
         Route::resource('customer', 'CustomerController')->except(['create', 'edit']);
-    // });
+    });
 
-    // TODO : menu buat operator, customer & agent
-    // Route::group(['middleware' => 'role:11, 21, 31, 41, 51'], function() {
+    // superadmin, admin, operator only
+    Route::group(['middleware' => 'role:11, 21, 31'], function() {
         Route::post('deliveryProgress', 'DeliveryProgressController@store');
         Route::resource('domesticDelivery', 'DomesticDeliveryController')->except(['create', 'edit']);
-    // });
+    });
+
+    // TODO : menu buat operator, customer & agent
+    Route::group(['middleware' => 'role:11, 21, 31, 41, 51'], function() {
+        // belum ada halaman untuk customer & agent
+    });
 
     Route::get('checkAuth', 'AppController@checkAuth');
+    Route::get('getNavigation', 'AppController@getNavigation');
     Route::post('logout', 'AuthController@logout');
 });
 

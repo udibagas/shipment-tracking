@@ -1,5 +1,7 @@
 <template>
     <div>
+        <el-page-header @back="$emit('back')" content="COMPANIES"> </el-page-header>
+        <el-divider></el-divider>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
                 <el-button icon="el-icon-plus" @click="openForm({role: 0, password: ''})" type="primary">ADD NEW COMPANY</el-button>
@@ -13,7 +15,7 @@
 
         <el-table :data="tableData.data" stripe
         :default-sort = "{prop: sort, order: order}"
-        height="calc(100vh - 345px)"
+        height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
             <el-table-column fixed="left" type="expand">
@@ -89,7 +91,7 @@
                 style="margin-bottom:15px;">
             </el-alert>
 
-            <el-form label-width="170px" style="height:calc(100vh - 320px);overflow-y:scroll;padding-right:20px;">
+            <el-form label-width="170px" label-position="left">
                 <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
                     <el-input placeholder="Code" v-model="formModel.code"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>

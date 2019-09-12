@@ -2,7 +2,7 @@
     <div>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
-                <el-button icon="el-icon-plus" @click="openForm({role: 0, password: ''})" type="primary">ADD NEW SERVICE TYPE</el-button>
+                <el-button icon="el-icon-plus" @click="openForm({role: 0, password: ''})" type="primary">ADD NEW DELAY CAUSE</el-button>
             </el-form-item>
             <el-form-item style="margin-right:0;">
                 <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
@@ -17,7 +17,6 @@
         v-loading="loading"
         @sort-change="sortChange">
             <el-table-column prop="code" label="Code" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="name" label="Name" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column prop="description" label="Description" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column width="40px">
                 <template slot-scope="scope">
@@ -45,7 +44,7 @@
         :total="tableData.total">
         </el-pagination>
 
-        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT SERVICE TYPE' : 'ADD NEW SERVICE TYPE'" width="500px" v-loading="loading" :close-on-click-modal="false">
+        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT DELAY CAUSE' : 'ADD NEW DELAY CAUSE'" width="500px" v-loading="loading" :close-on-click-modal="false">
             <el-alert type="error" title="ERROR"
                 :description="error.message + '\n' + error.file + ':' + error.line"
                 v-show="error.message"
@@ -56,11 +55,6 @@
                 <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
                     <el-input placeholder="Code" v-model="formModel.code"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
-                </el-form-item>
-
-                <el-form-item label="Name" :class="formErrors.name ? 'is-error' : ''">
-                    <el-input placeholder="Name" v-model="formModel.name"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>
                 </el-form-item>
 
                 <el-form-item label="Descrption" :class="formErrors.description ? 'is-error' : ''">
@@ -89,7 +83,7 @@ export default {
             page: 1,
             pageSize: 10,
             tableData: {},
-            sort: 'name',
+            sort: 'code',
             order: 'ascending',
             loading: false
         }
@@ -108,7 +102,7 @@ export default {
         },
         store() {
             this.loading = true;
-            axios.post('/serviceType', this.formModel).then(r => {
+            axios.post('/delayCause', this.formModel).then(r => {
                 this.showForm = false;
                 this.$message({
                     message: 'Data berhasil disimpan.',
@@ -132,7 +126,7 @@ export default {
         },
         update() {
             this.loading = true;
-            axios.put('/serviceType/' + this.formModel.id, this.formModel).then(r => {
+            axios.put('/delayCause/' + this.formModel.id, this.formModel).then(r => {
                 this.showForm = false
                 this.$message({
                     message: 'Data berhasil disimpan.',
@@ -156,7 +150,7 @@ export default {
         },
         deleteData(id) {
             this.$confirm('Anda yakin akan menghapus data ini?', 'Warning', { type: 'warning' }).then(() => {
-                axios.delete('/serviceType/' + id).then(r => {
+                axios.delete('/delayCause/' + id).then(r => {
                     this.requestData();
                     this.$message({
                         message: r.data.message,
@@ -182,7 +176,7 @@ export default {
             }
 
             this.loading = true;
-            axios.get('/serviceType', {params: params}).then(r => {
+            axios.get('/delayCause', {params: params}).then(r => {
                     this.tableData = r.data
             }).catch(e => {
                 if (e.response.status == 500) {

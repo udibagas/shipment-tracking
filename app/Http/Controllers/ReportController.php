@@ -30,4 +30,9 @@ class ReportController extends Controller
             return DB::select($sql, $params);
         }
     }
+
+    public function getFilterYear()
+    {
+        return DB::select("SELECT DISTINCT(YEAR(delivered_date)) AS `year` FROM domestic_deliveries ORDER BY `year` ASC");
+    }
 }

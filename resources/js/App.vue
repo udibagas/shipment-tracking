@@ -40,8 +40,8 @@
                             <el-dropdown @command="handleCommand">
                                 <span class="el-dropdown-link" style="cursor:pointer">Welcome, {{$store.state.user.name}}!</span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="profile">My Profile</el-dropdown-item>
-                                    <el-dropdown-item command="logout">Logout</el-dropdown-item>
+                                    <el-dropdown-item command="profile"><i class="el-icon-user"></i> My Profile</el-dropdown-item>
+                                    <el-dropdown-item command="logout"><i class="el-icon-d-arrow-right"></i> Logout</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </el-col>
@@ -65,20 +65,7 @@ export default {
     components: { Login, Profile },
     computed: {
         menus() {
-            return [
-                {label: 'Dashboard', icon: 'el-icon-menu', path: '/' },
-                {label: 'Domestic Deliveries', icon: 'el-icon-truck', path: 'domestic-delivery' },
-                {label: 'International Deliveries', icon: 'el-icon-ship', path: 'international-delivery' },
-                {label: 'Reports', icon: 'el-icon-data-analysis', path: 'report' },
-                {label: 'Agents', icon: 'el-icon-s-custom', path: 'agent' },
-                {label: 'Customers', icon: 'el-icon-connection', path: 'customer' },
-                {label: 'Master Data', icon: 'el-icon-coin', path: 'master-data' },
-                // {label: 'Companies', icon: 'el-icon-office-building', path: 'company' },
-                // {label: 'Delivery Statuses', icon: 'el-icon-s-flag', path: 'delivery-status' },
-                // {label: 'Delivery Services', icon: 'el-icon-document-copy', path: 'service-type' },
-                // {label: 'Delivery Types', icon: 'el-icon-collection-tag', path: 'delivery-type' },
-                // {label: 'Users', icon: 'el-icon-user', path: 'user' },
-            ]
+            return this.$store.state.navigation
         }
     },
     data() {
@@ -96,6 +83,7 @@ export default {
         handleCommand(command) {
             if (command === 'logout') {
                 axios.get('/logout').then(r => {
+                    this.$router.push({path: '/'})
                     window.localStorage.removeItem('user')
                     window.localStorage.removeItem('token')
                     this.$store.state.user = {}
@@ -108,6 +96,9 @@ export default {
                 this.showProfile = true
             }
         },
+    },
+    mounted() {
+        this.$store.commit('getNavigation')
     }
 }
 </script>
@@ -131,7 +122,6 @@ export default {
 
 .el-header {
     background-color: #4d00d5;
-    /* background-color: #2d5309; */
     color: #fff;
     line-height: 60px;
 }

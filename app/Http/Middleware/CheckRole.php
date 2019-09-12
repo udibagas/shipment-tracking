@@ -13,16 +13,10 @@ class CheckRole
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$roles)
     {
-        if (is_array($role)) {
-            if (!in_array($request->user()->role, $role)) {
-                return response(['message' => 'You are not allowed to acces this service' ], 403);
-            }
-        } else {
-            if ($request->user()->role != $role) {
-                return response(['message' => 'You are not allowed to acces this service' ], 403);
-            }
+        if (!in_array($request->user()->role, $roles)) {
+            return response(['message' => 'You are not allowed to acces this service' ], 403);
         }
 
         return $next($request);
