@@ -20,11 +20,6 @@ ROLE USER:
 51 : AGENT
 */
 
-Route::get('coba', function() {
-    return $_SERVER;
-});
-
-
 Route::post('login', 'AuthController@login');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
