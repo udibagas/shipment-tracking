@@ -49,7 +49,7 @@
             </el-col>
         </el-row>
 
-        <el-table striped :data="data.items" style="margin-top:10px" height="calc(100vh - 561px)">
+        <el-table striped :data="data.items" style="margin-top:10px">
             <el-table-column type="index"></el-table-column>
             <el-table-column label="Description" prop="description"> </el-table-column>
             <el-table-column label="Coli" prop="coli"> </el-table-column>

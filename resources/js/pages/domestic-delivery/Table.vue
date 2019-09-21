@@ -246,7 +246,7 @@
                 </el-row>
             </el-form>
 
-            <el-table striped :data="formModel.items" style="margin-top:10px" height="calc(100vh - 561px)">
+            <el-table striped :data="formModel.items" style="margin-top:10px">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column label="Description">
                     <template slot-scope="scope">
