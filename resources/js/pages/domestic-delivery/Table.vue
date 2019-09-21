@@ -2,10 +2,13 @@
     <div>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
-                <el-button icon="el-icon-plus" @click="openForm({ items: [] })" type="primary" plain>ADD NEW DOMESTIC DELIVERY</el-button>
+                <el-button icon="el-icon-plus" @click="openForm({ items: [] })" type="primary">New Domestic Delivery</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button icon="el-icon-download" @click="exportToExcel" type="primary" plain>EXPORT</el-button>
+                <el-button :disabled="selection.length == 0" icon="el-icon-money" @click="showInvoiceForm = true" type="primary">Create Invoice</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button icon="el-icon-download" @click="exportToExcel" type="primary">Export</el-button>
             </el-form-item>
             <el-form-item style="margin-right:0;">
                 <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
@@ -15,13 +18,26 @@
         </el-form>
 
         <el-table :data="tableData.data" stripe
+        ref="deliveryList"
         @row-dblclick="(row, column, event) => { selectedData = row; showDetailDialog = true; }"
         :default-sort = "{prop: sort, order: order}"
         height="calc(100vh - 290px)"
         v-loading="loading"
+        @selection-change="(val) => { selection = val }"
         @filter-change="(f) => { let c = Object.keys(f)[0]; filters[c] = Object.values(f[c]); page = 1; requestData(); }"
         @sort-change="sortChange">
-            <el-table-column fixed="left" prop="customer" label="Customer" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column fixed="left" type="selection" width="55"> </el-table-column>
+
+            <el-table-column
+            prop="customer"
+            label="Customer"
+            sortable="custom"
+            min-width="150px"
+            :filters="$store.state.customerList.map(c => { return { value: c.id, text: c.name } })"
+            column-key="customer_id"
+            show-overflow-tooltip>
+            </el-table-column>
+
             <el-table-column prop="charge_to" label="Charge To" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="origin" label="Origin" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="destination" label="Destination" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
@@ -42,7 +58,18 @@
             <el-table-column prop="volume" label="Volume (Kg)" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="quantity" label="Quantity" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="dimension" label="Dimension" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="agent" label="Agent" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+
+            <el-table-column
+            prop="agent"
+            label="Agent"
+            sortable="custom"
+            min-width="150px"
+            :filters="$store.state.agentList.map(c => { return { value: c.id, text: c.name } })"
+            column-key="agent_id"
+            show-overflow-tooltip>
+
+            </el-table-column>
+
             <el-table-column prop="ship_name" label="Ship Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="vehicle_number" label="Vehicle Number" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="drive_name" label="Driver Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
@@ -52,7 +79,7 @@
             <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column fixed="right" column-key="status" label="Status" sortable="custom" min-width="150px" :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
                 <template slot-scope="scope">
-                    <el-tag type="success" size="small">{{scope.row.statusName}}</el-tag>
+                    <el-tag type="warning" size="small">{{scope.row.statusName}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column fixed="right" width="40px">
@@ -63,7 +90,8 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native.prevent="() => { selectedData = scope.row; showDetailDialog = true; }"><i class="el-icon-zoom-in"></i> Show Detail</el-dropdown-item>
-                            <el-dropdown-item v-if="scope.row.delivery_status_id == 0" @click.native.prevent="printResi(scope.row)"><i class="el-icon-printer"></i> Print Receipt</el-dropdown-item>
+                            <el-dropdown-item v-if="scope.row.delivery_status_id == 0" @click.native.prevent="printSpb(scope.row)"><i class="el-icon-printer"></i> Print SPB</el-dropdown-item>
+                            <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printResi(scope.row)"><i class="el-icon-printer"></i> Print Receipt</el-dropdown-item>
                             <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printAwb(scope.row)"><i class="el-icon-printer"></i> Print Airway Bill</el-dropdown-item>
                             <el-dropdown-item v-if="scope.row.delivery_status_id == 4" @click.native.prevent="createInvoice(scope.row)"><i class="el-icon-money"></i> Create Invoice</el-dropdown-item>
                             <el-dropdown-item v-if="scope.row.delivery_status_id < 6" @click.native.prevent="openStatusForm(scope.row)"><i class="el-icon-warning-outline"></i> Update Status</el-dropdown-item>
@@ -86,24 +114,24 @@
         :total="tableData.total">
         </el-pagination>
 
-        <el-dialog title="DETAIL" :visible.sync="showDetailDialog" top="60px">
+        <el-dialog title="DETAIL" :visible.sync="showDetailDialog" fullscreen>
             <Detail v-if="!!selectedData" :data="selectedData" />
         </el-dialog>
 
         <el-dialog
         fullscreen
         :visible.sync="showForm"
-        :title="!!formModel.id ? 'EDIT DOMESTIC DELIVERY' : 'ADD NEW DOMESTIC DELIVERY'"
+        :title="!!formModel.id ? 'EDIT DOMESTIC DELIVERY' : 'NEW DOMESTIC DELIVERY'"
         v-loading="loading"
         :close-on-click-modal="false">
 
             <el-alert type="error" title="ERROR"
-                :description="error.message + '\n' + error.file + ':' + error.line"
+                :description="error.message"
                 v-show="error.message"
                 style="margin-bottom:15px;">
             </el-alert>
 
-            <el-form label-width="115px" label-position="left">
+            <el-form label-width="150px" label-position="left">
 
                 <el-row :gutter="25">
                     <el-col :span="8">
@@ -195,8 +223,13 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="Volume (Kg)" :class="formErrors.volume ? 'is-error' : ''">
-                            <el-input type="number" placeholder="Volume (Kg)" v-model="formModel.volume"></el-input>
+                        <el-form-item label="Weight (kg)" :class="formErrors.weight ? 'is-error' : ''">
+                            <el-input type="number" placeholder="Weight (kg)" v-model="formModel.weight"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.weight">{{formErrors.weight[0]}}</div>
+                        </el-form-item>
+
+                        <el-form-item label="Volume (m3)" :class="formErrors.volume ? 'is-error' : ''">
+                            <el-input type="number" placeholder="Volume (m3)" v-model="formModel.volume"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.volume">{{formErrors.volume[0]}}</div>
                         </el-form-item>
 
@@ -214,25 +247,25 @@
             </el-form>
 
             <el-table striped :data="formModel.items" style="margin-top:10px" height="calc(100vh - 561px)">
-                <el-table type="index"></el-table>
+                <el-table-column type="index"></el-table-column>
                 <el-table-column label="Description">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.item_description" size="small" placeholder="Description"></el-input>
+                        <el-input v-model="scope.row.description" size="small" placeholder="Description"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="Coli">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.qty" size="small" placeholder="Coli"></el-input>
+                        <el-input type="number" v-model="scope.row.coli" size="small" placeholder="Coli"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="Weight">
+                <el-table-column label="Weight (Kg)">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.weight" size="small" placeholder="Weight"></el-input>
+                        <el-input type="number" v-model="scope.row.weight" size="small" placeholder="Weight"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="Item">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.item" size="small" placeholder="Item"></el-input>
+                        <el-input type="number" v-model="scope.row.item" size="small" placeholder="Item"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="Reference">
@@ -250,7 +283,7 @@
                         <el-button @click="addItem" icon="el-icon-plus" type="primary" plain size="small"></el-button>
                     </template>
                     <template slot-scope="scope">
-                        <el-button @click="deleteItem(scope.$index)" icon="el-icon-delete" type="danger" plain size="small"></el-button>
+                        <el-button @click="deleteItem(scope.$index, scope.row.id)" icon="el-icon-delete" type="danger" plain size="small"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -262,15 +295,18 @@
         </el-dialog>
 
         <UpdateForm @submitted="requestData" @close="showStatusForm = false" :data="selectedData" :visible.sync="showStatusForm" />
+        <InvoiceForm @submitted="requestData" @close="showInvoiceForm = false" :items="selection" :visible.sync="showInvoiceForm" />
+
     </div>
 </template>
 
 <script>
 import UpdateForm from './UpdateForm'
+import InvoiceForm from './InvoiceForm'
 import Detail from './Detail'
 
 export default {
-    components: { UpdateForm, Detail },
+    components: { UpdateForm, Detail, InvoiceForm },
     watch: {
         timestamp(v, o) {
             this.requestData()
@@ -292,15 +328,20 @@ export default {
             showStatusForm: false,
             selectedData: {},
             showDetailDialog: false,
-            filters: {}
+            filters: {},
+            selection: [],
+            showInvoiceForm: false
         }
     },
     methods: {
         printResi(data) {
-
+            window.open(BASE_URL + '/domesticDelivery/printResi/' + data.id + '?token=' + this.$store.state.token, '_blank')
+        },
+        printSpb(data) {
+            window.open(BASE_URL + '/domesticDelivery/printSpb/' + data.id + '?token=' + this.$store.state.token, '_blank')
         },
         printAwb(data) {
-
+            window.open(BASE_URL + '/domesticDelivery/printAwb/' + data.id + '?token=' + this.$store.state.token, '_blank')
         },
         exportToExcel() {
 
@@ -347,16 +388,28 @@ export default {
         },
         addItem() {
             this.formModel.items.push({
-                item_description: '',
-                qty: '',
+                description: '',
+                coli: '',
                 weight: '',
                 item: '',
                 reference: '',
                 remark: ''
             });
         },
-        deleteItem(index) {
-            this.formModel.items.splice(index, 1);
+        deleteItem(index, id) {
+            if (!!id) {
+                axios.delete('/domesticDeliveryItem/' + id).then(r => {
+                    this.formModel.items.splice(index, 1);
+                }).catch(e => {
+                    this.$message({
+                        message: 'Data gagal dihapus.',
+                        type: 'error',
+                        showClose: true
+                    });
+                })
+            } else {
+                this.formModel.items.splice(index, 1);
+            }
         },
         store() {
             this.loading = true;
@@ -427,6 +480,8 @@ export default {
     },
     mounted() {
         this.requestData();
+        this.$store.commit('getCustomerList')
+        this.$store.commit('getAgentList')
     }
 }
 </script>

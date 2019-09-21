@@ -10,6 +10,7 @@ class AppController extends Controller
         ['label' => 'Dashboard', 'icon' => 'el-icon-menu', 'path' => '/', 'roles' => [11, 21, 31] ],
         ['label' => 'Domestic Deliveries', 'icon' => 'el-icon-truck', 'path' => '/domestic-delivery', 'roles' => [11, 21, 31] ],
         ['label' => 'International Deliveries', 'icon' => 'el-icon-ship', 'path' => '/international-delivery', 'roles' => [11, 21, 31] ],
+        ['label' => 'Invoices', 'icon' => 'el-icon-money', 'path' => '/invoice', 'roles' => [11, 21, 31] ],
         ['label' => 'Reports', 'icon' => 'el-icon-data-analysis', 'path' => '/report', 'roles' => [11, 21, 31] ],
         ['label' => 'Companies', 'icon' => 'el-icon-office-building', 'path' => '/company', 'roles' => [11] ],
         ['label' => 'Customers', 'icon' => 'el-icon-connection', 'path' => '/customer', 'roles' => [11, 21] ],

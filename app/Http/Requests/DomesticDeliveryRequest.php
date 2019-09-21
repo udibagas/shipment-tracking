@@ -26,7 +26,7 @@ class DomesticDeliveryRequest extends FormRequest
         return [
             'company_id' => 'exists:companies,id',
             'customer_id' => 'required|exists:customers,id',
-            'agent_id' => 'exists:agents,id',
+            // 'agent_id' => 'exists:agents,id',
             'service_type_id' => 'required|exists:service_types,id',
             'origin' => 'required|exists:cities,name',
             'destination' => 'required|exists:cities,name',
@@ -35,12 +35,36 @@ class DomesticDeliveryRequest extends FormRequest
             'spb_number' => 'required',
             'resi_number' => 'required',
             'volume' => 'numeric',
+            'weight' => 'numeric',
             'quantity' => 'numeric',
             'delivery_type_id' => 'required|exists:delivery_types,id',
             // 'etd' => 'required|date',
             // 'eta' => 'required|date',
             'charge_to' => 'required',
             'delivery_address' => 'required'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'company_id' => 'Company',
+            'customer_id' => 'Customer',
+            'agent_id' => 'Agent',
+            'service_type_id' => 'Service Type',
+            'origin' => 'Origin',
+            'destination' => 'Destination',
+            'pick_up_date' => 'Pic Up Date',
+            'spb_number' => 'SPN Number',
+            'resi_number' => 'Receipt Number',
+            'volume' => 'Volume',
+            'weight' => 'Weight',
+            'quantity' => 'Quantity',
+            'delivery_type_id' => 'Delivery Type',
+            'etd' => 'ETD',
+            'eta' => 'ETA',
+            'charge_to' => 'Charge To',
+            'delivery_address' => 'Delive Address'
         ];
     }
 }

@@ -1,5 +1,6 @@
 <template>
     <el-dialog
+    center
     top="60px"
     width="500px"
     title="UPDATE STATUS"
@@ -12,7 +13,7 @@
             <el-form-item label="Status" :class="formErrors.status ? 'is-error' : ''">
                 <el-select v-model="formModel.status" placeholder="Status" filterable default-first-option style="width:100%">
                     <el-option
-                    v-for="(t, i) in $store.state.deliveryStatusList.filter(s => s.id > data.delivery_status_id)"
+                    v-for="(t, i) in $store.state.deliveryStatusList.filter(s => s.id >= data.delivery_status_id)"
                     :value="t.id" :label="t.name" :key="i">
                     </el-option>
                 </el-select>
@@ -183,8 +184,8 @@
             </el-form-item> -->
         </el-form>
         <div slot="footer">
-            <el-button type="primary" @click="submit"><i class="el-icon-success"></i> SAVE</el-button>
-            <el-button type="info" @click="$emit('close')"><i class="el-icon-error"></i> CANCEL</el-button>
+            <el-button type="primary" @click="submit" icon="el-icon-success">SAVE</el-button>
+            <el-button type="info" @click="$emit('close')" icon="el-icon-error">CANCEL</el-button>
         </div>
     </el-dialog>
 </template>

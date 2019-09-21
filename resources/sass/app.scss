@@ -56,9 +56,9 @@ body {
     color: #fff !important;
 }
 
-.el-form-item__label {
-    font-weight: bold;
-}
+// .el-form-item__label {
+//     font-weight: bold;
+// }
 
 .bg-blue {
     background-color: $blue;
@@ -103,14 +103,15 @@ body {
 .td-label {
     font-weight: bold;
     width: 200px !important;
-    background-color: #dfdfdf;
+    // background-color: #dfdfdf;
     padding: 5px 10px !important;
+    border: 1px solid #ddd;
 }
 
 .td-value {
-    background-color: #efefef;
+    // background-color: #efefef;
     padding: 5px 10px !important;
-    min-width: 400px !important;
+    border: 1px solid #ddd;
 }
 
 // .el-table th {

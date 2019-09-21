@@ -29,10 +29,12 @@ class DomesticDelivery extends Model
         'resi_number', 'receiver', 'volume', 'quantity', 'dimension',
         'ship_name', 'driver_name', 'driver_phone', 'company_id',
         'delivery_type_id', 'etd', 'eta', 'tracking_number',
-        'tracking_number', 'delivery_address', 'charge_to'
+        'tracking_number', 'delivery_address', 'charge_to', 'weight'
     ];
 
-    protected $appends = ['statusName'];
+    protected $with = ['items'];
+
+    protected $appends = ['statusName', 'isDelay', 'isOntime'];
 
     public function getStatusNameAttribute()
     {
@@ -43,5 +45,23 @@ class DomesticDelivery extends Model
         ];
 
         return $statuses[$this->delivery_status_id];
+    }
+
+    public function getIsDelayAttribute()
+    {
+        return strtotime($this->delivered_date) > strtotime($this->eta);
+    }
+
+    public function getIsOntimeAttribute()
+    {
+        return strtotime($this->delivered_date) <= strtotime($this->eta);
+    }
+
+    public function items() {
+        return $this->hasMany(DomesticDeliveryItem::class);
+    }
+
+    public function customer() {
+        return $this->belongsTo(Customer::class);
     }
 }
