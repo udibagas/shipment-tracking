@@ -63,6 +63,8 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('domesticDelivery/printResi/{domesticDelivery}', 'DomesticDeliveryController@printResi');
         Route::get('domesticDelivery/printAwb/{domesticDelivery}', 'DomesticDeliveryController@printAwb');
         Route::resource('domesticDelivery', 'DomesticDeliveryController')->except(['create', 'edit']);
+        Route::get('domesticDeliveryInvoice/print/{domesticDeliveryInvoice}', 'DomesticDeliveryInvoiceController@print');
+        Route::resource('domesticDeliveryInvoice', 'DomesticDeliveryContInvoiceroller')->except(['create', 'edit']);
         Route::resource('masterFare', 'MasterFareController')->except(['create', 'edit']);
         Route::resource('masterFareCharter', 'MasterFareCharterController')->except(['create', 'edit']);
         Route::resource('masterFarePacking', 'MasterFarePackingController')->except(['create', 'edit']);
