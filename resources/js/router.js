@@ -9,6 +9,7 @@ import Setting from './pages/Setting'
 import Report from './pages/Report'
 import User from './pages/User'
 import Company from './pages/Company'
+import MasterFare from './pages/MasterFare'
 
 Vue.use(VueRouter)
 
@@ -38,6 +39,11 @@ const router = new VueRouter({
             path: '/domestic-delivery',
             component: DomesticDelivery,
             name: 'domestic-delivery'
+        },
+        {
+            path: '/master-fare',
+            component: MasterFare,
+            name: 'master-fare'
         },
         {
             path: '/report',

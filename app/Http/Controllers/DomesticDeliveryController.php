@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\DomesticDeliveryRequest;
 use App\DomesticDelivery;
+use App\DomesticDeliveryItem;
 use Illuminate\Support\Facades\DB;
 
 class DomesticDeliveryController extends Controller
@@ -23,13 +24,11 @@ class DomesticDeliveryController extends Controller
                 domestic_deliveries.*,
                 customers.name AS customer,
                 delivery_types.name AS delivery_type,
-                service_types.name AS service_type,
                 users.name AS user,
                 agents.name AS agent
             ')
             ->join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
             ->join('delivery_types', 'delivery_types.id', '=', 'domestic_deliveries.delivery_type_id')
-            ->join('service_types', 'service_types.id', '=', 'domestic_deliveries.service_type_id')
             ->join('users', 'users.id', '=', 'domestic_deliveries.user_id')
             ->join('agents', 'agents.id', '=', 'domestic_deliveries.agent_id', 'LEFT')
             ->when($request->status, function($q) use ($request) {
@@ -107,7 +106,8 @@ class DomesticDeliveryController extends Controller
                     ->delete();
 
                 DB::table('domestic_delivery_items')->insert(array_map(function($item) use ($domesticDelivery) {
-                    $data = array_only($item, ['description', 'coli', 'weight', 'item', 'reference', 'remark']);
+                    $deliveryItem = new DomesticDeliveryItem();
+                    $data = array_only($item, $deliveryItem->getFillable());
                     $data['domestic_delivery_id'] = $domesticDelivery->id;
                     return $data;
                 }, $request->items));

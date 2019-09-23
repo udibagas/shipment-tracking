@@ -26,11 +26,9 @@ class DomesticDeliveryRequest extends FormRequest
         return [
             'company_id' => 'exists:companies,id',
             'customer_id' => 'required|exists:customers,id',
-            // 'agent_id' => 'exists:agents,id',
-            'service_type_id' => 'required|exists:service_types,id',
+            'service_type' => 'required',
             'origin' => 'required|exists:cities,name',
             'destination' => 'required|exists:cities,name',
-            // 'delivery_status_id' => 'required|exists:delivery_statuses,id',
             'pick_up_date' => 'required|date',
             'spb_number' => 'required',
             'resi_number' => 'required',
@@ -38,10 +36,9 @@ class DomesticDeliveryRequest extends FormRequest
             'weight' => 'numeric',
             'quantity' => 'numeric',
             'delivery_type_id' => 'required|exists:delivery_types,id',
-            // 'etd' => 'required|date',
-            // 'eta' => 'required|date',
             'charge_to' => 'required',
-            'delivery_address' => 'required'
+            'delivery_address' => 'required',
+            'packing' => 'boolean'
         ];
     }
 
@@ -64,7 +61,8 @@ class DomesticDeliveryRequest extends FormRequest
             'etd' => 'ETD',
             'eta' => 'ETA',
             'charge_to' => 'Charge To',
-            'delivery_address' => 'Delive Address'
+            'delivery_address' => 'Delive Address',
+            'packing' => 'Packing Peti'
         ];
     }
 }

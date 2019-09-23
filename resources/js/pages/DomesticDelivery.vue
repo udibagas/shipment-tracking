@@ -24,8 +24,9 @@ export default {
         this.$store.commit('getCityList');
         this.$store.commit('getDeliveryTypeList');
         this.$store.commit('getServiceTypeList');
-        this.$store.commit('getCustomerList');
         this.$store.commit('getAgentList');
+        this.$store.commit('getCustomerList')
+        this.$store.commit('getVehicleTypeList')
     }
 }
 </script>

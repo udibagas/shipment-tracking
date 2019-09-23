@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('serviceType/getList', 'ServiceTypeController@getList');
     Route::get('delayCause/getList', 'DelayCauseController@getList');
     Route::get('deliveryType/getList', 'DeliveryTypeController@getList');
+    Route::get('vehicleType/getList', 'VehicleTypeController@getList');
     Route::get('user/getList', 'UserController@getList');
     Route::get('user/getRoleList', 'UserController@getRoleList');
     Route::get('report/leadTime', 'ReportController@leadTime');
@@ -62,6 +63,10 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('domesticDelivery/printResi/{domesticDelivery}', 'DomesticDeliveryController@printResi');
         Route::get('domesticDelivery/printAwb/{domesticDelivery}', 'DomesticDeliveryController@printAwb');
         Route::resource('domesticDelivery', 'DomesticDeliveryController')->except(['create', 'edit']);
+        Route::resource('masterFare', 'MasterFareController')->except(['create', 'edit']);
+        Route::resource('masterFareCharter', 'MasterFareCharterController')->except(['create', 'edit']);
+        Route::resource('masterFarePacking', 'MasterFarePackingController')->except(['create', 'edit']);
+        Route::resource('vehicleType', 'VehicleTypeController')->except(['create', 'edit', 'show']);
     });
 
     // TODO : menu buat operator, customer & agent

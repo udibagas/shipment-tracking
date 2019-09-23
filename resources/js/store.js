@@ -18,6 +18,7 @@ export default new Vuex.Store({
         delayCauseList: [],
         deliveryTypeList: [],
         serviceTypeList: [],
+        vehicleTypeList: [],
         deliveryStatusList: [
             {id: 0, name: 'Registered' },
             {id: 1, name: 'Ready For Delivery' },
@@ -66,6 +67,11 @@ export default new Vuex.Store({
         getServiceTypeList(state) {
             axios.get('/serviceType/getList').then(r => {
                 state.serviceTypeList = r.data
+            }).catch(e => console.log(e))
+        },
+        getVehicleTypeList(state) {
+            axios.get('/vehicleType/getList').then(r => {
+                state.vehicleTypeList = r.data
             }).catch(e => console.log(e))
         },
         // getDeliveryStatusList(state) {

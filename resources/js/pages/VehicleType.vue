@@ -2,7 +2,7 @@
     <div>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
-                <el-button icon="el-icon-plus" @click="openForm({})" type="primary">ADD NEW SERVICE TYPE</el-button>
+                <el-button icon="el-icon-plus" @click="openForm({})" type="primary">TAMBAH JENIS ARMADA</el-button>
             </el-form-item>
             <el-form-item style="margin-right:0;">
                 <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
@@ -16,9 +16,9 @@
         height="calc(100vh - 345px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column prop="code" label="Code" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="name" label="Name" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="description" label="Description" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="code" label="Kode" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="name" label="Nama" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="description" label="Deskripsi" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column width="40px">
                 <template slot-scope="scope">
                     <el-dropdown>
@@ -27,7 +27,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native.prevent="openForm(scope.row)"><i class="el-icon-edit-outline"></i> Edit</el-dropdown-item>
-                            <el-dropdown-item @click.native.prevent="deleteData(scope.row.id)"><i class="el-icon-delete"></i> Delete</el-dropdown-item>
+                            <el-dropdown-item @click.native.prevent="deleteData(scope.row.id)"><i class="el-icon-delete"></i> Hapus</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -45,7 +45,7 @@
         :total="tableData.total">
         </el-pagination>
 
-        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT SERVICE TYPE' : 'ADD NEW SERVICE TYPE'" width="500px" v-loading="loading" :close-on-click-modal="false">
+        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT JENIS ARMADA' : 'TAMBAH JENIS ARMADA'" width="500px" v-loading="loading" :close-on-click-modal="false">
             <el-alert type="error" title="ERROR"
                 :description="error.message + '\n' + error.file + ':' + error.line"
                 v-show="error.message"
@@ -53,25 +53,25 @@
             </el-alert>
 
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
-                    <el-input placeholder="Code" v-model="formModel.code"></el-input>
+                <el-form-item label="Kode" :class="formErrors.code ? 'is-error' : ''">
+                    <el-input placeholder="Kode" v-model="formModel.code"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
                 </el-form-item>
 
-                <el-form-item label="Name" :class="formErrors.name ? 'is-error' : ''">
-                    <el-input placeholder="Name" v-model="formModel.name"></el-input>
+                <el-form-item label="Nama" :class="formErrors.name ? 'is-error' : ''">
+                    <el-input placeholder="Nama" v-model="formModel.name"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>
                 </el-form-item>
 
-                <el-form-item label="Descrption" :class="formErrors.description ? 'is-error' : ''">
-                    <el-input placeholder="Descrption" v-model="formModel.description"></el-input>
+                <el-form-item label="Deskripsi" :class="formErrors.description ? 'is-error' : ''">
+                    <el-input placeholder="Deskripsi" v-model="formModel.description"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.description">{{formErrors.description[0]}}</div>
                 </el-form-item>
 
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="() => !!formModel.id ? update() : store()"><i class="el-icon-success"></i> SAVE</el-button>
-                <el-button type="info" @click="showForm = false"><i class="el-icon-error"></i> CANCEL</el-button>
+                <el-button type="primary" @click="() => !!formModel.id ? update() : store()" icon="el-icon-success">SIMPAN</el-button>
+                <el-button type="info" @click="showForm = false" icon="el-icon-error">BATAL</el-button>
             </span>
         </el-dialog>
     </div>
@@ -108,7 +108,7 @@ export default {
         },
         store() {
             this.loading = true;
-            axios.post('/serviceType', this.formModel).then(r => {
+            axios.post('/vehicleType', this.formModel).then(r => {
                 this.showForm = false;
                 this.$message({
                     message: 'Data berhasil disimpan.',
@@ -132,7 +132,7 @@ export default {
         },
         update() {
             this.loading = true;
-            axios.put('/serviceType/' + this.formModel.id, this.formModel).then(r => {
+            axios.put('/vehicleType/' + this.formModel.id, this.formModel).then(r => {
                 this.showForm = false
                 this.$message({
                     message: 'Data berhasil disimpan.',
@@ -156,7 +156,7 @@ export default {
         },
         deleteData(id) {
             this.$confirm('Anda yakin akan menghapus data ini?', 'Warning', { type: 'warning' }).then(() => {
-                axios.delete('/serviceType/' + id).then(r => {
+                axios.delete('/vehicleType/' + id).then(r => {
                     this.requestData();
                     this.$message({
                         message: r.data.message,
@@ -182,7 +182,7 @@ export default {
             }
 
             this.loading = true;
-            axios.get('/serviceType', {params: params}).then(r => {
+            axios.get('/vehicleType', {params: params}).then(r => {
                     this.tableData = r.data
             }).catch(e => {
                 if (e.response.status == 500) {

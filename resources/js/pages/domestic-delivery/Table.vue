@@ -2,13 +2,13 @@
     <div>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
-                <el-button icon="el-icon-plus" @click="openForm({ items: [] })" type="primary">New Domestic Delivery</el-button>
+                <el-button icon="el-icon-plus" @click="openForm({ items: [] })" type="primary">DOMESTIC DELIVERY BARU</el-button>
             </el-form-item>
-            <el-form-item>
+            <!-- <el-form-item>
                 <el-button :disabled="selection.length == 0" icon="el-icon-money" @click="showInvoiceForm = true" type="primary">Create Invoice</el-button>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item>
-                <el-button icon="el-icon-download" @click="exportToExcel" type="primary">Export</el-button>
+                <el-button icon="el-icon-download" @click="exportToExcel" type="primary">EXPORT</el-button>
             </el-form-item>
             <el-form-item style="margin-right:0;">
                 <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
@@ -39,25 +39,32 @@
             </el-table-column>
 
             <el-table-column prop="charge_to" label="Charge To" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="origin" label="Origin" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="destination" label="Destination" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="delivery_address" label="Delivery Address" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="pick_up_date" label="P/U Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="origin" label="Asal" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="destination" label="Tujuan" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="delivery_address" label="Alamat Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="pick_up_date" label="Tanggal Pick Up" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="etd" label="ETD" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="eta" label="ETA" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="delivery_date" label="Delivery Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="delivered_date" label="Delivered Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="received_date" label="Received Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="payment_date" label="Payment Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="resi_number" label="Receipt Number" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="spb_number" label="SPB Number" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="tracking_number" label="Tracking Number" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="delivery_type" label="Delivery Type" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="service_type" label="Delivery Service" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="volume" label="Volume (Kg)" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="quantity" label="Quantity" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="dimension" label="Dimension" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="delivery_date" label="Tgl Dikirim" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="delivered_date" label="Tgl Terkirim" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="received_date" label="Tgl Terima" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column> -->
+            <!-- <el-table-column prop="payment_date" label="Payment Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column> -->
+            <el-table-column prop="resi_number" label="Nomor Resi" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="spb_number" label="Nomor SPB" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="tracking_number" label="Nomor Tracking" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="delivery_type" label="Jenis Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="service_type" label="Layanan Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="quantity" label="Jml Koli" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="volume" label="Volume" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="weight" label="Berat" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="volume_weight" label="Berat Volume" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="invoice_weight" label="Berat Invoice" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="delivery_cost" label="Biaya Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="delivery_cost_ppn" label="PPN Biaya Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="packing_cost" label="Biaya Packing" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="packing_cost_ppn" label="PPN Biaya Packing" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="total_cost" label="Total Biaya" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
 
             <el-table-column
             prop="agent"
@@ -70,12 +77,12 @@
 
             </el-table-column>
 
-            <el-table-column prop="ship_name" label="Ship Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="vehicle_number" label="Vehicle Number" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="drive_name" label="Driver Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="drive_phone" label="Driver Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="user" label="Created By" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="updated_at" label="Last Update" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="ship_name" label="Nama Kapal" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="vehicle_number" label="Nomor Plat Armada" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="drive_name" label="Nama Driver" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="drive_phone" label="No. HP Driver" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="user" label="Diupdate Oleh" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="updated_at" label="Update Terkahir" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column fixed="right" column-key="status" label="Status" sortable="custom" min-width="150px" :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
                 <template slot-scope="scope">
@@ -90,9 +97,9 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native.prevent="() => { selectedData = scope.row; showDetailDialog = true; }"><i class="el-icon-zoom-in"></i> Show Detail</el-dropdown-item>
-                            <el-dropdown-item v-if="scope.row.delivery_status_id == 0" @click.native.prevent="printSpb(scope.row)"><i class="el-icon-printer"></i> Print SPB</el-dropdown-item>
-                            <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printResi(scope.row)"><i class="el-icon-printer"></i> Print Receipt</el-dropdown-item>
-                            <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printAwb(scope.row)"><i class="el-icon-printer"></i> Print Airway Bill</el-dropdown-item>
+                            <!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 0" @click.native.prevent="printSpb(scope.row)"><i class="el-icon-printer"></i> Print SPB</el-dropdown-item> -->
+                            <!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printResi(scope.row)"><i class="el-icon-printer"></i> Print Receipt</el-dropdown-item> -->
+                            <!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printAwb(scope.row)"><i class="el-icon-printer"></i> Print Airway Bill</el-dropdown-item> -->
                             <el-dropdown-item v-if="scope.row.delivery_status_id == 4" @click.native.prevent="createInvoice(scope.row)"><i class="el-icon-money"></i> Create Invoice</el-dropdown-item>
                             <el-dropdown-item v-if="scope.row.delivery_status_id < 6" @click.native.prevent="openStatusForm(scope.row)"><i class="el-icon-warning-outline"></i> Update Status</el-dropdown-item>
                             <el-dropdown-item v-if="scope.row.delivery_status_id == 0" @click.native.prevent="openForm(scope.row)"><i class="el-icon-edit-outline"></i> Edit</el-dropdown-item>
@@ -121,7 +128,7 @@
         <el-dialog
         fullscreen
         :visible.sync="showForm"
-        :title="!!formModel.id ? 'EDIT DOMESTIC DELIVERY' : 'NEW DOMESTIC DELIVERY'"
+        :title="!!formModel.id ? 'EDIT DOMESTIC DELIVERY' : 'DOMESTIC DELIVERY BARU'"
         v-loading="loading"
         :close-on-click-modal="false">
 
@@ -133,7 +140,7 @@
 
             <el-form label-width="150px" label-position="left">
 
-                <el-row :gutter="25">
+                <el-row :gutter="30">
                     <el-col :span="8">
                         <el-form-item label="Customer" :class="formErrors.customer_id ? 'is-error' : ''">
                             <el-select v-model="formModel.customer_id" placeholder="Customer" filterable default-first-option style="width:100%">
@@ -151,8 +158,8 @@
                             <div class="el-form-item__error" v-if="formErrors.charge_to">{{formErrors.charge_to[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Origin" :class="formErrors.origin ? 'is-error' : ''">
-                            <el-select v-model="formModel.origin" placeholder="Origin" filterable default-first-option style="width:100%">
+                        <el-form-item label="Asal" :class="formErrors.origin ? 'is-error' : ''">
+                            <el-select v-model="formModel.origin" placeholder="Asal" filterable default-first-option style="width:100%">
                                 <el-option v-for="(t, i) in $store.state.cityList"
                                 :value="t.name"
                                 :label="t.name"
@@ -162,8 +169,8 @@
                             <div class="el-form-item__error" v-if="formErrors.origin">{{formErrors.origin[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Destination" :class="formErrors.destination ? 'is-error' : ''">
-                            <el-select v-model="formModel.destination" placeholder="Destination" filterable default-first-option style="width:100%">
+                        <el-form-item label="Tujuan" :class="formErrors.destination ? 'is-error' : ''">
+                            <el-select v-model="formModel.destination" placeholder="Tujuan" filterable default-first-option style="width:100%">
                                 <el-option v-for="(t, i) in $store.state.cityList"
                                 :value="t.name"
                                 :label="t.name"
@@ -173,35 +180,36 @@
                             <div class="el-form-item__error" v-if="formErrors.destination">{{formErrors.destination[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Delivery Address" :class="formErrors.delivery_address ? 'is-error' : ''">
-                            <el-input type="textarea" rows="4" placeholder="Delivery Address" v-model="formModel.delivery_address"></el-input>
+                        <el-form-item label="Alamat Pengiriman" :class="formErrors.delivery_address ? 'is-error' : ''">
+                            <el-input type="textarea" rows="7" placeholder="Alamat Pengiriman" v-model="formModel.delivery_address"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.delivery_address">{{formErrors.delivery_address[0]}}</div>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="P/U Date" :class="formErrors.pick_up_date ? 'is-error' : ''">
+                        <el-form-item label="Tanggal Pick Up" :class="formErrors.pick_up_date ? 'is-error' : ''">
                             <el-date-picker
                             style="width:100%"
                             type="date"
                             format="dd-MMM-yyyy"
                             value-format="yyyy-MM-dd"
-                            placeholder="P/U Date"
+                            placeholder="Tanggal Pick Up"
                             v-model="formModel.pick_up_date">
                             </el-date-picker>
                             <div class="el-form-item__error" v-if="formErrors.pick_up_date">{{formErrors.pick_up_date[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Receipt Number" :class="formErrors.resi_number ? 'is-error' : ''">
-                            <el-input placeholder="Receipt Number" v-model="formModel.resi_number"></el-input>
+                        <el-form-item label="Nomor Resi" :class="formErrors.resi_number ? 'is-error' : ''">
+                            <el-input placeholder="Nomor Resi" v-model="formModel.resi_number"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.resi_number">{{formErrors.resi_number[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="SPB Number" :class="formErrors.spb_number ? 'is-error' : ''">
-                            <el-input placeholder="SPB Number" v-model="formModel.spb_number"></el-input>
+                        <el-form-item label="Nomor SPB" :class="formErrors.spb_number ? 'is-error' : ''">
+                            <el-input placeholder="Nomor SPB" v-model="formModel.spb_number"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.spb_number">{{formErrors.spb_number[0]}}</div>
                         </el-form-item>
-                        <el-form-item label="Delivery Type" :class="formErrors.delivery_type_id ? 'is-error' : ''">
-                            <el-select v-model="formModel.delivery_type_id" placeholder="Delivery Type" filterable default-first-option style="width:100%">
+
+                        <el-form-item label="Jenis Pengiriman" :class="formErrors.delivery_type_id ? 'is-error' : ''">
+                            <el-select v-model="formModel.delivery_type_id" placeholder="Jenis Pengiriman" filterable default-first-option style="width:100%">
                                 <el-option v-for="(t, i) in $store.state.deliveryTypeList"
                                 :value="t.id"
                                 :label="t.code + ' - ' + t.name"
@@ -211,71 +219,120 @@
                             <div class="el-form-item__error" v-if="formErrors.delivery_type_id">{{formErrors.delivery_type_id[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Delivery Service" :class="formErrors.service_type_id ? 'is-error' : ''">
-                            <el-select v-model="formModel.service_type_id" placeholder="Delivery Service" filterable default-first-option style="width:100%">
-                                <el-option v-for="(t, i) in $store.state.serviceTypeList"
-                                :value="t.id"
-                                :label="t.code + ' - ' + t.name"
-                                :key="i">
+                        <el-form-item label="Layanan Pengiriman" :class="formErrors.service_type ? 'is-error' : ''">
+                            <el-select v-model="formModel.service_type" placeholder="Layanan Pengiriman" style="width:100%">
+                                <el-option v-for="(l, i) in ['REGULER', 'CHARTER']" :value="l" :label="l" :key="i">
                                 </el-option>
                             </el-select>
-                            <div class="el-form-item__error" v-if="formErrors.service_type_id">{{formErrors.service_type_id[0]}}</div>
+                            <div class="el-form-item__error" v-if="formErrors.service_type">{{formErrors.service_type[0]}}</div>
                         </el-form-item>
+
+                        <el-form-item label="Jenis Armada" :class="formErrors.vehicle_type_id ? 'is-error' : ''">
+                            <el-select :disabled="formModel.service_type != 'CHARTER'" v-model="formModel.vehicle_type_id" placeholder="Jenis Armada" style="width:100%">
+                                <el-option v-for="v in $store.state.vehicleTypeList" :key="v.id" :label="v.name" :value="v.id"></el-option>
+                            </el-select>
+                            <div class="el-form-item__error" v-if="formErrors.vehicle_type_id">{{formErrors.vehicle_type_id[0]}}</div>
+                        </el-form-item>
+
+                        <el-form-item label="Packing Peti" :class="formErrors.quantity ? 'is-error' : ''">
+                            <el-select v-model="formModel.packing_peti" placeholder="Packing Peti" style="width:100%">
+                                <el-option v-for="(label, index) in ['TIDAK', 'YA']" :key="index" :label="label" :value="index"></el-option>
+                            </el-select>
+                            <div class="el-form-item__error" v-if="formErrors.quantity">{{formErrors.quantity[0]}}</div>
+                        </el-form-item>
+
                     </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="Weight (kg)" :class="formErrors.weight ? 'is-error' : ''">
-                            <el-input type="number" placeholder="Weight (kg)" v-model="formModel.weight"></el-input>
+                    <!-- <el-col :span="8">
+                        <el-form-item label="Berat (Kg)" :class="formErrors.weight ? 'is-error' : ''">
+                            <el-input disabled placeholder="Berat (Kg)" v-model="formModel.weight"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.weight">{{formErrors.weight[0]}}</div>
                         </el-form-item>
 
                         <el-form-item label="Volume (m3)" :class="formErrors.volume ? 'is-error' : ''">
-                            <el-input type="number" placeholder="Volume (m3)" v-model="formModel.volume"></el-input>
+                            <el-input disabled placeholder="Volume (m3)" v-model="formModel.volume"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.volume">{{formErrors.volume[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Quantity" :class="formErrors.quantity ? 'is-error' : ''">
-                            <el-input type="number" placeholder="Quantity" v-model="formModel.quantity"></el-input>
+                        <el-form-item label="Total Koli" :class="formErrors.quantity ? 'is-error' : ''">
+                            <el-input disabled placeholder="Total Koli" v-model="formModel.quantity"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.quantity">{{formErrors.quantity[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Dimension" :class="formErrors.dimension ? 'is-error' : ''">
-                            <el-input placeholder="Dimension" v-model="formModel.dimension"></el-input>
-                            <div class="el-form-item__error" v-if="formErrors.dimension">{{formErrors.dimension[0]}}</div>
+                    </el-col> -->
+                    <el-col :span="8">
+                        <el-form-item label="Biaya Pengiriman" :class="formErrors.quantity ? 'is-error' : ''">
+                            <el-input disabled placeholder="Biaya Pengiriman" v-model="formModel.quantity"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.quantity">{{formErrors.quantity[0]}}</div>
+                        </el-form-item>
+
+                        <el-form-item label="PPN Biaya Pengiriman" :class="formErrors.quantity ? 'is-error' : ''">
+                            <el-input disabled placeholder="PPN Biaya Pengiriman" v-model="formModel.quantity"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.quantity">{{formErrors.quantity[0]}}</div>
+                        </el-form-item>
+
+                        <el-form-item label="Biaya Packing Peti" :class="formErrors.quantity ? 'is-error' : ''">
+                            <el-input disabled placeholder="Biaya Packing Peti" v-model="formModel.quantity"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.quantity">{{formErrors.quantity[0]}}</div>
+                        </el-form-item>
+
+                        <el-form-item label="PPN Biaya Packing" :class="formErrors.quantity ? 'is-error' : ''">
+                            <el-input disabled placeholder="PPN Biaya Packing" v-model="formModel.quantity"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.quantity">{{formErrors.quantity[0]}}</div>
+                        </el-form-item>
+
+                        <el-form-item label="Total Biaya" :class="formErrors.quantity ? 'is-error' : ''">
+                            <el-input disabled placeholder="Total Biaya" v-model="formModel.quantity"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.quantity">{{formErrors.quantity[0]}}</div>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
 
             <el-table striped :data="formModel.items" style="margin-top:10px">
-                <el-table-column type="index"></el-table-column>
-                <el-table-column label="Description">
+                <el-table-column type="index" label="Koli"></el-table-column>
+                <el-table-column label="Deskripsi">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.description" size="small" placeholder="Description"></el-input>
+                        <el-input v-model="scope.row.description" size="small" placeholder="Deskripsi"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="Coli">
+                <el-table-column label="P (cm)" width="100" header-align="center">
                     <template slot-scope="scope">
-                        <el-input type="number" v-model="scope.row.coli" size="small" placeholder="Coli"></el-input>
+                        <el-input type="number" v-model="scope.row.dimension_p" size="small" placeholder="P"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="Weight (Kg)">
+                <el-table-column label="L (cm)" width="100" header-align="center">
                     <template slot-scope="scope">
-                        <el-input type="number" v-model="scope.row.weight" size="small" placeholder="Weight"></el-input>
+                        <el-input type="number" v-model="scope.row.dimension_l" size="small" placeholder="L"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="Item">
+                <el-table-column label="T (cm)" width="100" header-align="center">
                     <template slot-scope="scope">
-                        <el-input type="number" v-model="scope.row.item" size="small" placeholder="Item"></el-input>
+                        <el-input type="number" v-model="scope.row.dimension_t" size="small" placeholder="T"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="Reference">
+                <el-table-column label="Volume" width="120" header-align="right" align="right">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.reference" size="small" placeholder="Reference"></el-input>
+                        {{scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 1000000}} m<sup>3</sup>
                     </template>
                 </el-table-column>
-                <el-table-column label="Remark">
+                <el-table-column label="Berat (Kg)" width="100" header-align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" size="small" placeholder="Remark"></el-input>
+                        <el-input type="number" v-model="scope.row.weight" size="small" placeholder="Berat (Kg)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="Berat Volume" width="100" header-align="right" align="right">
+                    <template slot-scope="scope">
+                        {{(scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 4000).toFixed(0)}} Kg
+                    </template>
+                </el-table-column>
+                <el-table-column label="Berat Invoice" width="120" header-align="right" align="right">
+                    <template slot-scope="scope">
+                        {{scope.row.weight >= (scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 4000) ? scope.row.weight : (scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 4000).toFixed(0)}} Kg
+                    </template>
+                </el-table-column>
+                <el-table-column label="Keterangan">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.remark" size="small" placeholder="Keterangan"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column width="70px" align="right" header-align="right">
@@ -289,8 +346,8 @@
             </el-table>
 
             <span slot="footer">
-                <el-button type="primary" @click="() => !!formModel.id ? update() : store()"><i class="el-icon-success"></i> SAVE</el-button>
-                <el-button type="info" @click="showForm = false"><i class="el-icon-error"></i> CANCEL</el-button>
+                <el-button type="primary" @click="() => !!formModel.id ? update() : store()" icon="el-icon-success">SIMPAN</el-button>
+                <el-button type="info" @click="showForm = false" icon="el-icon-error">BATAL</el-button>
             </span>
         </el-dialog>
 
@@ -307,6 +364,17 @@ import Detail from './Detail'
 
 export default {
     components: { UpdateForm, Detail, InvoiceForm },
+    computed: {
+        total_weight() {
+            return 0;
+        },
+        total_volume() {
+            return 0;
+        },
+        total_coli() {
+            return 0;
+        }
+    },
     watch: {
         timestamp(v, o) {
             this.requestData()
@@ -480,8 +548,6 @@ export default {
     },
     mounted() {
         this.requestData();
-        this.$store.commit('getCustomerList')
-        this.$store.commit('getAgentList')
     }
 }
 </script>
