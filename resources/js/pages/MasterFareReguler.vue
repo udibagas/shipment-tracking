@@ -17,9 +17,10 @@
         v-loading="loading"
         @filter-change="(f) => { let c = Object.keys(f)[0]; filters[c] = Object.values(f[c]); page = 1; requestData(); }"
         @sort-change="sortChange">
-            <el-table-column v-if="$store.state.user.role == 11" prop="company" label="Company" sortable="custom"></el-table-column>
+            <el-table-column v-if="$store.state.user.role == 11" prop="company" label="Company" sortable="custom" show-overflow-tooltip></el-table-column>
 
             <el-table-column
+            show-overflow-tooltip
             :filters="$store.state.customerList.map(c => { return { value: c.id, text: c.name } })"
             column-key="customer_id"
             prop="customer"
@@ -27,7 +28,7 @@
             sortable="custom">
             </el-table-column>
 
-            <el-table-column prop="destination" label="Tujuan" sortable="custom"></el-table-column>
+            <el-table-column prop="destination" label="Tujuan" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column prop="fare" label="Tarif" sortable="custom" header-align="right" align="right">
                 <template slot-scope="scope">
                     Rp. {{scope.row.fare | formatNumber}}

@@ -17,17 +17,18 @@
         v-loading="loading"
         @filter-change="(f) => { let c = Object.keys(f)[0]; filters[c] = Object.values(f[c]); page = 1; requestData(); }"
         @sort-change="sortChange">
-            <el-table-column v-if="$store.state.user.role == 11" prop="company" label="Company" sortable="custom"></el-table-column>
+            <el-table-column v-if="$store.state.user.role == 11" prop="company" label="Company" sortable="custom" show-overflow-tooltip></el-table-column>
 
             <el-table-column
             :filters="$store.state.customerList.map(c => { return { value: c.id, text: c.name } })"
+            show-overflow-tooltip
             column-key="customer_id"
             prop="customer"
             label="Customer"
             sortable="custom">
             </el-table-column>
 
-            <el-table-column prop="destination" label="Tujuan" sortable="custom"></el-table-column>
+            <el-table-column prop="destination" label="Tujuan" sortable="custom" show-overflow-tooltip></el-table-column>
 
             <el-table-column
             :filters="$store.state.vehicleTypeList.map(c => { return { value: c.id, text: c.name } })"
