@@ -145,4 +145,17 @@ class DomesticDeliveryController extends Controller
     {
         return view('print.awb', ['data' => $domesticDelivery]);
     }
+
+    public function search(Request $request)
+    {
+        return DomesticDelivery::when($request->customer_id, function($q) use ($request) {
+            return $q->where('customer_id', $request->customer_id);
+        })->when($request->company_id, function($q) use ($request) {
+            return $q->where('company_id', $request->company_id);
+        })->when($request->invoice_status, function($q) use ($request) {
+            return $q->where('invoice_status', $request->invoice_status);
+        })->when($request->delivery_status_id, function($q) use ($request) {
+            return $q->where('delivery_status_id', $request->delivery_status_id);
+        });
+    }
 }

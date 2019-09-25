@@ -59,6 +59,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::group(['middleware' => 'role:11, 21, 31'], function() {
         Route::post('deliveryProgress', 'DeliveryProgressController@store');
         Route::delete('domesticDeliveryItem/{domesticDeliveryItem}', 'DomesticDeliveryItemController@destroy');
+        Route::get('domesticDelivery/search', 'DomesticDeliveryController@search');
         Route::get('domesticDelivery/printSpb/{domesticDelivery}', 'DomesticDeliveryController@printSpb');
         Route::get('domesticDelivery/printResi/{domesticDelivery}', 'DomesticDeliveryController@printResi');
         Route::get('domesticDelivery/printAwb/{domesticDelivery}', 'DomesticDeliveryController@printAwb');

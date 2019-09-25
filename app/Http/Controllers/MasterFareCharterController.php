@@ -19,12 +19,19 @@ class MasterFareCharterController extends Controller
         $sort = $request->sort ? $request->sort : 'customer';
         $order = $request->order == 'ascending' ? 'asc' : 'desc';
 
-        return MasterFareCharter::selectRaw('master_fare_charters.*, customers.name AS customer, companies.name AS company')
+        return MasterFareCharter::selectRaw('
+                master_fare_charters.*,
+                customers.name AS customer,
+                companies.name AS company,
+                vehicle_types.name AS vehicle
+            ')
             ->join('companies', 'companies.id', '=', 'master_fare_charters.company_id')
             ->join('customers', 'customers.id', '=', 'master_fare_charters.customer_id')
+            ->join('vehicle_types', 'vehicle_types.id', '=', 'master_fare_charters.vehicle_type_id')
             ->when($request->keyword, function ($q) use ($request) {
                 return $q->where('customers.name', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('master_fare_charters.destination', 'LIKE', '%' . $request->keyword . '%');
+                    ->orWhere('master_fare_charters.destination', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('vehicle_types.name', 'LIKE', '%' . $request->keyword . '%');
             })->when($request->company_id, function ($q) use ($request) {
                 return $q->whereIn('company_id', $request->company_id);
             })->when($request->customer_id, function ($q) use ($request) {

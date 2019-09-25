@@ -28,6 +28,14 @@
             </el-table-column>
 
             <el-table-column prop="destination" label="Tujuan" sortable="custom"></el-table-column>
+
+            <el-table-column
+            :filters="$store.state.vehicleTypeList.map(c => { return { value: c.id, text: c.name } })"
+            column-key="vehicle_type_id"
+            prop="vehicle"
+            label="Jenis Armada"
+            sortable="custom"></el-table-column>
+
             <el-table-column prop="fare" label="Tarif" sortable="custom" header-align="right" align="right">
                 <template slot-scope="scope">
                     Rp. {{scope.row.fare | formatNumber}}
