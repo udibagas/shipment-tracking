@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddWeightOnDomesticDeliveries extends Migration
+class AddPackingOnDeliveryItems extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddWeightOnDomesticDeliveries extends Migration
      */
     public function up()
     {
-        Schema::table('domestic_deliveries', function (Blueprint $table) {
-            $table->integer('weight')->default(0);
+        Schema::table('domestic_delivery_items', function (Blueprint $table) {
+            $table->boolean('packing')->default(0);
         });
     }
 
@@ -25,8 +25,8 @@ class AddWeightOnDomesticDeliveries extends Migration
      */
     public function down()
     {
-        Schema::table('domestic_deliveries', function (Blueprint $table) {
-            $table->dropColumn(['weight']);
+        Schema::table('domestic_delivery_items', function (Blueprint $table) {
+            $table->dropColumn('packing');
         });
     }
 }

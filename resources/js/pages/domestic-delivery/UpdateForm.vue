@@ -34,10 +34,10 @@
             </el-form-item>
 
             <!-- status = On Delivery -->
-            <el-form-item v-show="formModel.status == 1" label="Tracking Number" :class="formErrors.tracking_number ? 'is-error' : ''">
+            <!-- <el-form-item v-show="formModel.status == 1" label="Tracking Number" :class="formErrors.tracking_number ? 'is-error' : ''">
                 <el-input placeholder="Tracking Number" v-model="formModel.tracking_number"></el-input>
                 <div class="el-form-item__error" v-if="formErrors.tracking_number">{{formErrors.tracking_number[0]}}</div>
-            </el-form-item>
+            </el-form-item> -->
 
             <!-- status = On Delivery -->
             <el-form-item v-show="formModel.status == 1" label="Agent" :class="formErrors.agent_id ? 'is-error' : ''">
@@ -163,25 +163,6 @@
                 <el-input type="textarea" rows="4" placeholder="Note" v-model="formModel.note"></el-input>
                 <div class="el-form-item__error" v-if="formErrors.note">{{formErrors.note[0]}}</div>
             </el-form-item>
-
-            <!-- <el-form-item label="Packing Required" :class="formErrors.note ? 'is-error' : ''">
-                <el-checkbox v-model="formModel.packing_required">Yes</el-checkbox>
-            </el-form-item>
-
-            <el-form-item label="Volume (Kg)" :class="formErrors.volume ? 'is-error' : ''">
-                <el-input type="number" placeholder="Volume (Kg)" v-model="formModel.volume"></el-input>
-                <div class="el-form-item__error" v-if="formErrors.volume">{{formErrors.volume[0]}}</div>
-            </el-form-item>
-
-            <el-form-item label="Quantity" :class="formErrors.quantity ? 'is-error' : ''">
-                <el-input type="number" placeholder="Quantity" v-model="formModel.quantity"></el-input>
-                <div class="el-form-item__error" v-if="formErrors.quantity">{{formErrors.quantity[0]}}</div>
-            </el-form-item>
-
-            <el-form-item label="Dimension" :class="formErrors.dimension ? 'is-error' : ''">
-                <el-input placeholder="Dimension" v-model="formModel.dimension"></el-input>
-                <div class="el-form-item__error" v-if="formErrors.dimension">{{formErrors.dimension[0]}}</div>
-            </el-form-item> -->
         </el-form>
         <div slot="footer">
             <el-button type="primary" @click="submit" icon="el-icon-success">SAVE</el-button>

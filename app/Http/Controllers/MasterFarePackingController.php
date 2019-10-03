@@ -71,4 +71,22 @@ class MasterFarePackingController extends Controller
         $masterFarePacking->delete();
         return ['message' => 'Data berhasil dihapus.'];
     }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'company_id' => 'required',
+            'customer_id' => 'required',
+        ]);
+
+        $fare = MasterFarePacking::where('company_id', $request->company_id)
+            ->where('customer_id', $request->customer_id)
+            ->first();
+
+        if (!$fare) {
+            return response(['message' => 'Tidak ada tarif untuk data dimaksud'], 404);
+        }
+
+        return $fare;
+    }
 }

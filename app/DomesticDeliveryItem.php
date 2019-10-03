@@ -9,6 +9,11 @@ class DomesticDeliveryItem extends Model
     protected $fillable = [
         'domestic_delivery_id', 'description', 'weight',
         'remark', 'dimension_p', 'dimension_l', 'dimension_t',
-        'volume', 'volume_weight', 'invoice_weight'
+        'volume', 'volume_weight', 'invoice_weight', 'packing',
+        'created_at', 'updated_at'
+    ];
+
+    protected $casts = [
+        'packing' => 'boolean'
     ];
 }

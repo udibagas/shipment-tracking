@@ -13,7 +13,7 @@ class DeliveryProgressController extends Controller
         $request->validate([
             'status' => 'required|in:1,2,3,4,5,6',
             'etd' => 'required_if:status,1|date',
-            'tracking_number' => 'required_if:status,1',
+            // 'tracking_number' => 'required_if:status,1',
             'agent_id' => 'required_if:status,1|exists:agents,id',
             'delivery_date' => 'required_if:status,2|date',
             'eta' => 'required_if:status,2|date',

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddWeightOnDomesticDeliveries extends Migration
+class RenameTableDomesticDeliveryInvoiceToInvoice extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,7 @@ class AddWeightOnDomesticDeliveries extends Migration
      */
     public function up()
     {
-        Schema::table('domestic_deliveries', function (Blueprint $table) {
-            $table->integer('weight')->default(0);
-        });
+        Schema::rename('domestic_delivery_invoices', 'invoices');
     }
 
     /**
@@ -25,8 +23,6 @@ class AddWeightOnDomesticDeliveries extends Migration
      */
     public function down()
     {
-        Schema::table('domestic_deliveries', function (Blueprint $table) {
-            $table->dropColumn(['weight']);
-        });
+        Schema::rename('invoices', 'domestic_delivery_invoices');
     }
 }

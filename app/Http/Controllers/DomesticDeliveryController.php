@@ -25,12 +25,14 @@ class DomesticDeliveryController extends Controller
                 customers.name AS customer,
                 delivery_types.name AS delivery_type,
                 users.name AS user,
-                agents.name AS agent
+                agents.name AS agent,
+                vehicle_types.name AS vehicle_type
             ')
             ->join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
             ->join('delivery_types', 'delivery_types.id', '=', 'domestic_deliveries.delivery_type_id')
             ->join('users', 'users.id', '=', 'domestic_deliveries.user_id')
             ->join('agents', 'agents.id', '=', 'domestic_deliveries.agent_id', 'LEFT')
+            ->join('vehicle_types', 'vehicle_types.id', '=', 'domestic_deliveries.vehicle_type_id', 'LEFT')
             ->when($request->status, function($q) use ($request) {
                 return $q->whereIn('delivery_status_id', $request->status);
             })->when($request->customer_id, function($q) use ($request) {
@@ -59,11 +61,15 @@ class DomesticDeliveryController extends Controller
                 $input['user_id'] = $request->user()->id;
                 $input['company_id'] = $request->user()->company_id;
                 $input['delivery_status_id'] = DomesticDelivery::STATUS_REGISTERED;
+                $input['created_at'] = $input['updated_at'] = now();
 
                 $id = DB::table('domestic_deliveries')->insertGetId($input);
 
                 DB::table('domestic_delivery_items')->insert(array_map(function($item) use ($id) {
                     $item['domestic_delivery_id'] = $id;
+                    $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
+                    $item['volume_weight'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 4000;
+                    $item['invoice_weight'] = $item['weight'] > $item['volume_weight'] ? $item['weight'] : $item['volume_weight'];
                     return $item;
                 }, $request->items));
 
@@ -96,9 +102,12 @@ class DomesticDeliveryController extends Controller
     {
         try {
             DB::transaction(function () use ($request, $domesticDelivery) {
+                $input = $request->only($domesticDelivery->getFillable());
+                $input['updated_at'] = now();
+
                 DB::table('domestic_deliveries')
                     ->where('id', $domesticDelivery->id)
-                    ->update($request->only($domesticDelivery->getFillable()));
+                    ->update($input);
 
                 // delete item first
                 DB::table('domestic_delivery_items')
@@ -109,6 +118,9 @@ class DomesticDeliveryController extends Controller
                     $deliveryItem = new DomesticDeliveryItem();
                     $data = array_only($item, $deliveryItem->getFillable());
                     $data['domestic_delivery_id'] = $domesticDelivery->id;
+                    $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
+                    $item['volume_weight'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 4000;
+                    $item['invoice_weight'] = $item['weight'] > $item['volume_weight'] ? $item['weight'] : $item['volume_weight'];
                     return $data;
                 }, $request->items));
 
@@ -131,11 +143,6 @@ class DomesticDeliveryController extends Controller
         return ['message' => 'Data telah dihapus'];
     }
 
-    public function printSpb(DomesticDelivery $domesticDelivery)
-    {
-        return view('print.spb', ['data' => $domesticDelivery]);
-    }
-
     public function printResi(DomesticDelivery $domesticDelivery)
     {
         return view('print.resi', ['data' => $domesticDelivery]);
@@ -153,9 +160,9 @@ class DomesticDeliveryController extends Controller
         })->when($request->company_id, function($q) use ($request) {
             return $q->where('company_id', $request->company_id);
         })->when($request->invoice_status, function($q) use ($request) {
-            return $q->where('invoice_status', $request->invoice_status);
+            // return $q->where('invoice_status', $request->invoice_status);
         })->when($request->delivery_status_id, function($q) use ($request) {
-            return $q->where('delivery_status_id', $request->delivery_status_id);
-        });
+            // return $q->where('delivery_status_id', $request->delivery_status_id);
+        })->get();
     }
 }

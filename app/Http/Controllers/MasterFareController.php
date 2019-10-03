@@ -71,4 +71,24 @@ class MasterFareController extends Controller
         $masterFare->delete();
         return ['message' => 'Data berhasil dihapus.'];
     }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'company_id' => 'required',
+            'customer_id' => 'required',
+            'destination' => 'required',
+        ]);
+
+        $fare = MasterFare::where('company_id', $request->company_id)
+            ->where('customer_id', $request->customer_id)
+            ->where('destination', $request->destination)
+            ->first();
+
+        if (!$fare) {
+            return response(['message' => 'Tidak ada tarif untuk data dimaksud'], 404);
+        }
+
+        return $fare;
+    }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MasterFareCharterRequest;
-use App\Http\Requests\MasterFareRequest;
 use App\MasterFareCharter;
 use Illuminate\Http\Request;
 
@@ -80,5 +79,27 @@ class MasterFareCharterController extends Controller
     {
         $masterFareCharter->delete();
         return ['message' => 'Data berhasil dihapus.'];
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'company_id' => 'required',
+            'customer_id' => 'required',
+            'destination' => 'required',
+            'vehicle_type_id' => 'required'
+        ]);
+
+        $fare = MasterFareCharter::where('company_id', $request->company_id)
+            ->where('customer_id', $request->customer_id)
+            ->where('destination', $request->destination)
+            ->where('vehicle_type_id', $request->vehicle_type_id)
+            ->first();
+
+        if (!$fare) {
+            return response(['message' => 'Tidak ada tarif untuk data dimaksud'], 404);
+        }
+
+        return $fare;
     }
 }

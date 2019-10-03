@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DomesticDeliveryInvoice extends Model
+class Invoice extends Model
 {
     protected $fillable = [
         'company_id', 'customer_id', 'user_id',

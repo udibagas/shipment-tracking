@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\DomesticDeliveryInvoice;
-use App\Http\Requests\DomesticDeliveryInvoiceRequest;
+use App\Invoice;
+use App\Http\Requests\InvoiceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DomesticDeliveryInvoiceController extends Controller
+class InvoiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class DomesticDeliveryInvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        return DomesticDeliveryInvoice::paginate();
+        return Invoice::paginate();
     }
 
     /**
@@ -25,7 +25,7 @@ class DomesticDeliveryInvoiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(DomesticDeliveryInvoiceRequest $request)
+    public function store(InvoiceRequest $request)
     {
         try {
             DB::transaction(function () {
@@ -43,7 +43,7 @@ class DomesticDeliveryInvoiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(DomesticDeliveryInvoiceRequest $request, DomesticDeliveryInvoice $domesticDeliveryInvoice)
+    public function update(InvoiceRequest $request, Invoice $invoice)
     {
 
     }
@@ -54,18 +54,18 @@ class DomesticDeliveryInvoiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DomesticDeliveryInvoice $domesticDeliveryInvoice)
+    public function destroy(Invoice $invoice)
     {
-        if ($domesticDeliveryInvoice->status > 0) {
+        if ($invoice->status > 0) {
             return response(['message' => 'Data yang sudah disubmit tidak boleh dihapus'], 500);
         }
 
-        $domesticDeliveryInvoice->delete();
+        $invoice->delete();
         return ['message' => 'Data berhasil dihapus'];
     }
 
-    public function print(DomesticDeliveryInvoice $domesticDeliveryInvoice)
+    public function print(Invoice $invoice)
     {
-        return view('print.invoice', ['data' => $domesticDeliveryInvoice]);
+        return view('print.invoice', ['data' => $invoice]);
     }
 }

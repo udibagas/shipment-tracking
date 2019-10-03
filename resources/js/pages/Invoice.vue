@@ -1,10 +1,10 @@
 <template>
     <div>
-        <el-page-header @back="$emit('back')" content="SETTINGS"> </el-page-header>
+        <el-page-header @back="$emit('back')" content="INVOICE"> </el-page-header>
         <el-divider></el-divider>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
-                <el-button icon="el-icon-plus" @click="openForm({})" type="primary">INVOICE BARU</el-button>
+                <el-button icon="el-icon-plus" @click="openForm({items: []})" type="primary">INVOICE BARU</el-button>
             </el-form-item>
             <el-form-item style="margin-right:0;">
                 <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
@@ -22,6 +22,17 @@
             <el-table-column prop="date" label="Tanggal" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column prop="number" label="Nomor" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column prop="total" label="Total" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column label="Status" prop="status" sortable="custom" align="center" header-align="center">
+                <template slot-scope="scope">
+                    {{scope.row.status}}
+                </template>
+            </el-table-column>
+            <el-table-column label="Update Terakhir" prop="updated_at" sortable="custom" align="center" header-align="center">
+                <template slot-scope="scope">
+                    {{scope.row.updated_at | readableDateTime}}
+                </template>
+            </el-table-column>
+            <el-table-column label="User" prop="user" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column width="40px">
                 <template slot-scope="scope">
                     <el-dropdown>
@@ -48,7 +59,7 @@
         :total="tableData.total">
         </el-pagination>
 
-        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT INVOICE' : 'INVOICE BARU'" width="500px" v-loading="loading" :close-on-click-modal="false">
+        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT INVOICE' : 'INVOICE BARU'" fullscreen v-loading="loading" :close-on-click-modal="false">
             <el-alert type="error" title="ERROR"
                 :description="error.message + '\n' + error.file + ':' + error.line"
                 v-show="error.message"
@@ -63,11 +74,11 @@
                                 <el-option v-for="c in $store.state.customerList" :key="c.id" :value="c.id" :label="c.name"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="Date">
-                            <el-date-picker v-model="formModel.date" placeholder="Date" style="width:100%"></el-date-picker>
+                        <el-form-item label="Tanggal">
+                            <el-date-picker format="dd-MMM-yyyy" value-format="yyyy-MM-dd" v-model="formModel.date" placeholder="Tanggal" style="width:100%"></el-date-picker>
                         </el-form-item>
-                        <el-form-item label="Number">
-                            <el-input placeholder="Number" v-model="formModel.number"></el-input>
+                        <el-form-item label="Nomor">
+                            <el-input placeholder="Nomor" v-model="formModel.number"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -86,42 +97,42 @@
 
             <el-table :data="formModel.items">
                 <el-table-column label="No" type="index" width="55px"></el-table-column>
-                <el-table-column label="Tgl Kirim">
+                <el-table-column label="Tgl Kirim" min-width="120">
                     <template slot-scope="scope">
                         {{scope.row.delivery_date | formattedDate}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Tgl Terima">
+                <el-table-column label="Tgl Terima" min-width="120">
                     <template slot-scope="scope">
                         {{scope.row.delivered_date | formattedDate}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Surat Pengantar" prop="spb_number"></el-table-column>
-                <el-table-column label="Asal" prop="origin"></el-table-column>
-                <el-table-column label="Tujuan" prop="destination"></el-table-column>
-                <el-table-column label="Layanan" prop="service_type"></el-table-column>
-                <el-table-column label="Quantity" prop="quantity">
+                <el-table-column label="Surat Pengantar" prop="spb_number" min-width="150"></el-table-column>
+                <el-table-column label="Asal" prop="origin" show-overflow-tooltip min-width="150"></el-table-column>
+                <el-table-column label="Tujuan" prop="destination" show-overflow-tooltip min-width="150"></el-table-column>
+                <el-table-column label="Layanan" prop="service_type" min-width="120"></el-table-column>
+                <el-table-column label="Quantity" prop="quantity" min-width="80">
                     <template slot-scope="scope">
                         {{scope.row.quantity | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Unit" prop="unit" header-align="center" align="center"></el-table-column>
-                <el-table-column label="Tarif" prop="fare" align="right" header-align="right">
+                <el-table-column label="Unit" prop="unit" header-align="center" align="center" min-width="80"></el-table-column>
+                <el-table-column label="Tarif" prop="fare" align="right" header-align="right" min-width="120">
                     <template slot-scope="scope">
                         Rp. {{scope.row.fare | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Harga" prop="price" align="right" header-align="right">
+                <el-table-column label="Harga" prop="price" align="right" header-align="right" min-width="120">
                     <template slot-scope="scope">
                         Rp. {{scope.row.price | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="PPN" prop="tax" align="right" header-align="right">
+                <el-table-column label="PPN" prop="tax" align="right" header-align="right" min-width="120">
                     <template slot-scope="scope">
                         Rp. {{scope.row.tax | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Total" prop="total" align="right" header-align="right">
+                <el-table-column label="Total" prop="total" align="right" header-align="right" min-width="120">
                     <template slot-scope="scope">
                         Rp. {{scope.row.total | formatNumber}}
                     </template>
@@ -154,7 +165,7 @@ export default {
             showForm: false,
             formErrors: {},
             error: {},
-            formModel: {},
+            formModel: { items: []},
             keyword: '',
             page: 1,
             pageSize: 10,
@@ -275,7 +286,13 @@ export default {
             }
 
             axios.get('/domesticDelivery/search', { params: params }).then(r => {
-                this.formModel.items = r.data
+                this.formModel.items = r.data.map(d => {
+                    d.unit = ' KG'
+                    d.price = d.quantity * d.fare
+                    d.tax = d.ppn
+                    d.total = d.tax + d.tax
+                    return d
+                })
             }).catch(e => {
                 this.$message({
                     message: e.response.data.message,
@@ -287,6 +304,7 @@ export default {
     },
     mounted() {
         this.requestData();
+        this.$store.commit('getCustomerList')
     }
 }
 </script>

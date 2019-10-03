@@ -10,6 +10,7 @@ import Report from './pages/Report'
 import User from './pages/User'
 import Company from './pages/Company'
 import MasterFare from './pages/MasterFare'
+import Invoice from './pages/Invoice'
 
 Vue.use(VueRouter)
 
@@ -49,6 +50,11 @@ const router = new VueRouter({
             path: '/report',
             component: Report,
             name: 'report'
+        },
+        {
+            path: '/invoice',
+            component: Invoice,
+            name: 'invoice'
         },
         {
             path: '/setting',

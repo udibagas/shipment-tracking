@@ -60,15 +60,21 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         Route::post('deliveryProgress', 'DeliveryProgressController@store');
         Route::delete('domesticDeliveryItem/{domesticDeliveryItem}', 'DomesticDeliveryItemController@destroy');
         Route::get('domesticDelivery/search', 'DomesticDeliveryController@search');
-        Route::get('domesticDelivery/printSpb/{domesticDelivery}', 'DomesticDeliveryController@printSpb');
         Route::get('domesticDelivery/printResi/{domesticDelivery}', 'DomesticDeliveryController@printResi');
         Route::get('domesticDelivery/printAwb/{domesticDelivery}', 'DomesticDeliveryController@printAwb');
         Route::resource('domesticDelivery', 'DomesticDeliveryController')->except(['create', 'edit']);
-        Route::get('domesticDeliveryInvoice/print/{domesticDeliveryInvoice}', 'DomesticDeliveryInvoiceController@print');
-        Route::resource('domesticDeliveryInvoice', 'DomesticDeliveryContInvoiceroller')->except(['create', 'edit']);
+        Route::get('invoice/print/{invoice}', 'InvoiceController@print');
+        Route::resource('invoice', 'InvoiceController')->except(['create', 'edit']);
+
+        Route::get('masterFare/search', 'MasterFareController@search');
         Route::resource('masterFare', 'MasterFareController')->except(['create', 'edit']);
+
+        Route::get('masterFareCharter/search', 'MasterFareCharterController@search');
         Route::resource('masterFareCharter', 'MasterFareCharterController')->except(['create', 'edit']);
+
+        Route::get('masterFarePacking/search', 'MasterFarePackingController@search');
         Route::resource('masterFarePacking', 'MasterFarePackingController')->except(['create', 'edit']);
+
         Route::resource('vehicleType', 'VehicleTypeController')->except(['create', 'edit', 'show']);
     });
 
