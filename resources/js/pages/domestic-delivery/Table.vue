@@ -1,8 +1,8 @@
 <template>
     <div>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
-            <el-form-item>
-                <el-button icon="el-icon-plus" @click="openForm({ items: [] })" type="primary">PENGIRIMAN DOMESTIC BARU</el-button>
+            <el-form-item v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
+                <el-button icon="el-icon-plus" @click="openForm({ items: [] })" type="primary">PENGIRIMAN DOMESTIK BARU</el-button>
             </el-form-item>
             <el-form-item>
                 <el-date-picker
@@ -306,7 +306,7 @@
                 </el-table-column>
             </el-table>
 
-            <table style="width:100%;margin-top:20px" class="table">
+            <table style="width:100%;margin-top:20px" class="table" v-if="!!delivery_rate.id">
                 <thead>
                     <tr>
                         <th>Jenis Biaya</th>
@@ -326,7 +326,7 @@
                         <td class="td-value text-right">Rp. {{delivery_cost_ppn | formatNumber}}</td>
                         <td class="td-value text-right">Rp. {{delivery_cost + delivery_cost_ppn | formatNumber}}</td>
                     </tr>
-                    <tr>
+                    <tr v-if="!!totalVolumePacking">
                         <td class="td-label">PACKING PETI</td>
                         <td class="td-value text-right">{{totalVolumePacking | formatNumber}} M<sup>3</sup></td>
                         <td class="td-value text-right">Rp {{packing_rate.fare | formatNumber}}</td>
@@ -386,8 +386,12 @@ export default {
                 return curr.weight > invoiceWeight ? prev + Number(curr.weight) : prev + Number(invoiceWeight)
             }, 0);
 
-            // TODO: ganti ini dengan minimum weight tarif
-            return total >= 100 ? total : 100;
+            // kalau dia reguler
+            if (!!this.delivery_rate.minimum) {
+                return total >= this.delivery_rate.minimum ? total : this.delivery_rate.minimum;
+            }
+
+            return total
         },
         totalQuantity() {
             return this.formModel.items.length
@@ -444,6 +448,10 @@ export default {
                 return
             }
 
+            if (this.formModel.service_type == 'CHARTER' && !this.formModel.vehicle_type_id) {
+                return
+            }
+
             let url = this.formModel.service_type == 'REGULER' ? '/masterFare/search' : '/masterFareCharter/search'
 
             let params = {
@@ -456,6 +464,7 @@ export default {
             axios.get(url, { params: params }).then(r => {
                 this.delivery_rate = r.data
             }).catch(e => {
+                this.delivery_rate = {}
                 this.$message({
                     message: e.response.data.message,
                     type: 'error',
@@ -476,6 +485,7 @@ export default {
             axios.get('/masterFarePacking/search', { params: params }).then(r => {
                 this.packing_rate = r.data
             }).catch(e => {
+                this.packing_rate = {}
                 this.$message({
                     message: e.response.data.message,
                     type: 'error',
@@ -604,6 +614,40 @@ export default {
             this.formModel.delivery_rate = this.delivery_rate.fare
             this.formModel.packing_rate = this.packing_rate.fare
             this.formModel.packing = this.totalVolumePacking > 0 ? 1 : 0
+
+            // cari data item yg ga lengkap
+            let invalidItems = this.formModel.items.filter(i => {
+                return !i.description || !i.dimension_p || !i.dimension_l || !i.dimension_t || !i.weight
+            });
+
+            if (this.formModel.items.length == 0 || invalidItems.length > 0) {
+                this.$message({
+                    message: 'Mohon lengkapi data item.',
+                    type: 'error',
+                    showClose: true
+                });
+                return
+            }
+
+            // kalau tarifnya ga ada
+            if (!this.delivery_rate.id) {
+                this.$message({
+                    message: 'Tarif untuk data terkait tidak ada. Silakan lengkapi data master tarif terlebih dahulu.',
+                    type: 'error',
+                    showClose: true
+                });
+                return
+            }
+
+            // kalau volume packing ada tapi tafir packing ga ada
+            if (this.totalVolumePacking > 0 && !this.packing_rate.id) {
+                this.$message({
+                    message: 'Tarif packing peti untuk data terkait tidak ada. Silakan lengkapi data master tarif terlebih dahulu.',
+                    type: 'error',
+                    showClose: true
+                });
+                return
+            }
 
             if (!!this.formModel.id) {
                 this.update()

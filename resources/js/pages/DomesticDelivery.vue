@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-page-header @back="$emit('back')" content="DOMESTIC DELIVERIES"> </el-page-header>
+        <el-page-header @back="$emit('back')" content="PENGIRIMAN DOMESTIK"> </el-page-header>
         <el-divider></el-divider>
 
         <Table />
