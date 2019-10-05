@@ -64,10 +64,10 @@
                 <th>Jumlah</th>
                 <th>Satuan</th>
                 @endif
-                <th>Tarif</th>
-                <th>Biaya</th>
-                <th>PPN</th>
-                <th>Sub Total</th>
+                <th style="width:100px">Tarif</th>
+                <th style="width:100px">Biaya</th>
+                <th style="width:100px">PPN</th>
+                <th style="width:100px">Sub Total</th>
             </tr>
         </thead>
         <tbody>
