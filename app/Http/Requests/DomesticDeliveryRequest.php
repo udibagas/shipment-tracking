@@ -36,7 +36,6 @@ class DomesticDeliveryRequest extends FormRequest
             'weight' => 'numeric',
             'quantity' => 'numeric',
             'delivery_type_id' => 'required|exists:delivery_types,id',
-            'charge_to' => 'required',
             'delivery_address' => 'required',
             'packing' => 'boolean'
         ];
@@ -60,7 +59,6 @@ class DomesticDeliveryRequest extends FormRequest
             'delivery_type_id' => 'Delivery Type',
             'etd' => 'ETD',
             'eta' => 'ETA',
-            'charge_to' => 'Charge To',
             'delivery_address' => 'Delive Address',
             'packing' => 'Packing Peti'
         ];
