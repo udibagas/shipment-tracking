@@ -161,6 +161,8 @@ class DomesticDeliveryController extends Controller
             return $q->where('company_id', $request->company_id);
         })->when($request->delivery_status_id, function($q) use ($request) {
             return $q->where('delivery_status_id', $request->delivery_status_id);
+        })->when($request->service_type, function($q) use ($request) {
+            return $q->where('service_type', $request->service_type);
         })->where('invoice_status', $request->invoice_status)->get();
     }
 }

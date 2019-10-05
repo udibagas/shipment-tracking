@@ -59,7 +59,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native.prevent="() => { showDetail = true; selectedData = scope.row; }"><i class="el-icon-zoom-in"></i> Lihat Detail</el-dropdown-item>
-                            <el-dropdown-item @click.native.prevent="print(scope.row.id)"><i class="el-icon-printer"></i> Print Invoice</el-dropdown-item>
+                            <el-dropdown-item v-if="!!scope.row.status" @click.native.prevent="print(scope.row.id)"><i class="el-icon-printer"></i> Print Invoice</el-dropdown-item>
                             <el-dropdown-item v-if="!scope.row.status" divided @click.native.prevent="openForm(scope.row)"><i class="el-icon-edit-outline"></i> Edit</el-dropdown-item>
                             <el-dropdown-item v-if="!scope.row.status" @click.native.prevent="deleteData(scope.row.id)"><i class="el-icon-delete"></i> Hapus</el-dropdown-item>
                         </el-dropdown-menu>
@@ -106,7 +106,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="Layanan Pengiriman" :class="formErrors.service_type ? 'is-error' : ''">
-                            <el-select v-model="formModel.service_type" placeholder="Layanan Pengiriman" style="width:100%">
+                            <el-select @change="getItems" v-model="formModel.service_type" placeholder="Layanan Pengiriman" style="width:100%">
                                 <el-option v-for="(l, i) in ['REGULER', 'CHARTER']" :value="l" :label="l" :key="i">
                                 </el-option>
                             </el-select>
@@ -379,11 +379,16 @@ export default {
             })
         },
         getItems() {
+            if (!this.formModel.customer_id || !this.formModel.service_type) {
+                return
+            }
+
             let params = {
                 delivery_status_id: 3, // received
                 invoice_status: 0,
                 customer_id: this.formModel.customer_id,
-                company_id: this.$store.state.user.company_id
+                company_id: this.$store.state.user.company_id,
+                service_type: this.formModel.service_type
             }
 
             axios.get('/domesticDelivery/search', { params: params }).then(r => {
