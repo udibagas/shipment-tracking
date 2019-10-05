@@ -95,7 +95,7 @@
         </tbody>
         <tfoot style="background-color:#eee;">
             <tr>
-                <th colspan="8" class="text-right">TOTAL</th>
+                <th colspan="{{ $data->service_type == 'REGULER' ? '8' : '6' }}" class="text-right">TOTAL</th>
                 <th class="text-right">Rp. {{ number_format(array_reduce($data->items->toArray(), function($prev, $curr) { return $prev + $curr['price']; }, 0), 0, ',', '.') }}</th>
                 <th class="text-right">Rp. {{ number_format(array_reduce($data->items->toArray(), function($prev, $curr) { return $prev + $curr['tax']; }, 0), 0, ',', '.') }}</th>
                 <th class="text-right">Rp. {{number_format($data->total, 0, ',', '.')}}</th>
