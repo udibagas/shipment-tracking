@@ -2,14 +2,14 @@
     <div>
         <el-row :gutter="15">
             <el-col :span="8">
-                <table style="width:100%">
+                <table class="table table-sm table-bordered">
                     <tbody>
                         <tr><td class="td-label">Customer</td><td class="td-value">{{data.customer}}</td></tr>
                         <tr><td class="td-label">Charge To</td><td class="td-value">{{data.charge_to}}</td></tr>
                         <tr><td class="td-label">Asal</td><td class="td-value">{{data.origin}}</td></tr>
                         <tr><td class="td-label">Tujuan</td><td class="td-value">{{data.destination}}</td></tr>
                         <tr><td class="td-label">Alamat Pengiriman</td><td class="td-value">{{data.delivery_address}}</td></tr>
-                        <tr><td class="td-label">Tanggal Pick Up</td><td class="td-value">{{data.pick_up_date}}</td></tr>
+                        <tr><td class="td-label">Tanggal Pick Up</td><td class="td-value">{{data.pick_up_date | readableDate}}</td></tr>
                         <tr><td class="td-label">Nomor Resi</td><td class="td-value">{{data.resi_number}}</td></tr>
                         <tr><td class="td-label">Nomor SPB</td><td class="td-value">{{data.spb_number}}</td></tr>
                         <!-- <tr><td class="td-label">Tracking Number</td><td class="td-value">{{data.tracking_number}}</td></tr> -->
@@ -17,13 +17,13 @@
                 </table>
             </el-col>
             <el-col :span="8">
-                <table style="width:100%">
+                <table class="table table-sm table-bordered">
                     <tbody>
                         <tr><td class="td-label">Jenis Pengiriman</td><td class="td-value">{{data.delivery_type}}</td></tr>
                         <tr><td class="td-label">Layanan Pengiriman</td><td class="td-value">{{data.service_type}}</td></tr>
                         <tr><td class="td-label">Jenis Armada</td><td class="td-value">{{data.vehicle_type}}</td></tr>
                         <tr><td class="td-label">Agent</td><td class="td-value">{{data.agent}}</td></tr>
-                        <tr><td class="td-label">Nama Kapan</td><td class="td-value">{{data.ship_name}}</td></tr>
+                        <tr><td class="td-label">Nama Kapal</td><td class="td-value">{{data.ship_name}}</td></tr>
                         <tr><td class="td-label">Plat Nomor Armada</td><td class="td-value">{{data.vehicle_number}}</td></tr>
                         <tr><td class="td-label">Nama Driver</td><td class="td-value">{{data.driver_name}}</td></tr>
                         <tr><td class="td-label">No. HP Driver</td><td class="td-value">{{data.driver_phone}}</td></tr>
@@ -31,13 +31,13 @@
                 </table>
             </el-col>
             <el-col :span="8">
-                <table style="width:100%">
+                <table class="table table-sm table-bordered">
                     <tbody>
-                        <tr><td class="td-label">ETD</td><td class="td-value">{{data.etd}}</td></tr>
-                        <tr><td class="td-label">Delivery Date</td><td class="td-value">{{data.delivery_date}}</td></tr>
-                        <tr><td class="td-label">ETA</td><td class="td-value">{{data.eta}}</td></tr>
-                        <tr><td class="td-label">Arrival Date</td><td class="td-value">{{data.delivered_date}}</td></tr>
-                        <tr><td class="td-label">Received Date</td><td class="td-value">{{data.received_date}}</td></tr>
+                        <tr><td class="td-label">ETD</td><td class="td-value">{{data.etd | readableDate}}</td></tr>
+                        <tr><td class="td-label">Tanggal Kirim</td><td class="td-value">{{data.delivery_date | readableDate}}</td></tr>
+                        <tr><td class="td-label">ETA</td><td class="td-value">{{data.eta | readableDate}}</td></tr>
+                        <tr><td class="td-label">Tanggal Terima</td><td class="td-value">{{data.delivered_date | readableDate}}</td></tr>
+                        <!-- <tr><td class="td-label">Received Date</td><td class="td-value">{{data.received_date}}</td></tr> -->
                         <!-- <tr><td class="td-label">Invoice Date</td><td class="td-value">{{data.invoice_date}}</td></tr> -->
                         <!-- <tr><td class="td-label">Payment Date</td><td class="td-value">{{data.payment_date}}</td></tr> -->
                         <tr><td class="td-label">Status</td><td class="td-value">{{data.statusName}}</td></tr>
@@ -94,7 +94,9 @@
             <el-table-column label="Keterangan" prop="remark" show-overflow-tooltip> </el-table-column>
         </el-table>
 
-        <table style="width:100%;margin-top:20px" class="table">
+        <br>
+
+        <table class="table table-sm table-bordered">
             <thead>
                 <tr>
                     <th>Jenis Biaya</th>
@@ -107,7 +109,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="td-label"> {{data.service_type}} - {{data.destination}} </td>
+                    <td class="td-value"> {{data.service_type}} </td>
                     <td class="td-value text-right">{{data.invoice_weight | formatNumber}} KG</td>
                     <td class="td-value text-right">Rp {{data.delivery_rate | formatNumber}}</td>
                     <td class="td-value text-right">Rp. {{data.delivery_cost | formatNumber}}</td>
@@ -115,7 +117,7 @@
                     <td class="td-value text-right">Rp. {{data.delivery_cost + data.delivery_cost_ppn | formatNumber}}</td>
                 </tr>
                 <tr>
-                    <td class="td-label">PACKING PETI</td>
+                    <td class="td-value">PACKING PETI</td>
                     <td class="td-value text-right">{{data.packing_volume | formatNumber}} M<sup>3</sup></td>
                     <td class="td-value text-right">Rp {{data.packing_rate | formatNumber}}</td>
                     <td class="td-value text-right">Rp. {{data.packing_cost | formatNumber}}</td>
@@ -123,7 +125,7 @@
                     <td class="td-value text-right">Rp. {{data.packing_cost + data.packing_cost_ppn | formatNumber}}</td>
                 </tr>
                 <tr>
-                    <td class="td-label">TOTAL</td>
+                    <td class="td-value">TOTAL</td>
                     <td class="td-value text-right big" colspan="5">Rp. {{data.total_cost | formatNumber}}</td>
                 </tr>
             </tbody>

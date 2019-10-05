@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         requestData() {
-            axios('/report/summary').then(r => {
+            axios('/report/summary', { params: { dateRange: this.dateRange } }).then(r => {
                 this.summary = r.data
             }).catch(e => console.log(e))
         },

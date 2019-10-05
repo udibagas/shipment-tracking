@@ -44,10 +44,15 @@ class ReportController extends Controller
             FROM domestic_deliveries
             JOIN customers ON customers.id = domestic_deliveries.customer_id
             WHERE company_id = :company_id
+                AND pick_up_date BETWEEN :start AND :end
             GROUP BY customers.name
         ";
 
-        return DB::select($sql, [':company_id' => $request->user()->company_id]);
+        return DB::select($sql, [
+            ':company_id' => $request->user()->company_id,
+            ':start' => $request->dateRange ? $request->dateRange[0] : '1970-01-01',
+            ':end' => $request->dateRange ? $request->dateRange[1] : date('Y-m-d'),
+        ]);
     }
 
     public function getFilterYear()

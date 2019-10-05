@@ -6,10 +6,12 @@
             </el-form-item>
             <el-form-item>
                 <el-date-picker
+                @change="requestData"
                 type="daterange"
                 format="dd-MMM-yyyy"
                 value-format="yyyy-MM-dd"
-                placeholder="Tanggal"
+                start-placeholder="Dari"
+                end-placeholder="Sampai"
                 v-model="dateRange"></el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -18,11 +20,18 @@
                 </el-input>
             </el-form-item>
             <el-form-item>
-                <el-button icon="el-icon-download" @click="exportToExcel" type="primary">EXPORT</el-button>
+                <el-dropdown split-button type="primary" icon="el-icon-setting">
+                    AKSI
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item icon="el-icon-download">EXPORT KE EXCEL</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-message">KIRIM REPORT</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <!-- <el-button icon="el-icon-download" @click="exportToExcel" type="primary">EXPORT</el-button> -->
             </el-form-item>
-            <el-form-item>
+            <!-- <el-form-item>
                 <el-button icon="el-icon-document-copy" @click="sendReport" type="primary">REPORT</el-button>
-            </el-form-item>
+            </el-form-item> -->
         </el-form>
 
         <el-table :data="tableData.data" stripe
@@ -101,12 +110,12 @@
                             <i class="el-icon-more"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native.prevent="() => { selectedData = scope.row; showDetailDialog = true; }"><i class="el-icon-zoom-in"></i> Lihat Detail</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-zoom-in" @click.native.prevent="() => { selectedData = scope.row; showDetailDialog = true; }">Lihat Detail</el-dropdown-item>
                             <!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printResi(scope.row)"><i class="el-icon-printer"></i> Print Receipt</el-dropdown-item> -->
                             <!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printAwb(scope.row)"><i class="el-icon-printer"></i> Print Airway Bill</el-dropdown-item> -->
-                            <el-dropdown-item v-if="scope.row.delivery_status_id < 6" @click.native.prevent="openStatusForm(scope.row)"><i class="el-icon-warning-outline"></i> Update Status</el-dropdown-item>
-                            <el-dropdown-item divided v-if="scope.row.delivery_status_id == 0" @click.native.prevent="openForm(scope.row)"><i class="el-icon-edit-outline"></i> Edit</el-dropdown-item>
-                            <el-dropdown-item v-if="scope.row.delivery_status_id == 0" @click.native.prevent="deleteData(scope.row.id)"><i class="el-icon-delete"></i> Hapus</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-warning-outline" v-if="scope.row.delivery_status_id < 6" @click.native.prevent="openStatusForm(scope.row)">Update Status</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-edit-outline" divided v-if="scope.row.delivery_status_id == 0" @click.native.prevent="openForm(scope.row)">Edit</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-delete" v-if="scope.row.delivery_status_id == 0" @click.native.prevent="deleteData(scope.row.id)">Hapus</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -238,7 +247,7 @@
                         </el-form-item>
 
                         <el-form-item label="Jenis Armada" :class="formErrors.vehicle_type_id ? 'is-error' : ''">
-                            <el-select @change="getFare" :disabled="formModel.service_type != 'CHARTER'" v-model="formModel.vehicle_type_id" placeholder="Jenis Armada" style="width:100%">
+                            <el-select @change="getFare" v-model="formModel.vehicle_type_id" placeholder="Jenis Armada" style="width:100%">
                                 <el-option v-for="v in $store.state.vehicleTypeList" :key="v.id" :label="v.name" :value="v.id"></el-option>
                             </el-select>
                             <div class="el-form-item__error" v-if="formErrors.vehicle_type_id">{{formErrors.vehicle_type_id[0]}}</div>
@@ -279,7 +288,7 @@
                         {{(scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 1000000).toFixed(3)}} M<sup>3</sup>
                     </template>
                 </el-table-column>
-                <el-table-column label="Berat Volume" width="110" header-align="right" align="right">
+                <el-table-column label="Berat Volume" width="120" header-align="right" align="right">
                     <template slot-scope="scope">
                         {{(scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 4000).toFixed(0)}} KG
                     </template>
@@ -351,6 +360,22 @@
         </el-dialog>
 
         <UpdateForm @submitted="requestData" @close="showStatusForm = false" :data="selectedData" :visible.sync="showStatusForm" />
+
+        <el-dialog :visible="false" title="KIRIM REPORT">
+            <el-form>
+                <el-form-item>
+                    <el-input placeholder="Subyek Pesan"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input type="textarea" rows="10" placeholder="Isi Pesan"></el-input>
+                </el-form-item>
+            </el-form>
+
+            <span slot="footer">
+                <el-button type="primary" @click="save" icon="el-icon-success">KIRIM</el-button>
+                <el-button type="info" @click="showForm = false" icon="el-icon-error">BATAL</el-button>
+            </span>
+        </el-dialog>
 
     </div>
 </template>
@@ -440,18 +465,17 @@ export default {
             selectedData: {},
             showDetailDialog: false,
             filters: {},
-            dateRange: [moment().format('YYYY-MM-01'), moment().format('YYYY-MM-DD')],
+            dateRange: '',
             delivery_rate: {},
             packing_rate: {}
         }
     },
     methods: {
         getFare() {
-            if (!this.formModel.customer_id || !this.formModel.destination || !this.formModel.service_type) {
-                return
-            }
-
-            if (this.formModel.service_type == 'CHARTER' && !this.formModel.vehicle_type_id) {
+            if (!this.formModel.customer_id
+                || !this.formModel.destination
+                || !this.formModel.vehicle_type_id
+                || !this.formModel.service_type) {
                 return
             }
 
@@ -524,6 +548,7 @@ export default {
                 pageSize: this.pageSize,
                 sort: this.sort,
                 order: this.order,
+                dateRange: this.dateRange
             }
 
             this.loading = true;

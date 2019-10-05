@@ -9,7 +9,7 @@
                 </td>
                 <td>
                     <h2 style="margin:0">{{$data->company->name}}</h2>
-                    {{$data->company->address}} <br>
+                    {!! nl2br($data->company->address) !!} <br>
                     Telp. : {{$data->company->phone}} <br>
                     Email : {{$data->company->email}} <br>
                     Website : {{$data->company->website}} <br>
@@ -34,7 +34,7 @@
                 <td width="50%"  style="border-top:1px solid #ddd">
                     Kepada:
                     <h3 style="margin:0;">{{$data->customer->name}}</h3>
-                    {{$data->customer->address}}
+                    {!! nl2br($data->customer->address) !!}
                 </td>
                 <td width="50%" style="border-top:1px solid #ddd">
                     Pembayaran ditransfer ke:  <br>

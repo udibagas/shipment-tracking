@@ -37,19 +37,19 @@
         table.bordered > thead > tr > th,
         table.bordered > tfoot > tr > th,
         table.bordered > tbody > tr > td {
-            border-bottom: 1px solid #ddd !important;
-            border-left: 1px solid #ddd !important;
+            border-bottom: 1px solid #ccc !important;
+            border-left: 1px solid #ccc !important;
             padding: 5px;
         }
 
         table.bordered > thead > tr > th {
-            border-top: 1px solid #ddd !important;
+            border-top: 1px solid #ccc !important;
         }
 
         table.bordered > thead > tr > th:last-of-type,
         table.bordered > tbody > tr > td:last-of-type,
         table.bordered > tfoot > tr > th:last-of-type {
-            border-right: 1px solid #ddd !important;
+            border-right: 1px solid #ccc !important;
         }
 
         .text-right {

@@ -27,6 +27,7 @@ class DomesticDeliveryRequest extends FormRequest
             'company_id' => 'exists:companies,id',
             'customer_id' => 'required|exists:customers,id',
             'service_type' => 'required',
+            'vehicle_type_id' => 'required|exists:vehicle_types,id',
             'origin' => 'required|exists:cities,name',
             'destination' => 'required|exists:cities,name',
             'pick_up_date' => 'required|date',
@@ -36,8 +37,7 @@ class DomesticDeliveryRequest extends FormRequest
             'weight' => 'numeric',
             'quantity' => 'numeric',
             'delivery_type_id' => 'required|exists:delivery_types,id',
-            'delivery_address' => 'required',
-            'packing' => 'boolean'
+            'delivery_address' => 'required'
         ];
     }
 
@@ -48,6 +48,7 @@ class DomesticDeliveryRequest extends FormRequest
             'customer_id' => 'Customer',
             'agent_id' => 'Agent',
             'service_type_id' => 'Service Type',
+            'vehicle_type_id' => 'Jenis Armada',
             'origin' => 'Origin',
             'destination' => 'Destination',
             'pick_up_date' => 'Pic Up Date',
@@ -60,7 +61,6 @@ class DomesticDeliveryRequest extends FormRequest
             'etd' => 'ETD',
             'eta' => 'ETA',
             'delivery_address' => 'Delive Address',
-            'packing' => 'Packing Peti'
         ];
     }
 }

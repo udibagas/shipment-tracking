@@ -29,6 +29,7 @@ class MasterFareRequest extends FormRequest
             'fare' => 'required|numeric',
             'lead_time' => 'required',
             'minimum' => 'required|numeric',
+            'vehicle_type_id' => 'required'
         ];
     }
 
@@ -39,7 +40,8 @@ class MasterFareRequest extends FormRequest
             'destination' => 'Tujuan',
             'fare' => 'Tarif',
             'lead_time' => 'Lead Time',
-            'minimum' => 'Min',
+            'minimum' => 'Min. Charge',
+            'vehicle_type_id' => 'Jenis Armada'
         ];
     }
 }

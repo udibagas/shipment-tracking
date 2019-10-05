@@ -26,7 +26,14 @@ class CustomerRequest extends FormRequest
         return [
             'code' => 'required',
             'name' => 'required',
-            'email' => 'email'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'code' => 'Kode',
+            'name' => 'Nama'
         ];
     }
 }

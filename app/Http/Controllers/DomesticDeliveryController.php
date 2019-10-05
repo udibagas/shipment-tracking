@@ -42,6 +42,8 @@ class DomesticDeliveryController extends Controller
             })->when($request->keyword, function ($q) use ($request) {
                 return $q->where('spb_number', 'LIKE', '%' . $request->keyword . '%')
                     ->orWhere('resi_number', 'LIKE', '%' . $request->keyword . '%');
+            })->when($request->dateRange, function($q) use ($request) {
+                return $q->whereBetween('pick_up_date', $request->dateRange);
             })->orderBy($sort, $order)->paginate($request->pageSize);
     }
 

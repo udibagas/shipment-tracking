@@ -29,6 +29,14 @@
             </el-table-column>
 
             <el-table-column prop="destination" label="Tujuan" sortable="custom" show-overflow-tooltip></el-table-column>
+
+            <el-table-column
+            :filters="$store.state.vehicleTypeList.map(c => { return { value: c.id, text: c.name } })"
+            column-key="vehicle_type_id"
+            prop="vehicle"
+            label="Jenis Armada"
+            sortable="custom"></el-table-column>
+
             <el-table-column prop="fare" label="Tarif" sortable="custom" header-align="right" align="right">
                 <template slot-scope="scope">
                     Rp. {{scope.row.fare | formatNumber}}
@@ -105,6 +113,17 @@
                         </el-option>
                     </el-select>
                     <div class="el-form-item__error" v-if="formErrors.destination">{{formErrors.destination[0]}}</div>
+                </el-form-item>
+
+                <el-form-item label="Jenis Armada" :class="formErrors.vehicle_type_id ? 'is-error' : ''">
+                    <el-select v-model="formModel.vehicle_type_id" placeholder="Jenis Armada" filterable default-first-option style="width:100%">
+                        <el-option v-for="(t, i) in $store.state.vehicleTypeList"
+                        :value="t.id"
+                        :label="t.name"
+                        :key="i">
+                        </el-option>
+                    </el-select>
+                    <div class="el-form-item__error" v-if="formErrors.vehicle_type_id">{{formErrors.vehicle_type_id[0]}}</div>
                 </el-form-item>
 
                 <el-form-item label="Tarif (Rp)" :class="formErrors.fare ? 'is-error' : ''">

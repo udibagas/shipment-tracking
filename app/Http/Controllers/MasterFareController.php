@@ -18,16 +18,25 @@ class MasterFareController extends Controller
         $sort = $request->sort ? $request->sort : 'customer';
         $order = $request->order == 'ascending' ? 'asc' : 'desc';
 
-        return MasterFare::selectRaw('master_fares.*, customers.name AS customer, companies.name AS company')
+        return MasterFare::selectRaw('
+                master_fares.*,
+                customers.name AS customer,
+                companies.name AS company,
+                vehicle_types.name AS vehicle
+            ')
             ->join('companies', 'companies.id', '=', 'master_fares.company_id')
             ->join('customers', 'customers.id', '=', 'master_fares.customer_id')
+            ->join('vehicle_types', 'vehicle_types.id', '=', 'master_fares.vehicle_type_id', 'LEFT')
             ->when($request->keyword, function ($q) use ($request) {
                 return $q->where('customers.name', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('master_fares.destination', 'LIKE', '%' . $request->keyword . '%');
+                    ->orWhere('master_fares.destination', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('vehicle_types.name', 'LIKE', '%' . $request->keyword . '%');
             })->when($request->company_id, function ($q) use ($request) {
                 return $q->whereIn('company_id', $request->company_id);
             })->when($request->customer_id, function ($q) use ($request) {
                 return $q->whereIn('customer_id', $request->customer_id);
+            })->when($request->vehicle_type_id, function ($q) use ($request) {
+                return $q->whereIn('vehicle_type_id', $request->vehicle_type_id);
             })->orderBy($sort, $order)->paginate($request->pageSize);
     }
 

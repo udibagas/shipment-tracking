@@ -9,7 +9,7 @@
     :destroy-on-close="true"
     :close-on-click-modal="false"
     :close-on-press-escape="false">
-        <el-form label-width="120px" label-position="left">
+        <el-form label-width="150px" label-position="left">
             <el-form-item label="Status" :class="formErrors.status ? 'is-error' : ''">
                 <el-select v-model="formModel.status" placeholder="Status" filterable default-first-option style="width:100%">
                     <el-option
@@ -52,13 +52,13 @@
             </el-form-item>
 
             <!-- status = On Delivery -->
-            <el-form-item v-show="formModel.status == 2" label="Delivery Date" :class="formErrors.delivery_date ? 'is-error' : ''">
+            <el-form-item v-show="formModel.status == 2" label="Tanggal Pengiriman" :class="formErrors.delivery_date ? 'is-error' : ''">
                 <el-date-picker
                 style="width:100%"
                 type="date"
                 format="dd-MMM-yyyy"
                 value-format="yyyy-MM-dd"
-                placeholder="Delivery Date"
+                placeholder="Tanggal Pengiriman"
                 v-model="formModel.delivery_date">
                 </el-date-picker>
                 <div class="el-form-item__error" v-if="formErrors.delivery_date">{{formErrors.delivery_date[0]}}</div>
@@ -102,13 +102,13 @@
             </el-form-item>
 
             <!-- status = Delivered -->
-            <el-form-item v-show="formModel.status == 3" label="Tangal Tiba" :class="formErrors.delivered_date ? 'is-error' : ''">
+            <el-form-item v-show="formModel.status == 3" label="Tangal Terima" :class="formErrors.delivered_date ? 'is-error' : ''">
                 <el-date-picker
                 style="width:100%"
                 type="date"
                 format="dd-MMM-yyyy"
                 value-format="yyyy-MM-dd"
-                placeholder="Tangal Tiba"
+                placeholder="Tangal Terima"
                 v-model="formModel.delivered_date">
                 </el-date-picker>
                 <div class="el-form-item__error" v-if="formErrors.delivered_date">{{formErrors.delivered_date[0]}}</div>

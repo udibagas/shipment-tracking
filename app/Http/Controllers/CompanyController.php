@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Company;
 use App\Http\Requests\CompanyRequest;
+use App\User;
 
 class CompanyController extends Controller
 {
@@ -48,6 +49,10 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
+        if (auth()->user()->role == User::ROLE_ADMIN && auth()->user()->company_id != $company->id) {
+            return response(['message' => 'Anda tidak berhak mengakses data ini.'], 403);
+        }
+
         return $company;
     }
 
@@ -60,6 +65,10 @@ class CompanyController extends Controller
      */
     public function update(CompanyRequest $request, Company $company)
     {
+        if (auth()->user()->role == User::ROLE_ADMIN && auth()->user()->company_id != $company->id) {
+            return response(['message' => 'Anda tidak berhak mengupdate data ini.'], 403);
+        }
+
         $company->update($request->all());
         return $company;
     }

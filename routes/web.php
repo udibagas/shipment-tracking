@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     // super admin only
     Route::group(['middleware' => 'role:11'], function() {
-        Route::resource('company', 'CompanyController')->except(['create', 'edit']);
+        Route::resource('company', 'CompanyController')->only(['index', 'store', 'destroy']);
         Route::resource('deliveryStatus', 'DeliveryStatusController')->except(['create', 'edit', 'show']);
         Route::resource('serviceType', 'ServiceTypeController')->except(['create', 'edit', 'show']);
         Route::resource('delayCause', 'DelayCauseController')->except(['create', 'edit', 'show']);
@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     // superadmin & admin
     Route::group(['middleware' => 'role:11, 21'], function() {
+        Route::resource('company', 'CompanyController')->only(['show', 'update']);
         Route::resource('user', 'UserController')->except(['create', 'edit']);
         Route::resource('agent', 'AgentController')->except(['create', 'edit']);
         Route::resource('customer', 'CustomerController')->except(['create', 'edit']);
