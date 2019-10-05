@@ -39,9 +39,9 @@
                 <td width="50%" style="border-top:1px solid #ddd">
                     Pembayaran ditransfer ke:  <br>
                     <strong>
-                        Bank BNI-46 Cab. Kramat <br>
-                        No. Rek. 8068058046 <br>
-                        a/n PT. Kencana Mandiri Lancar <br>
+                        Bank {{$data->customer->bank_name}} Cab. {{$data->customer->bank_branch}} <br>
+                        No. Rek. {{$data->customer->account_number}} <br>
+                        a/n {{$data->customer->account_holder}} <br>
                     </strong>
                 </td>
             </tr>
