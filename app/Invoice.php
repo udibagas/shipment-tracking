@@ -9,7 +9,7 @@ class Invoice extends Model
     protected $fillable = [
         'company_id', 'customer_id', 'user_id',
         'date', 'number', 'total', 'status',
-        'type', 'total_said'
+        'type', 'total_said', 'service_type'
     ];
 
     protected $with = ['items'];

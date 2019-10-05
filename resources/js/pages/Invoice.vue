@@ -105,6 +105,13 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
+                        <el-form-item label="Layanan Pengiriman" :class="formErrors.service_type ? 'is-error' : ''">
+                            <el-select v-model="formModel.service_type" placeholder="Layanan Pengiriman" style="width:100%">
+                                <el-option v-for="(l, i) in ['REGULER', 'CHARTER']" :value="l" :label="l" :key="i">
+                                </el-option>
+                            </el-select>
+                            <div class="el-form-item__error" v-if="formErrors.service_type">{{formErrors.service_type[0]}}</div>
+                        </el-form-item>
                         <el-form-item label="Total" :class="formErrors.total ? 'is-error' : ''">
                             <div style="font-size:20px;height:40px;line-height:40px;border:1px solid #ddd;border-radius:4px;background-color:yellow;padding-left:20px;">
                                 Rp {{total | formatNumber}}
@@ -136,13 +143,17 @@
                 <el-table-column label="Surat Pengantar" prop="spb_number" min-width="110" show-overflow-tooltip></el-table-column>
                 <el-table-column label="Asal" prop="origin" show-overflow-tooltip min-width="100"></el-table-column>
                 <el-table-column label="Tujuan" prop="destination" show-overflow-tooltip min-width="100"></el-table-column>
-                <el-table-column label="Layanan" prop="service_type" min-width="100"></el-table-column>
-                <el-table-column label="Qty" prop="quantity" min-width="70" align="right" header-align="right">
+                <el-table-column label="Layanan" prop="service_type" min-width="100">
+                    <template slot-scope="scope">
+                        {{scope.row.service_type == 'CHARTER' ? 'CHARTER ' + scope.row.vehicle_type : scope.row.service_type}}
+                    </template>
+                </el-table-column>
+                <el-table-column v-if="formModel.service_type == 'REGULER'" label="Qty" prop="quantity" min-width="70" align="right" header-align="right">
                     <template slot-scope="scope">
                         {{scope.row.quantity | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Unit" prop="unit" header-align="center" align="center" min-width="60"></el-table-column>
+                <el-table-column v-if="formModel.service_type == 'REGULER'" label="Unit" prop="unit" header-align="center" align="center" min-width="60"></el-table-column>
                 <el-table-column label="Tarif" prop="fare" align="right" header-align="right" min-width="100">
                     <template slot-scope="scope">
                         Rp. {{scope.row.fare | formatNumber}}

@@ -28,7 +28,8 @@ class InvoiceRequest extends FormRequest
             'number' => 'required',
             'customer_id' => 'required|exists:customers,id',
             'total' => 'required|numeric',
-            'total_said' => 'required'
+            'total_said' => 'required',
+            'service_type' => 'required'
         ];
     }
 
@@ -39,7 +40,8 @@ class InvoiceRequest extends FormRequest
             'number' => 'Nomor',
             'customer_id' => 'Customer',
             'total' => 'Total',
-            'total_said' => 'Terbilang'
+            'total_said' => 'Terbilang',
+            'service_type' => 'Jenis Layanan'
         ];
     }
 }

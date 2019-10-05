@@ -43,7 +43,7 @@
             show-overflow-tooltip>
             </el-table-column>
 
-            <el-table-column prop="charge_to" label="Charge To" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="charge_to" label="Charge To" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="origin" label="Asal" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="destination" label="Tujuan" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="delivery_address" label="Alamat Pengiriman" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
@@ -162,10 +162,10 @@
                             <div class="el-form-item__error" v-if="formErrors.customer_id">{{formErrors.customer_id[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Charge To" :class="formErrors.charge_to ? 'is-error' : ''">
+                        <!-- <el-form-item label="Charge To" :class="formErrors.charge_to ? 'is-error' : ''">
                             <el-input placeholder="Charge To" v-model="formModel.charge_to"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.charge_to">{{formErrors.charge_to[0]}}</div>
-                        </el-form-item>
+                        </el-form-item> -->
 
                         <el-form-item label="Asal" :class="formErrors.origin ? 'is-error' : ''">
                             <el-select v-model="formModel.origin" placeholder="Asal" filterable default-first-option style="width:100%">
@@ -313,7 +313,7 @@
                 <thead>
                     <tr>
                         <th>Jenis Biaya</th>
-                        <th>Berat/Volume</th>
+                        <th v-if="formModel.service_type == 'REGULER'">Berat/Volume</th>
                         <th>Tarif</th>
                         <th>Biaya</th>
                         <th>PPN</th>
@@ -323,7 +323,7 @@
                 <tbody>
                     <tr>
                         <td class="td-label"> {{formModel.service_type}} - {{formModel.destination}} </td>
-                        <td class="td-value text-right">{{totalInvoiceWeight | formatNumber}} KG</td>
+                        <td  v-if="formModel.service_type == 'REGULER'" class="td-value text-right">{{totalInvoiceWeight | formatNumber}} KG</td>
                         <td class="td-value text-right">Rp {{delivery_rate.fare | formatNumber}}</td>
                         <td class="td-value text-right">Rp. {{delivery_cost | formatNumber}}</td>
                         <td class="td-value text-right">Rp. {{delivery_cost_ppn | formatNumber}}</td>
@@ -626,7 +626,7 @@ export default {
                 return !i.description || !i.dimension_p || !i.dimension_l || !i.dimension_t || !i.weight
             });
 
-            if (this.formModel.items.length == 0 || invalidItems.length > 0) {
+            if ((this.formModel.service_type == 'REGULER' && this.formModel.items.length == 0) || invalidItems.length > 0) {
                 this.$message({
                     message: 'Mohon lengkapi data item.',
                     type: 'error',

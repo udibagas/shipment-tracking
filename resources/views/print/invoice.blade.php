@@ -60,8 +60,10 @@
                 {{-- <th>Asal</th> --}}
                 <th>Tujuan</th>
                 <th>Layanan</th>
+                @if ($data->service_type == 'REGULER')
                 <th>Jumlah</th>
                 <th>Satuan</th>
+                @endif
                 <th>Tarif</th>
                 <th>Biaya</th>
                 <th>PPN</th>
@@ -77,9 +79,13 @@
                 <td>{{$item->description['spb_number']}}</td>
                 {{-- <td>{{$item->description['origin']}}</td> --}}
                 <td>{{$item->description['destination']}}</td>
-                <td>{{$item->description['service_type']}}</td>
+                <td>
+                    {{$item->description['service_type'] == 'CHARTER' ? 'CHARTER - ' . $item->description['vehicle_type'] : $item->description['service_type']}}
+                </td>
+                @if ($data->service_type == 'REGULER')
                 <td class="text-right">{{number_format($item->quantity, 3, ',', '.')}}</td>
                 <td class="text-center">{{$item->unit}}</td>
+                @endif
                 <td class="text-right">Rp. {{number_format($item->fare, 0, ',', '.')}}</td>
                 <td class="text-right">Rp. {{number_format($item->price, 0, ',', '.')}}</td>
                 <td class="text-right">Rp. {{number_format($item->tax, 0, ',', '.')}}</td>
