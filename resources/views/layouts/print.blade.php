@@ -72,7 +72,7 @@
 <body>
     <div class="container">@yield('content')</div>
     <script type="text/javascript">
-        window.print()
+        // window.print()
     </script>
 </body>
 </html>

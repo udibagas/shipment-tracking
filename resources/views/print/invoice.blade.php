@@ -39,9 +39,9 @@
                 <td width="50%" style="border-top:1px solid #ddd">
                     Pembayaran ditransfer ke:  <br>
                     <strong>
-                        Bank {{$data->customer->bank_name}} Cab. {{$data->customer->bank_branch}} <br>
-                        No. Rek. {{$data->customer->account_number}} <br>
-                        a/n {{$data->customer->account_holder}} <br>
+                        Bank {{$data->company->bank_name}} Cab. {{$data->company->bank_branch}} <br>
+                        No. Rek. {{$data->company->account_number}} <br>
+                        a/n {{$data->company->account_holder}} <br>
                     </strong>
                 </td>
             </tr>
