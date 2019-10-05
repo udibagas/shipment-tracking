@@ -31,6 +31,25 @@ class ReportController extends Controller
         }
     }
 
+    public function summary(Request $request)
+    {
+        $sql = "SELECT
+                customers.name AS customer,
+                SUM(CASE WHEN delivery_status_id = 0 THEN 1 ELSE 0 END) AS registered,
+                SUM(CASE WHEN delivery_status_id = 1 THEN 1 ELSE 0 END) AS ready_for_delivery,
+                SUM(CASE WHEN delivery_status_id = 2 THEN 1 ELSE 0 END) AS on_delivery,
+                SUM(CASE WHEN delivery_status_id = 3 THEN 1 ELSE 0 END) AS delivered,
+                SUM(CASE WHEN delivery_status_id = 4 THEN 1 ELSE 0 END) AS received,
+                COUNT(domestic_deliveries.id) AS `total`
+            FROM domestic_deliveries
+            JOIN customers ON customers.id = domestic_deliveries.customer_id
+            WHERE company_id = :company_id
+            GROUP BY customers.name
+        ";
+
+        return DB::select($sql, [':company_id' => $request->user()->company_id]);
+    }
+
     public function getFilterYear()
     {
         return DB::select("SELECT DISTINCT(YEAR(delivered_date)) AS `year` FROM domestic_deliveries ORDER BY `year` ASC");

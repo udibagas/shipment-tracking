@@ -38,7 +38,7 @@ class DomesticDelivery extends Model
         'created_at', 'updated_at'
     ];
 
-    protected $with = ['items'];
+    protected $with = ['items', 'vehicleType'];
 
     protected $appends = ['statusName', 'isDelay', 'isOntime'];
 
@@ -69,5 +69,9 @@ class DomesticDelivery extends Model
 
     public function customer() {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function vehicleType() {
+        return $this->belongsTo(VehicleType::class);
     }
 }

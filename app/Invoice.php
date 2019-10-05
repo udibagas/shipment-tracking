@@ -8,13 +8,14 @@ class Invoice extends Model
 {
     protected $fillable = [
         'company_id', 'customer_id', 'user_id',
-        'date', 'number', 'total', 'status'
+        'date', 'number', 'total', 'status',
+        'type', 'total_said'
     ];
 
     protected $with = ['items'];
 
     public function items() {
-        return $this->hasMany(DomesticDeliveryInvoiceItem::class);
+        return $this->hasMany(InvoiceItem::class);
     }
 
     public function customer() {
@@ -28,4 +29,5 @@ class Invoice extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+
 }

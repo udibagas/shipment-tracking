@@ -3,11 +3,21 @@
         <el-page-header @back="$emit('back')" content="INVOICE"> </el-page-header>
         <el-divider></el-divider>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
-            <el-form-item>
+            <el-form-item v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
                 <el-button icon="el-icon-plus" @click="openForm({items: []})" type="primary">INVOICE BARU</el-button>
             </el-form-item>
+            <el-form-item>
+                <el-date-picker
+                @change="requestData"
+                start-placeholder="Dari"
+                end-placeholder="Sampai"
+                type="daterange"
+                format="dd-MMM-yyyy"
+                value-format="yyyy-MM-dd"
+                v-model="dateRange"></el-date-picker>
+            </el-form-item>
             <el-form-item style="margin-right:0;">
-                <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
+                <el-input v-model="keyword" placeholder="Cari" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
                     <el-button @click="() => { page = 1; keyword = ''; requestData(); }" slot="append" icon="el-icon-refresh"></el-button>
                 </el-input>
             </el-form-item>
@@ -18,13 +28,21 @@
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
+            <el-table-column prop="date" label="Tanggal" sortable="custom" width="120" header-align="center" align="center">
+                <template slot-scope="scope">
+                    {{scope.row.date | readableDate}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="number" label="Nomor" sortable="custom" min-width="150" show-overflow-tooltip></el-table-column>
             <el-table-column prop="customer" label="Customer" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="date" label="Tanggal" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="number" label="Nomor" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="total" label="Total" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="total" label="Total" sortable="custom" align="right" header-align="right">
+                <template slot-scope="scope">
+                    Rp {{scope.row.total | formatNumber}}
+                </template>
+            </el-table-column>
             <el-table-column label="Status" prop="status" sortable="custom" align="center" header-align="center">
                 <template slot-scope="scope">
-                    {{scope.row.status}}
+                    {{scope.row.status ? 'Final' : 'Draft'}}
                 </template>
             </el-table-column>
             <el-table-column label="Update Terakhir" prop="updated_at" sortable="custom" align="center" header-align="center">
@@ -40,8 +58,10 @@
                             <i class="el-icon-more"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native.prevent="openForm(scope.row)"><i class="el-icon-edit-outline"></i> Edit</el-dropdown-item>
-                            <el-dropdown-item @click.native.prevent="deleteData(scope.row.id)"><i class="el-icon-delete"></i> Hapus</el-dropdown-item>
+                            <el-dropdown-item @click.native.prevent="() => { showDetail = true; selectedData = scope.row; }"><i class="el-icon-zoom-in"></i> Lihat Detail</el-dropdown-item>
+                            <el-dropdown-item @click.native.prevent="print(scope.row.id)"><i class="el-icon-printer"></i> Print Invoice</el-dropdown-item>
+                            <el-dropdown-item v-if="!scope.row.status" divided @click.native.prevent="openForm(scope.row)"><i class="el-icon-edit-outline"></i> Edit</el-dropdown-item>
+                            <el-dropdown-item v-if="!scope.row.status" @click.native.prevent="deleteData(scope.row.id)"><i class="el-icon-delete"></i> Hapus</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -61,7 +81,7 @@
 
         <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT INVOICE' : 'INVOICE BARU'" fullscreen v-loading="loading" :close-on-click-modal="false">
             <el-alert type="error" title="ERROR"
-                :description="error.message + '\n' + error.file + ':' + error.line"
+                :description="error.message"
                 v-show="error.message"
                 style="margin-bottom:15px;">
             </el-alert>
@@ -69,70 +89,76 @@
             <el-form label-width="150px" label-position="left">
                 <el-row :gutter="30">
                     <el-col :span="12">
-                        <el-form-item label="Customer">
+                        <el-form-item label="Customer" :class="formErrors.customer_id ? 'is-error' : ''">
                             <el-select @change="getItems" v-model="formModel.customer_id" placeholder="Customer" style="width:100%">
                                 <el-option v-for="c in $store.state.customerList" :key="c.id" :value="c.id" :label="c.name"></el-option>
                             </el-select>
+                            <div class="el-form-item__error" v-if="formErrors.customer_id">{{formErrors.customer_id[0]}}</div>
                         </el-form-item>
-                        <el-form-item label="Tanggal">
+                        <el-form-item label="Tanggal" :class="formErrors.date ? 'is-error' : ''">
                             <el-date-picker format="dd-MMM-yyyy" value-format="yyyy-MM-dd" v-model="formModel.date" placeholder="Tanggal" style="width:100%"></el-date-picker>
+                            <div class="el-form-item__error" v-if="formErrors.date">{{formErrors.date[0]}}</div>
                         </el-form-item>
-                        <el-form-item label="Nomor">
+                        <el-form-item label="Nomor" :class="formErrors.number ? 'is-error' : ''">
                             <el-input placeholder="Nomor" v-model="formModel.number"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.number">{{formErrors.number[0]}}</div>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="Total (Rp)">
-                            <el-input disabled v-model="total"></el-input>
+                        <el-form-item label="Total" :class="formErrors.total ? 'is-error' : ''">
+                            <div style="font-size:20px;height:40px;line-height:40px;border:1px solid #ddd;border-radius:4px;background-color:yellow;padding-left:20px;">
+                                Rp {{total | formatNumber}}
+                            </div>
+                            <div class="el-form-item__error" v-if="formErrors.total">{{formErrors.total[0]}}</div>
                         </el-form-item>
-                        <el-form-item label="PPN (Rp)">
-                            <el-input disabled v-model="ppn"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Grand Total (Rp)">
-                            <el-input disabled v-model="grand_total"></el-input>
+                        <el-form-item label="Terbilang" :class="formErrors.total_said ? 'is-error' : ''">
+                            <el-input placeholder="Terbilang" v-model="formModel.total_said"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.total_said">{{formErrors.total_said[0]}}</div>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
 
+            <br>
+
             <el-table :data="formModel.items">
-                <el-table-column label="No" type="index" width="55px"></el-table-column>
-                <el-table-column label="Tgl Kirim" min-width="120">
+                <el-table-column label="#" type="index" width="30px"></el-table-column>
+                <el-table-column label="Tgl Kirim" min-width="100" header-align="center" align="center">
                     <template slot-scope="scope">
-                        {{scope.row.delivery_date | formattedDate}}
+                        {{scope.row.delivery_date | readableDate}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Tgl Terima" min-width="120">
+                <el-table-column label="Tgl Terima" min-width="100" header-align="center" align="center">
                     <template slot-scope="scope">
-                        {{scope.row.delivered_date | formattedDate}}
+                        {{scope.row.delivered_date | readableDate}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Surat Pengantar" prop="spb_number" min-width="150"></el-table-column>
-                <el-table-column label="Asal" prop="origin" show-overflow-tooltip min-width="150"></el-table-column>
-                <el-table-column label="Tujuan" prop="destination" show-overflow-tooltip min-width="150"></el-table-column>
-                <el-table-column label="Layanan" prop="service_type" min-width="120"></el-table-column>
-                <el-table-column label="Quantity" prop="quantity" min-width="80">
+                <el-table-column label="Surat Pengantar" prop="spb_number" min-width="110" show-overflow-tooltip></el-table-column>
+                <el-table-column label="Asal" prop="origin" show-overflow-tooltip min-width="100"></el-table-column>
+                <el-table-column label="Tujuan" prop="destination" show-overflow-tooltip min-width="100"></el-table-column>
+                <el-table-column label="Layanan" prop="service_type" min-width="100"></el-table-column>
+                <el-table-column label="Qty" prop="quantity" min-width="70" align="right" header-align="right">
                     <template slot-scope="scope">
                         {{scope.row.quantity | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Unit" prop="unit" header-align="center" align="center" min-width="80"></el-table-column>
-                <el-table-column label="Tarif" prop="fare" align="right" header-align="right" min-width="120">
+                <el-table-column label="Unit" prop="unit" header-align="center" align="center" min-width="60"></el-table-column>
+                <el-table-column label="Tarif" prop="fare" align="right" header-align="right" min-width="100">
                     <template slot-scope="scope">
                         Rp. {{scope.row.fare | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Harga" prop="price" align="right" header-align="right" min-width="120">
+                <el-table-column label="Harga" prop="price" align="right" header-align="right" min-width="100">
                     <template slot-scope="scope">
                         Rp. {{scope.row.price | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="PPN" prop="tax" align="right" header-align="right" min-width="120">
+                <el-table-column label="PPN" prop="tax" align="right" header-align="right" min-width="100">
                     <template slot-scope="scope">
                         Rp. {{scope.row.tax | formatNumber}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Total" prop="total" align="right" header-align="right" min-width="120">
+                <el-table-column label="Total" prop="total" align="right" header-align="right" min-width="100">
                     <template slot-scope="scope">
                         Rp. {{scope.row.total | formatNumber}}
                     </template>
@@ -140,7 +166,8 @@
             </el-table>
 
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="() => !!formModel.id ? update() : store()" icon="el-icon-success">SIMPAN</el-button>
+                <el-button type="primary" plain @click="save(0)" icon="el-icon-edit">DRAFT</el-button>
+                <el-button type="primary" @click="save(1)" icon="el-icon-success">SIMPAN</el-button>
                 <el-button type="info" @click="showForm = false" icon="el-icon-error">BATAL</el-button>
             </span>
         </el-dialog>
@@ -149,15 +176,22 @@
 
 <script>
 export default {
+    // filters: {
+    //     terbilang(v) {
+    //         let bilangan = ',satu,dua,tiga,empat,lima,enam,tujuh,delapan,sembilan'.split(',')
+    //         let level_bilangan = ',puluh,ratus,ribu,puluh ribu, ratus ribu, juta,puluh juta,ratus juta,milyar,puluh milyar,ratus milyar,triliun'.split(',')
+    //         let input = Math.round(v) + ''
+
+    //         let start_from = input
+    //         for (let i = 0; i < input.length; i++) {
+
+    //         }
+
+    //     }
+    // },
     computed: {
         total() {
-            return this.formModel.items.reduce((t, c) => t + c.price , 0)
-        },
-        ppn() {
-            return this.formModel.items.reduce((t, c) => t + c.tax , 0)
-        },
-        grand_total() {
-            return this.total + this.ppn;
+            return this.formModel.items.reduce((t, c) => t + c.price + c.tax , 0)
         }
     },
     data() {
@@ -170,9 +204,12 @@ export default {
             page: 1,
             pageSize: 10,
             tableData: {},
-            sort: 'name',
+            sort: 'date',
             order: 'ascending',
-            loading: false
+            loading: false,
+            showDetail: false,
+            selectedData: null,
+            dateRange: [],
         }
     },
     methods: {
@@ -181,15 +218,63 @@ export default {
                 this.sort = c.prop; this.order = c.order; this.requestData()
             }
         },
+        print(id) {
+            window.open(BASE_URL + '/invoice/print/' + id + '?token=' + this.$store.state.token, '_blank')
+        },
         openForm(data) {
             this.error = {}
             this.formErrors = {}
             this.formModel = JSON.parse(JSON.stringify(data));
+
+            if (!!this.formModel.id) {
+                this.formModel.items.map(i => {
+                    i.delivery_date = i.description.delivery_date
+                    i.delivered_date = i.description.delivered_date
+                    i.origin = i.description.origin
+                    i.destination = i.description.destination
+                    i.service_type = i.description.service_type
+                    i.spb_number = i.description.spb_number
+                    i.vehicle_type = i.description.vehicle_type
+                    return i
+                })
+            }
+
             this.showForm = true
+        },
+        save(status) {
+            if (this.formModel.items.length == 0) {
+                this.$message({
+                    message: 'Tidak ada pengiriman yang bisa ditagih untuk customer terkait',
+                    type: 'error',
+                    showClose: true
+                });
+                return
+            }
+
+            this.formModel.status = status
+            this.formModel.total = this.total
+
+            if (!!status) {
+                this.$confirm('Anda yakin?' ,'Konfirmasi', { type: 'warning' }).then(() => {
+                    if (!!this.formModel.id) {
+                        this.update()
+                    } else {
+                        this.store()
+                    }
+                }).catch(e => {
+                    console.log(e)
+                })
+            } else {
+                if (!!this.formModel.id) {
+                    this.update()
+                } else {
+                    this.store()
+                }
+            }
         },
         store() {
             this.loading = true;
-            axios.post('/domesticDeliveryInvoice', this.formModel).then(r => {
+            axios.post('/invoice', this.formModel).then(r => {
                 this.showForm = false;
                 this.$message({
                     message: 'Data berhasil disimpan.',
@@ -213,7 +298,7 @@ export default {
         },
         update() {
             this.loading = true;
-            axios.put('/domesticDeliveryInvoice/' + this.formModel.id, this.formModel).then(r => {
+            axios.put('/invoice/' + this.formModel.id, this.formModel).then(r => {
                 this.showForm = false
                 this.$message({
                     message: 'Data berhasil disimpan.',
@@ -236,8 +321,8 @@ export default {
             })
         },
         deleteData(id) {
-            this.$confirm('Anda yakin akan menghapus data ini?', 'Warning', { type: 'warning' }).then(() => {
-                axios.delete('/domesticDeliveryInvoice/' + id).then(r => {
+            this.$confirm('Anda yakin akan menghapus data ini?', 'Konfirmasi', { type: 'warning' }).then(() => {
+                axios.delete('/invoice/' + id).then(r => {
                     this.requestData();
                     this.$message({
                         message: r.data.message,
@@ -263,12 +348,12 @@ export default {
             }
 
             this.loading = true;
-            axios.get('/domesticDeliveryInvoice', {params: params}).then(r => {
+            axios.get('/invoice', {params: params}).then(r => {
                     this.tableData = r.data
             }).catch(e => {
                 if (e.response.status == 500) {
                     this.$message({
-                        message: e.response.data.message + '\n' + e.response.data.file + ':' + e.response.data.line,
+                        message: e.response.data.message,
                         type: 'error',
                         showClose: true
                     });
@@ -286,13 +371,63 @@ export default {
             }
 
             axios.get('/domesticDelivery/search', { params: params }).then(r => {
+                if (r.data.length == 0) {
+                    this.$message({
+                        message: 'Tidak ada pengiriman yang bisa ditagih untuk customer terkait',
+                        type: 'error',
+                        showClose: true
+                    });
+                    return
+                }
+
+                let clonedData = JSON.parse(JSON.stringify(r.data))
+                // biaya pengiriman
                 this.formModel.items = r.data.map(d => {
-                    d.unit = ' KG'
-                    d.price = d.quantity * d.fare
-                    d.tax = d.ppn
-                    d.total = d.tax + d.tax
+                    d.description = {
+                        delivery_id: d.id,
+                        delivery_date: d.delivery_date,
+                        delivered_date: d.delivered_date,
+                        service_type: d.service_type,
+                        origin: d.origin,
+                        destination: d.destination,
+                        vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
+                        spb_number: d.spb_number,
+                        total_coli: d.quantity
+                    }
+
+                    d.quantity = d.invoice_weight
+                    d.unit = 'KG'
+                    d.fare = d.delivery_rate
+                    d.price = d.delivery_cost
+                    d.tax = d.delivery_cost_ppn
+                    d.total = d.price + d.tax
+                    d.vehicle_type = d.vehicle_type ? d.vehicle_type.name : ''
                     return d
                 })
+
+                // biaya packing
+                clonedData.filter(d => d.packing_cost > 0).map(d => {
+                    d.description = {
+                        delivery_id: d.id,
+                        delivery_date: d.delivery_date,
+                        delivered_date: d.delivered_date,
+                        service_type: 'PACKING PETI',
+                        origin: d.origin,
+                        destination: d.destination,
+                        vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
+                        spb_number: d.spb_number,
+                        total_coli: d.quantity
+                    }
+
+                    d.service_type = 'PACKING PETI'
+                    d.quantity = d.packing_volume
+                    d.unit = 'M3'
+                    d.fare = d.packing_rate
+                    d.price = d.packing_cost
+                    d.tax = d.packing_cost_ppn
+                    d.total = d.price + d.tax
+                    return d
+                }).forEach(p => this.formModel.items.push(p))
             }).catch(e => {
                 this.$message({
                     message: e.response.data.message,

@@ -78,37 +78,37 @@
             </el-form-item>
 
             <!-- status = On Delivery -->
-            <el-form-item v-show="formModel.status == 2" label="Ship Name" :class="formErrors.ship_name ? 'is-error' : ''">
-                <el-input placeholder="Ship Name" v-model="formModel.ship_name"></el-input>
+            <el-form-item v-show="formModel.status == 2" label="Nama Kapal" :class="formErrors.ship_name ? 'is-error' : ''">
+                <el-input placeholder="Nama Kapal" v-model="formModel.ship_name"></el-input>
                 <div class="el-form-item__error" v-if="formErrors.ship_name">{{formErrors.ship_name[0]}}</div>
             </el-form-item>
 
             <!-- status = On Delivery -->
-            <el-form-item v-show="formModel.status == 2" label="Vehicle Number" :class="formErrors.vehicle_number ? 'is-error' : ''">
-                <el-input placeholder="Vehicle Number" v-model="formModel.vehicle_number"></el-input>
+            <el-form-item v-show="formModel.status == 2" label="Plat Nomor Armada" :class="formErrors.vehicle_number ? 'is-error' : ''">
+                <el-input placeholder="Plat Nomor Armada" v-model="formModel.vehicle_number"></el-input>
                 <div class="el-form-item__error" v-if="formErrors.vehicle_number">{{formErrors.vehicle_number[0]}}</div>
             </el-form-item>
 
             <!-- status = On Delivery -->
-            <el-form-item v-show="formModel.status == 2" label="Driver Name" :class="formErrors.driver_name ? 'is-error' : ''">
-                <el-input placeholder="Driver Name" v-model="formModel.driver_name"></el-input>
+            <el-form-item v-show="formModel.status == 2" label="Nama Driver" :class="formErrors.driver_name ? 'is-error' : ''">
+                <el-input placeholder="Nama Driver" v-model="formModel.driver_name"></el-input>
                 <div class="el-form-item__error" v-if="formErrors.driver_name">{{formErrors.driver_name[0]}}</div>
             </el-form-item>
 
             <!-- status = On Delivery -->
-            <el-form-item v-show="formModel.status == 2" label="Driver Phone" :class="formErrors.driver_phone ? 'is-error' : ''">
-                <el-input placeholder="Driver Phone" v-model="formModel.driver_phone"></el-input>
+            <el-form-item v-show="formModel.status == 2" label="No. HP Driver" :class="formErrors.driver_phone ? 'is-error' : ''">
+                <el-input placeholder="No. HP Driver" v-model="formModel.driver_phone"></el-input>
                 <div class="el-form-item__error" v-if="formErrors.driver_phone">{{formErrors.driver_phone[0]}}</div>
             </el-form-item>
 
             <!-- status = Delivered -->
-            <el-form-item v-show="formModel.status == 3" label="Arrival Date" :class="formErrors.delivered_date ? 'is-error' : ''">
+            <el-form-item v-show="formModel.status == 3" label="Tangal Tiba" :class="formErrors.delivered_date ? 'is-error' : ''">
                 <el-date-picker
                 style="width:100%"
                 type="date"
                 format="dd-MMM-yyyy"
                 value-format="yyyy-MM-dd"
-                placeholder="Arrival Date"
+                placeholder="Tangal Tiba"
                 v-model="formModel.delivered_date">
                 </el-date-picker>
                 <div class="el-form-item__error" v-if="formErrors.delivered_date">{{formErrors.delivered_date[0]}}</div>

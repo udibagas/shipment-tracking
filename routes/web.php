@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('user/getList', 'UserController@getList');
     Route::get('user/getRoleList', 'UserController@getRoleList');
     Route::get('report/leadTime', 'ReportController@leadTime');
+    Route::get('report/summary', 'ReportController@summary');
     Route::get('report/getFilterYear', 'ReportController@getFilterYear');
 
 

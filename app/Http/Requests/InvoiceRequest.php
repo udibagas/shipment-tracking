@@ -26,7 +26,20 @@ class InvoiceRequest extends FormRequest
         return [
             'date' => 'required|date',
             'number' => 'required',
-            'customer_id' => 'required|exists:customers,id'
+            'customer_id' => 'required|exists:customers,id',
+            'total' => 'required|numeric',
+            'total_said' => 'required'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'date' => 'Tanggal',
+            'number' => 'Nomor',
+            'customer_id' => 'Customer',
+            'total' => 'Total',
+            'total_said' => 'Terbilang'
         ];
     }
 }
