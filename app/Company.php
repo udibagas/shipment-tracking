@@ -10,6 +10,7 @@ class Company extends Model
         'code', 'name', 'phone', 'email',
         'address', 'active', 'contact_person',
         'fax', 'website', 'contact_person_email',
-        'contact_person_phone', 'logo'
+        'contact_person_phone', 'logo',
+        'bank_name', 'bank_branch', 'account_number', 'account_holder'
     ];
 }

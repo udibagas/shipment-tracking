@@ -171,6 +171,10 @@
                 <el-button type="info" @click="showForm = false" icon="el-icon-error">BATAL</el-button>
             </span>
         </el-dialog>
+
+        <el-dialog :visible.sync="showDetail" :title="selectedData.number" fullscreen center>
+            <iframe v-if="!!selectedData.id" :src="baseUrl + '/invoice/print/' + selectedData.id + '?token= ' + $store.state.token" frameborder="0" style="height:calc(100vh - 150px);width:100%;"></iframe>
+        </el-dialog>
     </div>
 </template>
 
@@ -196,6 +200,7 @@ export default {
     },
     data() {
         return {
+            baseUrl: BASE_URL,
             showForm: false,
             formErrors: {},
             error: {},
@@ -208,7 +213,7 @@ export default {
             order: 'ascending',
             loading: false,
             showDetail: false,
-            selectedData: null,
+            selectedData: {},
             dateRange: [],
         }
     },

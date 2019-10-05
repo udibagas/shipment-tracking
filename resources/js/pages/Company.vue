@@ -29,6 +29,10 @@
                             <tr><td class="td-label">Fax</td><td class="td-value">{{scope.row.fax}}</td></tr>
                             <tr><td class="td-label">Email</td><td class="td-value">{{scope.row.email}}</td></tr>
                             <tr><td class="td-label">Website</td><td class="td-value">{{scope.row.website}}</td></tr>
+                            <tr><td class="td-label">Bank</td><td class="td-value">{{scope.row.bank_name}}</td></tr>
+                            <tr><td class="td-label">Cabang</td><td class="td-value">{{scope.row.bank_branch}}</td></tr>
+                            <tr><td class="td-label">No. Rekening</td><td class="td-value">{{scope.row.account_number}}</td></tr>
+                            <tr><td class="td-label">Nama Pemegang Rekening</td><td class="td-value">{{scope.row.account_holder}}</td></tr>
                             <tr><td class="td-label">Contact Person</td><td class="td-value">{{scope.row.contact_person}}</td></tr>
                             <tr><td class="td-label">Contact Person Email</td><td class="td-value">{{scope.row.contact_person_email}}</td></tr>
                             <tr><td class="td-label">Contact Person Phone</td><td class="td-value">{{scope.row.contact_person_phone}}</td></tr>
@@ -127,8 +131,6 @@
                     <div class="el-form-item__error" v-if="formErrors.active">{{formErrors.active[0]}}</div>
                 </el-form-item>
 
-                <el-divider></el-divider>
-
                 <el-form-item label="Address" :class="formErrors.address ? 'is-error' : ''">
                     <el-input type="textarea" rows="3" placeholder="Address" v-model="formModel.address"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.address">{{formErrors.address[0]}}</div>
@@ -150,11 +152,29 @@
                 </el-form-item>
 
                 <el-form-item label="Website" :class="formErrors.website ? 'is-error' : ''">
-                    <el-input placeholder="Email" v-model="formModel.website"></el-input>
+                    <el-input placeholder="Website" v-model="formModel.website"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.website">{{formErrors.website[0]}}</div>
                 </el-form-item>
 
-                <el-divider></el-divider>
+                <el-form-item label="Nama Bank" :class="formErrors.bank_name ? 'is-error' : ''">
+                    <el-input placeholder="Nama Bank" v-model="formModel.bank_name"></el-input>
+                    <div class="el-form-item__error" v-if="formErrors.bank_name">{{formErrors.bank_name[0]}}</div>
+                </el-form-item>
+
+                <el-form-item label="Nama Cabang Bank" :class="formErrors.bank_branch ? 'is-error' : ''">
+                    <el-input placeholder="Nama Cabang Bank" v-model="formModel.bank_branch"></el-input>
+                    <div class="el-form-item__error" v-if="formErrors.bank_branch">{{formErrors.bank_branch[0]}}</div>
+                </el-form-item>
+
+                <el-form-item label="Nomor Rekening" :class="formErrors.account_number ? 'is-error' : ''">
+                    <el-input placeholder="Nomor Rekening" v-model="formModel.account_number"></el-input>
+                    <div class="el-form-item__error" v-if="formErrors.account_number">{{formErrors.account_number[0]}}</div>
+                </el-form-item>
+
+                <el-form-item label="Rekening Atas Nama" :class="formErrors.account_holder ? 'is-error' : ''">
+                    <el-input placeholder="Rekening Atas Nama" v-model="formModel.account_holder"></el-input>
+                    <div class="el-form-item__error" v-if="formErrors.account_holder">{{formErrors.account_holder[0]}}</div>
+                </el-form-item>
 
                 <el-form-item label="Contact Person Name" :class="formErrors.contact_person ? 'is-error' : ''">
                     <el-input placeholder="Contact Person" v-model="formModel.contact_person"></el-input>
