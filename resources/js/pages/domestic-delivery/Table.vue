@@ -20,6 +20,9 @@
             <el-form-item>
                 <el-button icon="el-icon-download" @click="exportToExcel" type="primary">EXPORT</el-button>
             </el-form-item>
+            <el-form-item>
+                <el-button icon="el-icon-document-copy" @click="sendReport" type="primary">REPORT</el-button>
+            </el-form-item>
         </el-form>
 
         <el-table :data="tableData.data" stripe
@@ -276,7 +279,7 @@
                         {{(scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 1000000).toFixed(3)}} M<sup>3</sup>
                     </template>
                 </el-table-column>
-                <el-table-column label="Berat Volume" width="100" header-align="right" align="right">
+                <el-table-column label="Berat Volume" width="110" header-align="right" align="right">
                     <template slot-scope="scope">
                         {{(scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 4000).toFixed(0)}} KG
                     </template>
@@ -402,13 +405,13 @@ export default {
                 : this.delivery_rate.fare * this.totalInvoiceWeight
         },
         delivery_cost_ppn() {
-            return this.delivery_rate.tax ? this.delivery_cost * 10 / 100 : 0
+            return this.delivery_rate.ppn ? this.delivery_cost * 10 / 100 : 0
         },
         packing_cost() {
             return this.packing_rate.fare * this.totalVolumePacking
         },
         packing_cost_ppn() {
-            return this.packing_rate.tax ? this.packing_cost * 10 / 100 : 0
+            return this.packing_rate.ppn ? this.packing_cost * 10 / 100 : 0
         },
         total_cost() {
             return this.delivery_cost + this.delivery_cost_ppn + this.packing_cost + this.packing_cost_ppn;
@@ -471,6 +474,9 @@ export default {
                     showClose: true
                 });
             })
+        },
+        sendReport() {
+
         },
         getFarePacking() {
             if (!this.formModel.customer_id) {
