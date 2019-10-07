@@ -2,7 +2,7 @@
     <div>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
-                <el-button icon="el-icon-plus" @click="openForm({ items: [] })" type="primary">PENGIRIMAN DOMESTIK BARU</el-button>
+                <el-button type="primary" icon="el-icon-plus" @click="openForm({ items: [] })">PENGIRIMAN DOMESTIK BARU</el-button>
             </el-form-item>
             <el-form-item>
                 <el-date-picker
@@ -19,19 +19,12 @@
                     <el-button @click="() => { page = 1; keyword = ''; requestData(); }" slot="append" icon="el-icon-refresh"></el-button>
                 </el-input>
             </el-form-item>
-            <el-form-item>
-                <el-dropdown split-button type="primary" icon="el-icon-setting">
-                    AKSI
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item icon="el-icon-download">EXPORT KE EXCEL</el-dropdown-item>
-                        <el-dropdown-item icon="el-icon-message">KIRIM REPORT</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <!-- <el-button icon="el-icon-download" @click="exportToExcel" type="primary">EXPORT</el-button> -->
+            <el-form-item v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
+                <el-button-group>
+                    <el-button type="primary" @click="exportToExcel" icon="el-icon-download" title="EXPORT KE EXCEL"></el-button>
+                    <el-button type="primary" @click="showReportForm = true" icon="el-icon-message" title="KIRIM REPORT"></el-button>
+                </el-button-group>
             </el-form-item>
-            <!-- <el-form-item>
-                <el-button icon="el-icon-document-copy" @click="sendReport" type="primary">REPORT</el-button>
-            </el-form-item> -->
         </el-form>
 
         <el-table :data="tableData.data" stripe
@@ -56,29 +49,85 @@
             <el-table-column prop="origin" label="Asal" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="destination" label="Tujuan" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="delivery_address" label="Alamat Pengiriman" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="pick_up_date" label="Tanggal Pick Up" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="etd" label="ETD" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column>
-            <el-table-column prop="eta" label="ETA" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column>
-            <el-table-column prop="delivery_date" label="Tgl Dikirim" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column>
-            <el-table-column prop="delivered_date" label="Tgl Terkirim" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column>
-            <el-table-column prop="received_date" label="Tgl Terima" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column>
+            <el-table-column prop="pick_up_date" label="Tanggal Pick Up" sortable="custom" min-width="140px" align="center" header-align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.pick_up_date | readableDate }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="etd" label="ETD" sortable="custom" min-width="140px" header-align="center" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.etd | readableDate }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="eta" label="ETA" sortable="custom" min-width="140px" header-align="center" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.eta | readableDate }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="delivery_date" label="Tgl Dikirim" sortable="custom" min-width="140px" header-align="center" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.delivery_date | readableDate }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="delivered_date" label="Tgl Terima" sortable="custom" min-width="140px" header-align="center" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.delivered_date | readableDate }}
+                </template>
+            </el-table-column>
+            <!-- <el-table-column prop="received_date" label="Tgl Terima" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column> -->
             <!-- <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column> -->
             <!-- <el-table-column prop="payment_date" label="Payment Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="resi_number" label="Nomor Resi" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="spb_number" label="Nomor SPB" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="tracking_number" label="Nomor Tracking" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="tracking_number" label="Nomor Tracking" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="delivery_type" label="Jenis Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="service_type" label="Layanan Pengiriman" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="quantity" label="Jml Koli" sortable="custom" min-width="150px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="volume" label="Volume" sortable="custom" min-width="150px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="weight" label="Berat" sortable="custom" min-width="150px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="volume_weight" label="Berat Volume" sortable="custom" min-width="150px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="invoice_weight" label="Berat Invoice" sortable="custom" min-width="150px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="delivery_cost" label="Biaya Pengiriman" sortable="custom" min-width="150px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="delivery_cost_ppn" label="PPN Biaya Pengiriman" sortable="custom" min-width="180px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="packing_cost" label="Biaya Packing" sortable="custom" min-width="150px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="packing_cost_ppn" label="PPN Biaya Packing" sortable="custom" min-width="170px" header-align="right" align="right"></el-table-column>
-            <el-table-column prop="total_cost" label="Total Biaya" sortable="custom" min-width="150px" header-align="right" align="right"></el-table-column>
+            <el-table-column prop="quantity" label="Jml Koli" sortable="custom" min-width="150px" header-align="center" align="center"></el-table-column>
+            <el-table-column prop="volume" label="Volume" sortable="custom" min-width="100px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.volume | formatNumber }} M<sup>3</sup>
+                </template>
+            </el-table-column>
+            <el-table-column prop="weight" label="Berat" sortable="custom" min-width="100px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.weight | formatNumber }} KG
+                </template>
+            </el-table-column>
+            <el-table-column prop="volume_weight" label="Berat Volume" sortable="custom" min-width="130px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.volume_weight | formatNumber }} KG
+                </template>
+            </el-table-column>
+            <el-table-column prop="invoice_weight" label="Berat Invoice" sortable="custom" min-width="120px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.invoice_weight | formatNumber }} KG
+                </template>
+            </el-table-column>
+            <el-table-column prop="delivery_cost" label="Biaya Pengiriman" sortable="custom" min-width="150px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.delivery_cost | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="delivery_cost_ppn" label="PPN Biaya Pengiriman" sortable="custom" min-width="180px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.delivery_cost_ppn | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="packing_cost" label="Biaya Packing" sortable="custom" min-width="150px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.packing_cost | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="packing_cost_ppn" label="PPN Biaya Packing" sortable="custom" min-width="170px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.packing_cost_ppn | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="total_cost" label="Total Biaya" sortable="custom" min-width="150px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.total_cost | formatNumber }}
+                </template>
+            </el-table-column>
 
             <el-table-column
             prop="agent"
@@ -360,32 +409,18 @@
         </el-dialog>
 
         <UpdateForm @submitted="requestData" @close="showStatusForm = false" :data="selectedData" :visible.sync="showStatusForm" />
-
-        <el-dialog :visible="false" title="KIRIM REPORT">
-            <el-form>
-                <el-form-item>
-                    <el-input placeholder="Subyek Pesan"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-input type="textarea" rows="10" placeholder="Isi Pesan"></el-input>
-                </el-form-item>
-            </el-form>
-
-            <span slot="footer">
-                <el-button type="primary" @click="save" icon="el-icon-success">KIRIM</el-button>
-                <el-button type="info" @click="showForm = false" icon="el-icon-error">BATAL</el-button>
-            </span>
-        </el-dialog>
+        <ReportForm @submitted="requestData" @close="showReportForm = false" :visible.sync="showReportForm" />
 
     </div>
 </template>
 
 <script>
 import UpdateForm from './UpdateForm'
+import ReportForm from './ReportForm'
 import Detail from './Detail'
 
 export default {
-    components: { UpdateForm, Detail },
+    components: { UpdateForm, Detail, ReportForm },
     computed: {
         totalWeight() {
             return this.formModel.items.reduce((prev, curr) => {
@@ -462,6 +497,7 @@ export default {
             error: {},
             showForm: false,
             showStatusForm: false,
+            showReportForm: false,
             selectedData: {},
             showDetailDialog: false,
             filters: {},
@@ -499,8 +535,15 @@ export default {
                 });
             })
         },
-        sendReport() {
+        handleActionCommand(command) {
+            console.log(command)
+            if (command == 'report') {
+                this.showReportForm = true
+            }
 
+            if (command == 'export') {
+
+            }
         },
         getFarePacking() {
             if (!this.formModel.customer_id) {

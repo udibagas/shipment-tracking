@@ -80,6 +80,11 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         Route::resource('vehicleType', 'VehicleTypeController')->except(['create', 'edit', 'show']);
     });
 
+    // Buat admin cmpany & operator
+    Route::group(['middleware' => 'role: 21, 31'], function() {
+        Route::post('report/send', 'ReportController@send');
+    });
+
     // TODO : menu buat operator, customer & agent
     Route::group(['middleware' => 'role:11, 21, 31, 41, 51'], function() {
         // belum ada halaman untuk customer & agent

@@ -78,7 +78,7 @@ class CustomerController extends Controller
 
     public function getList()
     {
-        return Customer::select(['id', 'code', 'name'])
+        return Customer::select(['id', 'code', 'name', 'email'])
             ->orderBy('code', 'asc')
             ->get();
     }

@@ -25,23 +25,33 @@ class DomesticDeliveryController extends Controller
                 customers.name AS customer,
                 delivery_types.name AS delivery_type,
                 users.name AS user,
-                agents.name AS agent,
-                vehicle_types.name AS vehicle_type
+                agents.name AS agent
             ')
             ->join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
             ->join('delivery_types', 'delivery_types.id', '=', 'domestic_deliveries.delivery_type_id')
             ->join('users', 'users.id', '=', 'domestic_deliveries.user_id')
             ->join('agents', 'agents.id', '=', 'domestic_deliveries.agent_id', 'LEFT')
             ->join('vehicle_types', 'vehicle_types.id', '=', 'domestic_deliveries.vehicle_type_id', 'LEFT')
-            ->when($request->status, function($q) use ($request) {
+            ->when(auth()->user()->company_id, function($q) {
+                return $q->where('domestic_deliveries.company_id', auth()->user()->company_id);
+            })->when(auth()->user()->customer_id, function($q) {
+                return $q->where('domestic_deliveries.customer_id', auth()->user()->customer_id);
+            })->when(auth()->user()->agent_id, function($q) {
+                return $q->where('domestic_deliveries.agent_id', auth()->user()->agent_id);
+            })->when($request->status, function($q) use ($request) {
                 return $q->whereIn('delivery_status_id', $request->status);
             })->when($request->customer_id, function($q) use ($request) {
-                return $q->whereIn('domestic_deliveries.customer_id', $request->customer_id);
+                if (is_array($request->customer_id)) {
+                    return $q->whereIn('domestic_deliveries.customer_id', $request->customer_id);
+                }
+                return $q->where('domestic_deliveries.customer_id', $request->customer_id);
             })->when($request->agent_id, function($q) use ($request) {
                 return $q->whereIn('domestic_deliveries.agent_id', $request->agent_id);
             })->when($request->keyword, function ($q) use ($request) {
-                return $q->where('spb_number', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('resi_number', 'LIKE', '%' . $request->keyword . '%');
+                return $q->where(function($qq) use ($request) {
+                    return $qq->where('spb_number', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('resi_number', 'LIKE', '%' . $request->keyword . '%');
+                });
             })->when($request->dateRange, function($q) use ($request) {
                 return $q->whereBetween('pick_up_date', $request->dateRange);
             })->orderBy($sort, $order)->paginate($request->pageSize);

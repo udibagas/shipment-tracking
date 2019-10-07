@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
+use App\Mail\DomesticDeliveryReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Config;
 
 class ReportController extends Controller
 {
@@ -58,5 +62,39 @@ class ReportController extends Controller
     public function getFilterYear()
     {
         return DB::select("SELECT DISTINCT(YEAR(delivered_date)) AS `year` FROM domestic_deliveries ORDER BY `year` ASC");
+    }
+
+    public function send(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required',
+            'email' => 'required',
+            // 'body' => 'required',
+            'dateRange' => 'required',
+            'customer_id' => 'required|exists:customers,id',
+            'items' => 'array|min:1'
+        ], [], [
+            'customer_id' => 'Customer',
+            'subject' => 'Subyek Pesan',
+            'email' => 'Penerima Email',
+            'body' => 'Isi Pesan',
+            'dateRange' => 'Tanggal',
+        ]);
+
+        $company = Company::find($request->user()->company_id);
+        Config::set('app.name', $company->name . ' Shipment Tracking');
+        Config::set('mail.host', $company->smtp_host);
+        Config::set('mail.port', $company->smtp_port);
+        Config::set('mail.from', [
+            'address' => $company->smtp_username,
+            'name' => $company->name,
+        ]);
+        Config::set('mail.username', $company->smtp_username);
+        Config::set('mail.password', $company->smtp_password);
+        Config::set('mail.encryption', $company->smtp_encryption);
+
+        Mail::to(explode(', ', $request->email))->send(new DomesticDeliveryReport($request));
+
+        return ['message' => 'Email berhasil dikirim'];
     }
 }

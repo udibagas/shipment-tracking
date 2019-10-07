@@ -4,14 +4,14 @@
             <el-col :span="8">
                 <table class="table table-sm table-bordered">
                     <tbody>
+                        <tr><td class="td-label">Nomor Resi</td><td class="td-value">{{data.resi_number}}</td></tr>
+                        <tr><td class="td-label">Nomor SPB</td><td class="td-value">{{data.spb_number}}</td></tr>
                         <tr><td class="td-label">Customer</td><td class="td-value">{{data.customer}}</td></tr>
-                        <tr><td class="td-label">Charge To</td><td class="td-value">{{data.charge_to}}</td></tr>
+                        <!-- <tr><td class="td-label">Charge To</td><td class="td-value">{{data.charge_to}}</td></tr> -->
                         <tr><td class="td-label">Asal</td><td class="td-value">{{data.origin}}</td></tr>
                         <tr><td class="td-label">Tujuan</td><td class="td-value">{{data.destination}}</td></tr>
                         <tr><td class="td-label">Alamat Pengiriman</td><td class="td-value">{{data.delivery_address}}</td></tr>
-                        <tr><td class="td-label">Tanggal Pick Up</td><td class="td-value">{{data.pick_up_date | readableDate}}</td></tr>
-                        <tr><td class="td-label">Nomor Resi</td><td class="td-value">{{data.resi_number}}</td></tr>
-                        <tr><td class="td-label">Nomor SPB</td><td class="td-value">{{data.spb_number}}</td></tr>
+                        <tr><td class="td-label">Jenis Pengiriman</td><td class="td-value">{{data.delivery_type}}</td></tr>
                         <!-- <tr><td class="td-label">Tracking Number</td><td class="td-value">{{data.tracking_number}}</td></tr> -->
                     </tbody>
                 </table>
@@ -19,9 +19,8 @@
             <el-col :span="8">
                 <table class="table table-sm table-bordered">
                     <tbody>
-                        <tr><td class="td-label">Jenis Pengiriman</td><td class="td-value">{{data.delivery_type}}</td></tr>
                         <tr><td class="td-label">Layanan Pengiriman</td><td class="td-value">{{data.service_type}}</td></tr>
-                        <tr><td class="td-label">Jenis Armada</td><td class="td-value">{{data.vehicle_type}}</td></tr>
+                        <tr><td class="td-label">Jenis Armada</td><td class="td-value">{{data.vehicle_type ? data.vehicle_type.name : ''}}</td></tr>
                         <tr><td class="td-label">Agent</td><td class="td-value">{{data.agent}}</td></tr>
                         <tr><td class="td-label">Nama Kapal</td><td class="td-value">{{data.ship_name}}</td></tr>
                         <tr><td class="td-label">Plat Nomor Armada</td><td class="td-value">{{data.vehicle_number}}</td></tr>
@@ -33,6 +32,7 @@
             <el-col :span="8">
                 <table class="table table-sm table-bordered">
                     <tbody>
+                        <tr><td class="td-label">Tanggal Pick Up</td><td class="td-value">{{data.pick_up_date | readableDate}}</td></tr>
                         <tr><td class="td-label">ETD</td><td class="td-value">{{data.etd | readableDate}}</td></tr>
                         <tr><td class="td-label">Tanggal Kirim</td><td class="td-value">{{data.delivery_date | readableDate}}</td></tr>
                         <tr><td class="td-label">ETA</td><td class="td-value">{{data.eta | readableDate}}</td></tr>
@@ -88,7 +88,6 @@
             <el-table-column label="Packing" header-align="center" align="center" width="100">
                 <template slot-scope="scope">
                     <el-checkbox disabled v-model="scope.row.packing"></el-checkbox>
-                    <!-- {{scope.row.packing ? 'Ya' : 'Tidak'}} -->
                 </template>
             </el-table-column>
             <el-table-column label="Keterangan" prop="remark" show-overflow-tooltip> </el-table-column>

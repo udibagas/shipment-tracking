@@ -115,12 +115,12 @@ table {
 .table th,
 .table td {
     padding: 0.75rem;
-    vertical-align: top;
+    vertical-align: middle;
     border-top: 1px solid #eceeef;
 }
 
 .table thead th {
-    vertical-align: bottom;
+    vertical-align: middle;
     border-bottom: 2px solid #eceeef;
 }
 
