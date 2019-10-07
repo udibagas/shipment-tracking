@@ -6,7 +6,8 @@ Berikut kami sampaikan update laporan pengiriman barang periode tanggal {{ date(
 <table class="table">
     <thead>
         <tr>
-            <th>Nomor SPB/Resi</th>
+            <th>Nomor SPB</th>
+            <th>Nomor Resi</th>
             <th>Tujuan</th>
             <th>Layanan</th>
             <th>Jml Koli</th>
@@ -23,18 +24,19 @@ Berikut kami sampaikan update laporan pengiriman barang periode tanggal {{ date(
     <tbody>
         @foreach ($data->items as $i)
         <tr>
-            <td>{{ $i['spb_number'] }} <br> {{ $i['resi_number'] }}</td>
+            <td>{{ $i['spb_number'] }}</td>
+            <td>{{ $i['resi_number'] }}</td>
             <td>{{ $i['destination']}} <br> {!! nl2br($i['delivery_address']) !!}</td>
             <td>{{ $i['service_type'] }} <br> {{ $i['vehicle_type']['name'] }}</td>
-            <td>{{ $i['quantity'] }}</td>
-            <td>{{ number_format($i['invoice_weight'], 0, ',', '.') }} KG</td>
-            <td>{{ date('d/m/Y', strtotime($i['pick_up_date'])) }}</td>
-            <td>{{ date('d/m/Y', strtotime($i['etd'])) }}</td>
-            <td>{{ date('d/m/Y', strtotime($i['delivery_date'])) }}</td>
-            <td>{{ date('d/m/Y', strtotime($i['eta'])) }}</td>
-            <td>{{ date('d/m/Y', strtotime($i['delivered_date'])) }}</td>
-            <td>{{ $i['statusName'] }}</td>
-            <td>{{ date('d/m/Y', strtotime($i['updated_at'])) }}</td>
+            <td class="text-center">{{ $i['quantity'] }}</td>
+            <td class="text-right">{{ number_format($i['invoice_weight'], 0, ',', '.') }} KG</td>
+            <td class="text-center">{{ date('d/m/Y', strtotime($i['pick_up_date'])) }}</td>
+            <td class="text-center">{{ date('d/m/Y', strtotime($i['etd'])) }}</td>
+            <td class="text-center">{{ date('d/m/Y', strtotime($i['delivery_date'])) }}</td>
+            <td class="text-center">{{ date('d/m/Y', strtotime($i['eta'])) }}</td>
+            <td class="text-center">{{ date('d/m/Y', strtotime($i['delivered_date'])) }}</td>
+            <td class="text-center">{{ $i['statusName'] }}</td>
+            <td class="text-center">{{ date('d/m/Y', strtotime($i['updated_at'])) }}</td>
         </tr>
         @endforeach
     </tbody>
