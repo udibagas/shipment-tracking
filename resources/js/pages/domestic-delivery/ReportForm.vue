@@ -156,8 +156,15 @@ export default {
                 return
             }
 
-            this.formModel.pageSize = 1000000; // cuma buat ngakali aja biar cuma 1 page tampilannya
-            axios.get('/domesticDelivery', { params: this.formModel }).then(r => {
+            let params = {
+                customer_id: this.formModel.customer_id,
+                dateRange: this.formModel.dateRange,
+                subject: this.formModel.subject,
+                email: this.formModel.email,
+                pageSize: 1000000
+            }
+
+            axios.get('/domesticDelivery', { params: params }).then(r => {
                 if (r.data.data.length == 0) {
                         this.$message({
                         message: 'Tidak ada data untuk customer dan tanggal yang dipilih.',

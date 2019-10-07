@@ -31,12 +31,12 @@ Berikut kami sampaikan update laporan pengiriman barang periode tanggal {{ date(
             <td class="text-center">{{ $i['quantity'] }}</td>
             <td class="text-right">{{ number_format($i['invoice_weight'], 0, ',', '.') }} KG</td>
             <td class="text-center">{{ date('d/m/Y', strtotime($i['pick_up_date'])) }}</td>
-            <td class="text-center">{{ date('d/m/Y', strtotime($i['etd'])) }}</td>
-            <td class="text-center">{{ date('d/m/Y', strtotime($i['delivery_date'])) }}</td>
-            <td class="text-center">{{ date('d/m/Y', strtotime($i['eta'])) }}</td>
-            <td class="text-center">{{ date('d/m/Y', strtotime($i['delivered_date'])) }}</td>
+            <td class="text-center">{{ $i['etd'] ? date('d/m/Y', strtotime($i['etd'])) : '' }}</td>
+            <td class="text-center">{{ $i['delivery_date'] ? date('d/m/Y', strtotime($i['delivery_date'])) : '' }}</td>
+            <td class="text-center">{{ $i['eta'] ? date('d/m/Y', strtotime($i['eta'])) : '' }}</td>
+            <td class="text-center">{{ $i['delivered_date'] ? date('d/m/Y', strtotime($i['delivered_date'])) : '' }}</td>
             <td class="text-center">{{ $i['statusName'] }}</td>
-            <td class="text-center">{{ date('d/m/Y', strtotime($i['updated_at'])) }}</td>
+            <td class="text-center">{{ $i['updated_at'] ? date('d/m/Y', strtotime($i['updated_at'])) : '' }}</td>
         </tr>
         @endforeach
     </tbody>
