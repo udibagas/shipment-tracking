@@ -3,14 +3,44 @@ Dear Bapak/Ibu,
 
 Berikut kami sampaikan update laporan pengiriman barang periode tanggal {{ date('d/m/Y', strtotime($data->dateRange[0])) }} sampai {{ date('d/m/Y', strtotime($data->dateRange[1])) }}:
 
-@component('mail::table')
-| Nomor SPB/Resi | Tujuan | Layanan | Jml Koli | Berat | Tgl Pick Up | ETD | Tgl Kirim | ETA | Tgl Terima | Status | Waktu Update |
-| --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-@foreach ($data->items as $i)
-| {{ $i['spb_number'] }} <br> {{ $i['resi_number'] }} | {{ $i['destination']}} <br> {!! nl2br($i['delivery_address']) !!} | {{ $i['service_type'] }} <br> {{ $i['vehicle_type']['name'] }} | {{ $i['quantity'] }} | {{ $i['invoice_weight'] }} KG | {{ date('d/m/Y', strtotime($i['pick_up_date'])) }} | {{ date('d/m/Y', strtotime($i['etd'])) }} | {{ date('d/m/Y', strtotime($i['delivery_date'])) }} | {{ date('d/m/Y', strtotime($i['eta'])) }} | {{ date('d/m/Y', strtotime($i['delivered_date'])) }} | {{ $i['statusName'] }} | {{ $i['updated_at'] }} |
-@endforeach
-@endcomponent
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nomor SPB/Resi</th>
+            <th>Tujuan</th>
+            <th>Layanan</th>
+            <th>Jml Koli</th>
+            <th>Berat</th>
+            <th>Tgl Pick Up</th>
+            <th>ETD</th>
+            <th>Tgl Kirim</th>
+            <th>ETA</th>
+            <th>Tgl Terima</th>
+            <th>Status</th>
+            <th>Waktu Update</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($data->items as $i)
+        <tr>
+            <td>{{ $i['spb_number'] }} <br> {{ $i['resi_number'] }}</td>
+            <td>{{ $i['destination']}} <br> {!! nl2br($i['delivery_address']) !!}</td>
+            <td>{{ $i['service_type'] }} <br> {{ $i['vehicle_type']['name'] }}</td>
+            <td>{{ $i['quantity'] }}</td>
+            <td>{{ number_format($i['invoice_weight'], 0, ',', '.') }} KG</td>
+            <td>{{ date('d/m/Y', strtotime($i['pick_up_date'])) }}</td>
+            <td>{{ date('d/m/Y', strtotime($i['etd'])) }}</td>
+            <td>{{ date('d/m/Y', strtotime($i['delivery_date'])) }}</td>
+            <td>{{ date('d/m/Y', strtotime($i['eta'])) }}</td>
+            <td>{{ date('d/m/Y', strtotime($i['delivered_date'])) }}</td>
+            <td>{{ $i['statusName'] }}</td>
+            <td>{{ date('d/m/Y', strtotime($i['updated_at'])) }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 
+<br><br>
 
 Terimakasih,
 <br><br>

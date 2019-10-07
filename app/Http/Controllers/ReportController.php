@@ -93,8 +93,9 @@ class ReportController extends Controller
         Config::set('mail.password', $company->smtp_password);
         Config::set('mail.encryption', $company->smtp_encryption);
 
-        Mail::to(explode(', ', $request->email))->send(new DomesticDeliveryReport($request));
+        // return new DomesticDeliveryReport($request);
 
+        Mail::to(explode(', ', $request->email))->send(new DomesticDeliveryReport($request));
         return ['message' => 'Email berhasil dikirim'];
     }
 }
