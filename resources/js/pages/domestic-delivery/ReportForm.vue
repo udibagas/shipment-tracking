@@ -98,14 +98,14 @@ export default {
     props: ['visible'],
     watch: {
         'formModel.customer_id'(v, o) {
-            if (v) {
+            if (!!v) {
                 this.formModel.email = this.$store.state.customerList.find(c => c.id == v).email
             }
         }
     },
     data() {
         return {
-            formModel: { email: '', items: []},
+            formModel: { email: '', items: [] },
             formErrors: {},
             loading: false
         }
@@ -125,7 +125,7 @@ export default {
 
                 this.loading = true
                 axios.post('/report/send', this.formModel).then(r => {
-                    this.formModel = { email: '', items: []}
+                    this.formModel = { email: '', items: [] }
                     this.$message({
                         message: r.data.message,
                         type: 'success',
@@ -143,7 +143,7 @@ export default {
                         })
                     }
 
-                    if (e.response.status = 422) {
+                    if (e.response.status == 422) {
                         this.formErrors = e.response.data.errors
                     }
                 }).finally(() => {
