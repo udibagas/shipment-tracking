@@ -46,16 +46,44 @@
             <el-table-column prop="destination" label="Tujuan" show-overflow-tooltip min-width="100"> </el-table-column>
             <el-table-column prop="delivery_address" label="Alamat" show-overflow-tooltip min-width="100"> </el-table-column>
             <el-table-column prop="service_type" label="Layanan" show-overflow-tooltip min-width="100"> </el-table-column>
-            <el-table-column prop="vehicle_type" label="Armada" show-overflow-tooltip min-width="100"> </el-table-column>
-            <el-table-column prop="quantity" label="Jml Koli" min-width="100"> </el-table-column>
-            <el-table-column prop="invoice_weight" label="Berat" min-width="100"> </el-table-column>
-            <el-table-column prop="pick_up_date" label="Tgl Pick Up" min-width="100"> </el-table-column>
-            <el-table-column prop="etd" label="ETD" min-width="100"> </el-table-column>
-            <el-table-column prop="delivery_date" label="Tgl Kirim" min-width="100"> </el-table-column>
-            <el-table-column prop="eta" label="ETA" min-width="100"> </el-table-column>
-            <el-table-column prop="delivered_date" label="Tgl Terima" min-width="100"> </el-table-column>
+            <el-table-column prop="vehicle_type.name" label="Armada" show-overflow-tooltip min-width="100"> </el-table-column>
+            <el-table-column prop="quantity" label="Jml Koli" min-width="100" align="center" header-align="center"> </el-table-column>
+            <el-table-column prop="invoice_weight" label="Berat" min-width="100" align="right" header-align="right">
+                <template slot-scope="scope">
+                    {{scope.row.invoice_weight | formatNumber}} KG
+                </template>
+            </el-table-column>
+            <el-table-column prop="pick_up_date" label="Tgl Pick Up" min-width="100">
+                <template slot-scope="scope">
+                    {{scope.row.pick_up_date | readableDate}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="etd" label="ETD" min-width="100">
+                <template slot-scope="scope">
+                    {{scope.row.etd | readableDate}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="delivery_date" label="Tgl Kirim" min-width="100">
+                <template slot-scope="scope">
+                    {{scope.row.delivery_date | readableDate}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="eta" label="ETA" min-width="100">
+                <template slot-scope="scope">
+                    {{scope.row.eta | readableDate}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="delivered_date" label="Tgl Terima" min-width="100">
+                <template slot-scope="scope">
+                    {{scope.row.delivered_date | readableDate}}
+                </template>
+            </el-table-column>
             <el-table-column prop="statusName" label="Status" min-width="100"> </el-table-column>
-            <el-table-column prop="updated_at" label="Update" show-overflow-tooltip min-width="100"> </el-table-column>
+            <el-table-column prop="updated_at" label="Update" show-overflow-tooltip min-width="180">
+                <template slot-scope="scope">
+                    {{scope.row.etd | readableDateTime}}
+                </template>
+            </el-table-column>
         </el-table>
 
         <span slot="footer">
