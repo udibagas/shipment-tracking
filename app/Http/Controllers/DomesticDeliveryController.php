@@ -51,7 +51,14 @@ class DomesticDeliveryController extends Controller
             })->when($request->keyword, function ($q) use ($request) {
                 return $q->where(function($qq) use ($request) {
                     return $qq->where('spb_number', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('resi_number', 'LIKE', '%' . $request->keyword . '%');
+                        ->orWhere('resi_number', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('users.name', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('origin', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('destination', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('customers.name', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('vehicle_types.name', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('agents.name', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('service_type', 'LIKE', '%' . $request->keyword . '%');
                 });
             })->when($request->dateRange, function($q) use ($request) {
                 return $q->whereBetween('pick_up_date', $request->dateRange);
