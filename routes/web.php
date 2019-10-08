@@ -59,6 +59,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     // superadmin, admin, operator only
     Route::group(['middleware' => 'role:11, 21, 31'], function() {
+        Route::get('deliveryProgress', 'DeliveryProgressController@index');
         Route::post('deliveryProgress', 'DeliveryProgressController@store');
         Route::delete('domesticDeliveryItem/{domesticDeliveryItem}', 'DomesticDeliveryItemController@destroy');
         Route::get('domesticDelivery/search', 'DomesticDeliveryController@search');

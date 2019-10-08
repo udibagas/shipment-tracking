@@ -8,6 +8,15 @@ use App\DomesticDelivery;
 
 class DeliveryProgressController extends Controller
 {
+    public function index(Request $request)
+    {
+        return DeliveryProgress::selectRaw('delivery_progresses.*, users.name AS user')
+        ->join('users', 'users.id', '=', 'delivery_progresses.user_id')
+        ->when($request->delivery_id, function($q) use ($request) {
+            return $q->where('delivery_id', $request->delivery_id);
+        })->orderBy('created_at', 'ASC')->get();
+    }
+
     public function store(Request $request)
     {
         $request->validate([

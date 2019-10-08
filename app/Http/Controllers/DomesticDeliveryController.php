@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DeliveryProgress;
 use Illuminate\Http\Request;
 use App\Http\Requests\DomesticDeliveryRequest;
 use App\DomesticDelivery;
@@ -84,6 +85,14 @@ class DomesticDeliveryController extends Controller
                     $item['invoice_weight'] = $item['weight'] > $item['volume_weight'] ? $item['weight'] : $item['volume_weight'];
                     return $item;
                 }, $request->items));
+
+                // create progress
+                DeliveryProgress::create([
+                    'delivery_id' => $id,
+                    'status' => 0, // registered
+                    'note' => $request->status_note,
+                    'user_id' => $request->user()->id
+                ]);
 
                 return DomesticDelivery::find($id);
             });

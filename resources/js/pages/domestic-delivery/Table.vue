@@ -615,13 +615,13 @@ export default {
                 exportFromJSON({ data: data, fileName: 'domestic-delivery', exportType: 'xls' })
             }).catch(e => {
                 console.log(e)
-                // if (e.response.status == 500) {
-                //     this.$message({
-                //         message: e.response.data.message + '\n' + e.response.data.file + ':' + e.response.data.line,
-                //         type: 'error',
-                //         showClose: true
-                //     });
-                // }
+                if (e.response.status == 500) {
+                    this.$message({
+                        message: e.response.data.message,
+                        type: 'error',
+                        showClose: true
+                    });
+                }
             }).finally(() => {
                 this.loading = false
             })
