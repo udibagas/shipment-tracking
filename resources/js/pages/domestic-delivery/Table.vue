@@ -585,7 +585,7 @@ export default {
                         "Alamat Pengiriman": d.delivery_address,
                         "Jenis Pengiriman": d.delivery_type,
                         "Layanan": d.service_type,
-                        "Jenis Armada": d.vehicle_type,
+                        "Jenis Armada": d.vehicle_type ? d.vehicle_type.name : '',
                         "Agent": d.agent,
                         "Nama Kapal": d.ship_name,
                         "No. Plat Armada": d.vehicle_number,
