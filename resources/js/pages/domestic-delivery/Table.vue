@@ -82,6 +82,7 @@
             <!-- <el-table-column prop="tracking_number" label="Nomor Tracking" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="delivery_type" label="Jenis Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="service_type" label="Layanan Pengiriman" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="vehicle_type.name" label="Jenis Armada" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="quantity" label="Jml Koli" sortable="custom" min-width="150px" header-align="center" align="center"></el-table-column>
             <el-table-column prop="volume" label="Volume" sortable="custom" min-width="100px" header-align="right" align="right">
                 <template slot-scope="scope">
@@ -142,8 +143,8 @@
 
             <el-table-column prop="ship_name" label="Nama Kapal" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="vehicle_number" label="No. Plat Armada" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="drive_name" label="Nama Driver" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="drive_phone" label="No. HP Driver" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="driver_name" label="Nama Driver" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="driver_phone" label="No. HP Driver" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="user" label="Diupdate Oleh" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="updated_at" label="Update Terkahir" sortable="custom" min-width="150px"></el-table-column>
             <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
@@ -418,6 +419,7 @@
 import UpdateForm from './UpdateForm'
 import ReportForm from './ReportForm'
 import Detail from './Detail'
+import exportFromJSON from 'export-from-json'
 
 export default {
     components: { UpdateForm, Detail, ReportForm },
@@ -535,16 +537,6 @@ export default {
                 });
             })
         },
-        handleActionCommand(command) {
-            console.log(command)
-            if (command == 'report') {
-                this.showReportForm = true
-            }
-
-            if (command == 'export') {
-
-            }
-        },
         getFarePacking() {
             if (!this.formModel.customer_id) {
                 return
@@ -573,7 +565,66 @@ export default {
             window.open(BASE_URL + '/domesticDelivery/printAwb/' + data.id + '?token=' + this.$store.state.token, '_blank')
         },
         exportToExcel() {
+            let params = {
+                keyword: this.keyword,
+                pageSize: 1000000, // hacky solution, but it works
+                sort: this.sort,
+                order: this.order,
+                dateRange: this.dateRange
+            }
 
+            this.loading = true;
+            axios.get('/domesticDelivery', { params: Object.assign(params, this.filters) }).then(r => {
+                let data = r.data.data.map(d => {
+                    return {
+                        "Nomor SPB": d.spb_number,
+                        "Nomor Resi": d.resi_number,
+                        "Customer": d.customer,
+                        "Asal": d.origin,
+                        "Tujuan": d.destination,
+                        "Alamat Pengiriman": d.delivery_address,
+                        "Jenis Pengiriman": d.delivery_type,
+                        "Layanan": d.service_type,
+                        "Jenis Armada": d.vehicle_type,
+                        "Agent": d.agent,
+                        "Nama Kapal": d.ship_name,
+                        "No. Plat Armada": d.vehicle_number,
+                        "Driver Armada": d.driver_name,
+                        "No. HP Driver": d.driver_phone,
+                        "Tgl Pick Up": d.pick_up_date,
+                        "ETD": d.etd,
+                        "Tgl Kirim": d.delivery_date,
+                        "ETA": d.eta,
+                        "Tgl Terima": d.delivered_date,
+                        "Jml Koli": d.quantity,
+                        "Berat": d.weight,
+                        "Berat Volume": d.volume_weight,
+                        "Berat Invoice": d.invoice_weight,
+                        "Volume": d.volume,
+                        "Volume Packing": d.packing_volume,
+                        "Biaya Kirim": d.delivery_cost,
+                        "PPN Biaya Kirim": d.delivery_cost_ppn,
+                        "Biaya Packing": d.packing_cost,
+                        "PPN Biaya Packing": d.packing_cost_ppn,
+                        "Total Biaya": d.total_cost,
+                        "Status": d.statusName,
+                        "Waktu Update": d.updated_at,
+                    }
+                })
+
+                exportFromJSON({ data: data, fileName: 'domestic-delivery', exportType: 'xls' })
+            }).catch(e => {
+                console.log(e)
+                // if (e.response.status == 500) {
+                //     this.$message({
+                //         message: e.response.data.message + '\n' + e.response.data.file + ':' + e.response.data.line,
+                //         type: 'error',
+                //         showClose: true
+                //     });
+                // }
+            }).finally(() => {
+                this.loading = false
+            })
         },
         openStatusForm(data) {
             this.selectedData = JSON.parse(JSON.stringify(data));
