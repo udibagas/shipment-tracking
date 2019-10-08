@@ -56,24 +56,8 @@ export default {
             axios.get('/deliveryProgress', { params: params }).then(r => {
                 this.progress = r.data.map(d => {
                     d.status_name = this.$store.state.deliveryStatusList[d.status].name
+                    d.type = this.$store.state.deliveryStatusList[d.status].type
                     d.time = moment(d.created_at).format('DD-MMM-YYYY HH:mm')
-
-                    if (d.status == 0) {
-                        d.type = 'info'
-                    }
-
-                    if (d.status == 1) {
-                        d.type = 'warning'
-                    }
-
-                    if (d.status == 2) {
-                        d.type = 'primary'
-                    }
-
-                    if (d.status == 3) {
-                        d.type = 'success'
-                    }
-
                     return d;
                 })
             }).catch(e => console.log(e))

@@ -150,7 +150,7 @@
             <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column fixed="right" column-key="status" label="Status" sortable="custom" min-width="150px" :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
                 <template slot-scope="scope">
-                    <el-tag type="warning" size="small">{{scope.row.statusName}}</el-tag>
+                    <el-tag :type="$store.state.deliveryStatusList[scope.row.delivery_status_id].type" size="small">{{scope.row.statusName}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column fixed="right" width="40px">
