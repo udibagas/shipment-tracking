@@ -6,6 +6,7 @@ Berikut kami sampaikan update laporan pengiriman barang periode tanggal {{ date(
 <table class="table">
     <thead>
         <tr>
+            <th>#</th>
             <th>Nomor SPB</th>
             <th>Nomor Resi</th>
             <th>Tujuan</th>
@@ -22,8 +23,9 @@ Berikut kami sampaikan update laporan pengiriman barang periode tanggal {{ date(
         </tr>
     </thead>
     <tbody>
-        @foreach ($data->items as $i)
+        @foreach ($data->items as $index => $i)
         <tr>
+            <td>{{ $index + 1 }}</td>
             <td>{{ $i['spb_number'] }}</td>
             <td>{{ $i['resi_number'] }}</td>
             <td>{{ $i['destination']}} <br> {!! nl2br($i['delivery_address']) !!}</td>
