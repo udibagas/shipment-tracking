@@ -2,10 +2,10 @@
     <div>
         <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
             <el-form-item>
-                <el-button icon="el-icon-plus" @click="openForm({})" type="primary">TAMBAH TARIF PACKING PETI</el-button>
+                <el-button icon="el-icon-plus" @click="openForm({})" type="primary">TAMBAH KOTA</el-button>
             </el-form-item>
             <el-form-item style="margin-right:0;">
-                <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
+                <el-input v-model="keyword" placeholder="Cari" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
                     <el-button @click="() => { page = 1; keyword = ''; requestData(); }" slot="append" icon="el-icon-refresh"></el-button>
                 </el-input>
             </el-form-item>
@@ -15,35 +15,8 @@
         :default-sort = "{prop: sort, order: order}"
         height="calc(100vh - 345px)"
         v-loading="loading"
-        @filter-change="(f) => { let c = Object.keys(f)[0]; filters[c] = Object.values(f[c]); page = 1; requestData(); }"
         @sort-change="sortChange">
-            <el-table-column v-if="$store.state.user.role == 11" prop="company" label="Company" sortable="custom"></el-table-column>
-
-            <el-table-column
-            :filters="$store.state.customerList.map(c => { return { value: c.id, text: c.name } })"
-            column-key="customer_id"
-            prop="customer"
-            label="Customer"
-            sortable="custom">
-            </el-table-column>
-
-            <el-table-column prop="fare" label="Tarif per M3" sortable="custom" header-align="right" align="right">
-                <template slot-scope="scope">
-                    Rp. {{scope.row.fare | formatNumber}}
-                </template>
-            </el-table-column>
-
-            <el-table-column prop="ppn" label="PPN" sortable="custom" align="center" header-align="center">
-                <template slot-scope="scope">
-                    <i :class="scope.row.ppn ? 'el-icon-check text-success' : 'el-icon-close text-danger'"></i>
-                </template>
-            </el-table-column>
-
-            <el-table-column prop="updated_at" label="Update" sortable="custom" align="center" header-align="center">
-                <template slot-scope="scope">
-                    {{scope.row.updated_at | readableDate}}
-                </template>
-            </el-table-column>
+            <el-table-column prop="name" label="Name" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column width="40px">
                 <template slot-scope="scope">
                     <el-dropdown>
@@ -51,8 +24,8 @@
                             <i class="el-icon-more"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native.prevent="openForm(scope.row)"><i class="el-icon-edit-outline"></i> Edit</el-dropdown-item>
-                            <el-dropdown-item @click.native.prevent="deleteData(scope.row.id)"><i class="el-icon-delete"></i> Hapus</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-edit-outline" @click.native.prevent="openForm(scope.row)">Edit</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-delete" @click.native.prevent="deleteData(scope.row.id)">Hapus</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -70,42 +43,24 @@
         :total="tableData.total">
         </el-pagination>
 
-        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT TARIF PACKING PETI' : 'TAMBAH TARIF PACKING PETI'" width="500px" v-loading="loading" :close-on-click-modal="false">
+        <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT KOTA' : 'TAMBAH KOTA'" width="500px" v-loading="loading" :close-on-click-modal="false">
             <el-alert type="error" title="ERROR"
                 :description="error.message + '\n' + error.file + ':' + error.line"
                 v-show="error.message"
                 style="margin-bottom:15px;">
             </el-alert>
 
-            <el-form label-width="150px" label-position="left">
+            <el-form label-width="100px" label-position="left">
 
-                <el-form-item label="Customer" :class="formErrors.customer_id ? 'is-error' : ''">
-                    <el-select v-model="formModel.customer_id" placeholder="Customer" filterable default-first-option style="width:100%">
-                        <el-option v-for="(t, i) in $store.state.customerList"
-                        :value="t.id"
-                        :label="t.code + ' - ' + t.name"
-                        :key="i">
-                        </el-option>
-                    </el-select>
-                    <div class="el-form-item__error" v-if="formErrors.customer_id">{{formErrors.customer_id[0]}}</div>
-                </el-form-item>
-
-                <el-form-item label="Tarif per M3 (Rp)" :class="formErrors.fare ? 'is-error' : ''">
-                    <el-input type="number" placeholder="Tarif (Rp)" v-model="formModel.fare"></el-input>
-                    <div class="el-form-item__error" v-if="formErrors.fare">{{formErrors.fare[0]}}</div>
-                </el-form-item>
-
-                <el-form-item label="PPN" :class="formErrors.ppn ? 'is-error' : ''">
-                    <el-select placeholder="PPN" v-model="formModel.ppn" style="width:100%">
-                        <el-option v-for="(label, index) in ['Tidak', 'Ya']" :key="index" :value="index" :label="label"></el-option>
-                    </el-select>
-                    <div class="el-form-item__error" v-if="formErrors.ppn">{{formErrors.ppn[0]}}</div>
+                <el-form-item label="Nama Kota" :class="formErrors.name ? 'is-error' : ''">
+                    <el-input placeholder="Nama Kota" v-model="formModel.name"></el-input>
+                    <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>
                 </el-form-item>
 
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="() => !!formModel.id ? update() : store()" icon="el-icon-success">SIMPAN</el-button>
-                <el-button type="info" @click="showForm = false" icon="el-icon-error">BATAL</el-button>
+                <el-button icon="el-icon-success" type="primary" @click="() => !!formModel.id ? update() : store()">SIMPAN</el-button>
+                <el-button icon="el-icon-error" type="info" @click="showForm = false">BATAL</el-button>
             </span>
         </el-dialog>
     </div>
@@ -123,10 +78,9 @@ export default {
             page: 1,
             pageSize: 10,
             tableData: {},
-            sort: 'customer',
+            sort: 'name',
             order: 'ascending',
-            loading: false,
-            filters: {},
+            loading: false
         }
     },
     methods: {
@@ -143,7 +97,7 @@ export default {
         },
         store() {
             this.loading = true;
-            axios.post('/masterFarePacking', this.formModel).then(r => {
+            axios.post('/city', this.formModel).then(r => {
                 this.showForm = false;
                 this.$message({
                     message: 'Data berhasil disimpan.',
@@ -167,7 +121,7 @@ export default {
         },
         update() {
             this.loading = true;
-            axios.put('/masterFarePacking/' + this.formModel.id, this.formModel).then(r => {
+            axios.put('/city/' + this.formModel.id, this.formModel).then(r => {
                 this.showForm = false
                 this.$message({
                     message: 'Data berhasil disimpan.',
@@ -191,7 +145,7 @@ export default {
         },
         deleteData(id) {
             this.$confirm('Anda yakin akan menghapus data ini?', 'Warning', { type: 'warning' }).then(() => {
-                axios.delete('/masterFarePacking/' + id).then(r => {
+                axios.delete('/city/' + id).then(r => {
                     this.requestData();
                     this.$message({
                         message: r.data.message,
@@ -217,12 +171,12 @@ export default {
             }
 
             this.loading = true;
-            axios.get('/masterFarePacking', { params: Object.assign(params, this.filters) }).then(r => {
+            axios.get('/city', {params: params}).then(r => {
                     this.tableData = r.data
             }).catch(e => {
                 if (e.response.status == 500) {
                     this.$message({
-                        message: e.response.data.message,
+                        message: e.response.data.message + '\n' + e.response.data.file + ':' + e.response.data.line,
                         type: 'error',
                         showClose: true
                     });

@@ -9,7 +9,7 @@ class AppController extends Controller
     protected $navs = [
         ['label' => 'Dashboard', 'icon' => 'el-icon-menu', 'path' => '/', 'roles' => [11, 21, 31, 41] ],
         ['label' => 'Pengiriman Domestik', 'icon' => 'el-icon-truck', 'path' => '/domestic-delivery', 'roles' => [11, 21, 31, 41] ],
-        ['label' => 'Pengiriman International', 'icon' => 'el-icon-ship', 'path' => '/international-delivery', 'roles' => [11, 21, 31] ],
+        // ['label' => 'Pengiriman International', 'icon' => 'el-icon-ship', 'path' => '/international-delivery', 'roles' => [11, 21, 31] ],
         ['label' => 'Invoice', 'icon' => 'el-icon-money', 'path' => '/invoice', 'roles' => [11, 21, 31] ],
         ['label' => 'Laporan', 'icon' => 'el-icon-data-analysis', 'path' => '/report', 'roles' => [11, 21, 31, 41] ],
         ['label' => 'Companies', 'icon' => 'el-icon-office-building', 'path' => '/company', 'roles' => [11] ],

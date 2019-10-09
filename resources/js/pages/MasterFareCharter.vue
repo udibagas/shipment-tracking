@@ -45,7 +45,7 @@
             <el-table-column prop="lead_time" label="Lead Time" sortable="custom" align="center" header-align="center"></el-table-column>
             <el-table-column prop="ppn" label="PPN" sortable="custom" align="center" header-align="center">
                 <template slot-scope="scope">
-                    {{scope.row.ppn ? 'Ya' : 'Tidak'}}
+                    <i :class="scope.row.ppn ? 'el-icon-check text-success' : 'el-icon-close text-danger'"></i>
                 </template>
             </el-table-column>
             <el-table-column prop="updated_at" label="Update" sortable="custom" align="center" header-align="center">

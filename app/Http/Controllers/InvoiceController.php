@@ -28,7 +28,16 @@ class InvoiceController extends Controller
             ')
             ->join('customers', 'customers.id', '=', 'invoices.customer_id')
             ->join('users', 'users.id', '=', 'invoices.user_id')
-            ->orderBy($sort, $order)->paginate($request->pageSize);
+            ->when($request->keyword, function($q) use ($request) {
+                return $q->where(function($qq) use ($request) {
+                    return $qq->where('customers.name', 'LIKE', '%'.$request->keyword.'%')
+                        ->orWhere('users.name', 'LIKE', '%'.$request->keyword.'%')
+                        ->orWhere('number', 'LIKE', '%'.$request->keyword.'%')
+                        ->orWhere('service_type', 'LIKE', '%'.$request->keyword.'%');
+                });
+            })->when($request->dateRange, function($q) use ($request) {
+                return $q->whereBetween('date', $request->dateRange);
+            })->orderBy($sort, $order)->paginate($request->pageSize);
     }
 
     /**

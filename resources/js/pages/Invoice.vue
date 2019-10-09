@@ -35,6 +35,7 @@
             </el-table-column>
             <el-table-column prop="number" label="Nomor" sortable="custom" min-width="150" show-overflow-tooltip></el-table-column>
             <el-table-column prop="customer" label="Customer" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="service_type" label="Layanan" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column prop="total" label="Total" sortable="custom" align="right" header-align="right">
                 <template slot-scope="scope">
                     Rp {{scope.row.total | formatNumber}}
@@ -45,7 +46,7 @@
                     {{scope.row.status ? 'Final' : 'Draft'}}
                 </template>
             </el-table-column>
-            <el-table-column label="Update Terakhir" prop="updated_at" sortable="custom" align="center" header-align="center">
+            <el-table-column label="Update Terakhir" prop="updated_at" min-width="150" sortable="custom" align="center" header-align="center">
                 <template slot-scope="scope">
                     {{scope.row.updated_at | readableDateTime}}
                 </template>
@@ -119,7 +120,7 @@
                             <div class="el-form-item__error" v-if="formErrors.total">{{formErrors.total[0]}}</div>
                         </el-form-item>
                         <el-form-item label="Terbilang" :class="formErrors.total_said ? 'is-error' : ''">
-                            <el-input placeholder="Terbilang" v-model="formModel.total_said"></el-input>
+                            <el-input disabled placeholder="Terbilang" :value="terbilang(total)"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.total_said">{{formErrors.total_said[0]}}</div>
                         </el-form-item>
                     </el-col>
@@ -191,19 +192,6 @@
 
 <script>
 export default {
-    // filters: {
-    //     terbilang(v) {
-    //         let bilangan = ',satu,dua,tiga,empat,lima,enam,tujuh,delapan,sembilan'.split(',')
-    //         let level_bilangan = ',puluh,ratus,ribu,puluh ribu, ratus ribu, juta,puluh juta,ratus juta,milyar,puluh milyar,ratus milyar,triliun'.split(',')
-    //         let input = Math.round(v) + ''
-
-    //         let start_from = input
-    //         for (let i = 0; i < input.length; i++) {
-
-    //         }
-
-    //     }
-    // },
     computed: {
         total() {
             return this.formModel.items.reduce((t, c) => t + c.price + c.tax , 0)
@@ -237,6 +225,58 @@ export default {
         print(id) {
             window.open(BASE_URL + '/invoice/print/' + id + '?token=' + this.$store.state.token, '_blank')
         },
+        terbilang(v) {
+            let bilangan = 'nol,satu,dua,tiga,empat,lima,enam,tujuh,delapan,sembilan'.split(',')
+            let level_bilangan = ',ribu,juta,milyar,triliun'.split(',')
+            let input = Math.round(v) + ''
+            let tmp = [];
+
+            // pisahin angka 3 digit
+            let level = 0
+            while (true) {
+                tmp.push({level: level, angka: input.slice(-3)})
+                input = input.slice(0, -3)
+                level++
+                if (input == '') {
+                    break
+                }
+
+            }
+
+            tmp.reverse()
+            let said = ''
+
+            tmp.forEach(i => {
+                if (i.angka.length < 3) {
+                    i.angka = i.angka.length == 2 ? '0' + i.angka : '00' + i.angka
+                }
+
+                let array_angka = i.angka.split('').map(i => Number(i))
+
+                if (array_angka[0] == '1') {
+                    said += 'seratus '
+                } else {
+                    said += array_angka[0] > 0 ? bilangan[array_angka[0]] + ' ratus ' : ''
+                }
+
+                if (array_angka[1] == '1') {
+                    if (array_angka[2] == '0') {
+                        said += 'sepuluh '
+                    } else if (array_angka[2] == '1') {
+                        said += 'sebelas '
+                    } else {
+                        said += bilangan[array_angka[2]] + ' belas '
+                    }
+                } else {
+                    said += array_angka[1] > 0 ? bilangan[array_angka[1]] + ' puluh ' : ''
+                    said += array_angka[2] > 0 ? bilangan[array_angka[2]] + ' ' : ''
+                }
+
+                said += level_bilangan[i.level] + ' '
+            })
+
+            return said.replace('satu ribu', 'seribu').toUpperCase() + 'RUPIAH'
+        },
         openForm(data) {
             this.error = {}
             this.formErrors = {}
@@ -269,6 +309,7 @@ export default {
 
             this.formModel.status = status
             this.formModel.total = this.total
+            this.formModel.total_said = this.terbilang(this.total)
 
             if (!!status) {
                 this.$confirm('Anda yakin?' ,'Konfirmasi', { type: 'warning' }).then(() => {
@@ -361,6 +402,7 @@ export default {
                 pageSize: this.pageSize,
                 sort: this.sort,
                 order: this.order,
+                dateRange: this.dateRange
             }
 
             this.loading = true;

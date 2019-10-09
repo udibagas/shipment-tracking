@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     // superadmin & admin
     Route::group(['middleware' => 'role:11, 21'], function() {
+        Route::resource('city', 'CityController')->only(['index', 'store', 'update', 'destroy']);
         Route::resource('company', 'CompanyController')->only(['show', 'update']);
         Route::resource('user', 'UserController')->except(['create', 'edit']);
         Route::resource('agent', 'AgentController')->except(['create', 'edit']);

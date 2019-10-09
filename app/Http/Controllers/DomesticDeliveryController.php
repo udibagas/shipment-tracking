@@ -181,10 +181,16 @@ class DomesticDeliveryController extends Controller
         return view('print.awb', ['data' => $domesticDelivery]);
     }
 
+    // untuk ambil data waktu mau generate invoice & api buat konfirmasi penerimaan
     public function search(Request $request)
     {
         return DomesticDelivery::when($request->customer_id, function($q) use ($request) {
             return $q->where('customer_id', $request->customer_id);
+        })->when($request->keyword, function($q) use ($request) {
+            return $q->where(function($qq) use ($request) {
+                return $qq->where('spb_number', $request->keyword)
+                    ->orWhere('resi_number', $request->keyword);
+            });
         })->when($request->company_id, function($q) use ($request) {
             return $q->where('company_id', $request->company_id);
         })->when($request->delivery_status_id, function($q) use ($request) {

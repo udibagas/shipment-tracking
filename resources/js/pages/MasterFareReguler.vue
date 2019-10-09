@@ -37,7 +37,7 @@
             label="Jenis Armada"
             sortable="custom"></el-table-column>
 
-            <el-table-column prop="fare" label="Tarif" sortable="custom" header-align="right" align="right">
+            <el-table-column prop="fare" label="Tarif" sortable="custom" width="120" header-align="right" align="right">
                 <template slot-scope="scope">
                     Rp. {{scope.row.fare | formatNumber}}
                 </template>
@@ -48,9 +48,9 @@
                     {{scope.row.minimum}} KG
                 </template>
             </el-table-column>
-            <el-table-column prop="ppn" label="PPN" sortable="custom" align="center" header-align="center">
+            <el-table-column prop="ppn" label="PPN" sortable="custom" align="center" header-align="center" width="80">
                 <template slot-scope="scope">
-                    {{scope.row.ppn ? 'Ya' : 'Tidak'}}
+                    <i :class="scope.row.ppn ? 'el-icon-check text-success' : 'el-icon-close text-danger'"></i>
                 </template>
             </el-table-column>
             <el-table-column prop="updated_at" label="Update" sortable="custom" align="center" header-align="center">
