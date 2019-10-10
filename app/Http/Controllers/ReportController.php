@@ -47,7 +47,7 @@ class ReportController extends Controller
                 COUNT(domestic_deliveries.id) AS `total`
             FROM domestic_deliveries
             JOIN customers ON customers.id = domestic_deliveries.customer_id
-            WHERE company_id = :company_id
+            WHERE domestic_deliveries.company_id = :company_id
                 AND pick_up_date BETWEEN :start AND :end
             GROUP BY customers.name
         ";

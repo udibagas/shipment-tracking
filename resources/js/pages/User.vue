@@ -14,26 +14,11 @@
         </el-form>
 
         <el-table :data="tableData.data" stripe
+        @row-dblclick="(row, column, event) => { selectedData = row; showDetail = true; }"
         :default-sort = "{prop: sort, order: order}"
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column fixed="left" type="expand">
-                <template slot-scope="scope">
-                    <table>
-                        <tbody>
-                            <tr><td class="td-label">Name</td><td class="td-value">{{scope.row.name}}</td></tr>
-                            <tr><td class="td-label">Email</td><td class="td-value">{{scope.row.email}}</td></tr>
-                            <tr><td class="td-label">Phone</td><td class="td-value">{{scope.row.phone}}</td></tr>
-                            <tr><td class="td-label">Role</td><td class="td-value">{{$store.state.roleList[scope.row.role]}}</td></tr>
-                            <tr><td class="td-label">Company</td><td class="td-value">{{scope.row.company}}</td></tr>
-                            <tr><td class="td-label">Customer</td><td class="td-value">{{scope.row.customer}}</td></tr>
-                            <tr><td class="td-label">Agent</td><td class="td-value">{{scope.row.agent}}</td></tr>
-                            <tr><td class="td-label">Status</td><td class="td-value">{{scope.row.active ? 'Active' : 'Inactive'}}</td></tr>
-                        </tbody>
-                    </table>
-                </template>
-            </el-table-column>
             <el-table-column fixed="left" prop="name" label="Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
@@ -42,7 +27,7 @@
                     {{$store.state.roleList[scope.row.role]}}
                 </template>
             </el-table-column>
-            <el-table-column prop="company" label="Company" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column v-if="$store.state.user.role == 11" prop="company" label="Company" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="customer" label="Customer" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="agent" label="Agent" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column fixed="right" prop="active" label="Status" sortable="custom" min-width="100px">
@@ -58,6 +43,7 @@
                             <i class="el-icon-more"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item icon="el-icon-zoom-in" @click.native.prevent="() => { selectedData = scope.row; showDetail = true; }">Lihat Detail</el-dropdown-item>
                             <el-dropdown-item icon="el-icon-edit-outline" @click.native.prevent="openForm(scope.row)">Edit</el-dropdown-item>
                             <el-dropdown-item icon="el-icon-delete" @click.native.prevent="deleteData(scope.row.id)">Hapus</el-dropdown-item>
                         </el-dropdown-menu>
@@ -76,6 +62,21 @@
         :page-sizes="[10, 25, 50, 100]"
         :total="tableData.total">
         </el-pagination>
+
+        <el-dialog title="DETAIL USER" center :visible.sync="showDetail">
+            <table class="table table-striped table-sm" v-if="selectedData">
+                <tbody>
+                    <tr><td class="text-bold" style="width:150px">Name</td><td>: {{selectedData.name}}</td></tr>
+                    <tr><td class="text-bold">Email</td><td>: {{selectedData.email}}</td></tr>
+                    <tr><td class="text-bold">Phone</td><td>: {{selectedData.phone}}</td></tr>
+                    <tr><td class="text-bold">Role</td><td>: {{$store.state.roleList[selectedData.role]}}</td></tr>
+                    <tr><td class="text-bold">Company</td><td>: {{selectedData.company}}</td></tr>
+                    <tr><td class="text-bold">Customer</td><td>: {{selectedData.customer}}</td></tr>
+                    <tr><td class="text-bold">Agent</td><td>: {{selectedData.agent}}</td></tr>
+                    <tr><td class="text-bold">Status</td><td>: {{selectedData.active ? 'Aktif' : 'Nonaktif'}}</td></tr>
+                </tbody>
+            </table>
+        </el-dialog>
 
         <el-dialog :visible.sync="showForm" :title="!!formModel.id ? 'EDIT USER' : 'TAMBAH USER'" width="500px" v-loading="loading" :close-on-click-modal="false">
             <el-alert type="error" title="ERROR"
@@ -102,16 +103,12 @@
 
                 <el-form-item label="Role" :class="formErrors.role ? 'is-error' : ''">
                     <el-select v-model="formModel.role" placeholder="Role" style="width:100%">
-                        <el-option v-for="(t, i) in $store.state.roleList"
-                        :value="i"
-                        :label="t"
-                        :key="i">
-                        </el-option>
+                        <el-option v-for="(t, i) in $store.state.roleList" :value="i" :label="t" :key="i"> </el-option>
                     </el-select>
                     <div class="el-form-item__error" v-if="formErrors.role">{{formErrors.role[0]}}</div>
                 </el-form-item>
 
-                <el-form-item v-show="formModel.role == 21 || formModel.role == 31" label="Company" :class="formErrors.company_id ? 'is-error' : ''">
+                <el-form-item v-show="formModel.role == 11" label="Company" :class="formErrors.company_id ? 'is-error' : ''">
                     <el-select v-model="formModel.company_id" placeholder="Company" filterable default-first-option style="width:100%">
                         <el-option v-for="(t, i) in $store.state.companyList"
                         :value="t.id"
@@ -188,6 +185,8 @@ export default {
             sort: 'name',
             order: 'ascending',
             loading: false,
+            showDetail: false,
+            selectedData: {}
         }
     },
     methods: {
@@ -204,6 +203,7 @@ export default {
         },
         store() {
             this.loading = true;
+            this.formModel.company_id = this.$store.state.user.company_id
             axios.post('/user', this.formModel).then(r => {
                 this.showForm = false;
                 this.$message({

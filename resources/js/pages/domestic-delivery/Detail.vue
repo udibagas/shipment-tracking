@@ -36,7 +36,13 @@
                         <tr><td class="td-label">ETD</td><td class="td-value">{{data.etd | readableDate}}</td></tr>
                         <tr><td class="td-label">Tanggal Kirim</td><td class="td-value">{{data.delivery_date | readableDate}}</td></tr>
                         <tr><td class="td-label">ETA</td><td class="td-value">{{data.eta | readableDate}}</td></tr>
-                        <tr><td class="td-label">Tanggal Terima</td><td class="td-value">{{data.delivered_date | readableDate}}</td></tr>
+                        <tr>
+                            <td class="td-label">Tanggal Terima</td>
+                            <td class="td-value">
+                                {{data.delivered_date | readableDate}}
+                                {{!!data.receiver ? ' oleh ' + data.receiver : ''}}
+                            </td>
+                        </tr>
                         <!-- <tr><td class="td-label">Received Date</td><td class="td-value">{{data.received_date}}</td></tr> -->
                         <!-- <tr><td class="td-label">Invoice Date</td><td class="td-value">{{data.invoice_date}}</td></tr> -->
                         <!-- <tr><td class="td-label">Payment Date</td><td class="td-value">{{data.payment_date}}</td></tr> -->
@@ -123,6 +129,10 @@
                             <td class="td-value text-right">Rp. {{data.packing_cost | formatNumber}}</td>
                             <td class="td-value text-right">Rp. {{data.packing_cost_ppn | formatNumber}}</td>
                             <td class="td-value text-right">Rp. {{data.packing_cost + data.packing_cost_ppn | formatNumber}}</td>
+                        </tr>
+                        <tr>
+                            <td class="td-value">BIAYA PENERUS</td>
+                            <td class="td-value text-right" colspan="5">Rp. {{data.forwarder_cost | formatNumber}}</td>
                         </tr>
                         <tr>
                             <td class="td-value">TOTAL</td>

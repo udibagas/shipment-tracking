@@ -81,13 +81,18 @@ class User extends Authenticatable implements JWTSubject
 
     public static function roleList()
     {
-        return [
-            self::ROLE_SUPERADMIN => 'SUPER ADMIN',
-            self::ROLE_ADMIN => 'ADMIN',
+        $list = [
             self::ROLE_OPERATOR => 'OPERATOR',
             self::ROLE_CUSTOMER => 'CUSTOMER',
             self::ROLE_AGENT => 'AGENT'
         ];
+
+        if (auth()->user()->role == self::ROLE_SUPERADMIN) {
+            $list[self::ROLE_SUPERADMIN] = 'SUPER ADMIN';
+            $list[self::ROLE_ADMIN] = 'ADMIN';
+        }
+
+        return $list;
     }
 
     public function company() {

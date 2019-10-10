@@ -74,6 +74,7 @@
                     {{ scope.row.delivered_date | readableDate }}
                 </template>
             </el-table-column>
+            <el-table-column prop="receiver" label="Penerima" sortable="custom" min-width="100px" show-overflow-tooltip></el-table-column>
             <!-- <el-table-column prop="received_date" label="Tgl Terima" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column> -->
             <!-- <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column> -->
             <!-- <el-table-column prop="payment_date" label="Payment Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column> -->
@@ -388,13 +389,22 @@
                         <td class="td-value text-right">Rp. {{delivery_cost_ppn | formatNumber}}</td>
                         <td class="td-value text-right">Rp. {{delivery_cost + delivery_cost_ppn | formatNumber}}</td>
                     </tr>
-                    <tr v-if="!!totalVolumePacking">
+                    <tr>
                         <td class="td-label">PACKING PETI</td>
                         <td class="td-value text-right">{{totalVolumePacking | formatNumber}} M<sup>3</sup></td>
                         <td class="td-value text-right">Rp {{packing_rate.fare | formatNumber}}</td>
                         <td class="td-value text-right">Rp. {{packing_cost | formatNumber}}</td>
                         <td class="td-value text-right">Rp. {{packing_cost_ppn | formatNumber}}</td>
                         <td class="td-value text-right">Rp. {{packing_cost + packing_cost_ppn | formatNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">BIAYA PENERUS</td>
+                        <td class="td-value text-right" colspan="5">
+                            <input type="number"
+                            v-model="formModel.forwarder_cost"
+                            placeholder="Biaya Penerus"
+                            style="border:none;text-align:right;">
+                        </td>
                     </tr>
                     <tr>
                         <td class="td-label">TOTAL</td>
@@ -476,7 +486,7 @@ export default {
             return this.packing_rate.ppn ? this.packing_cost * 10 / 100 : 0
         },
         total_cost() {
-            return this.delivery_cost + this.delivery_cost_ppn + this.packing_cost + this.packing_cost_ppn;
+            return this.delivery_cost + this.delivery_cost_ppn + this.packing_cost + this.packing_cost_ppn + Number(this.formModel.forwarder_cost)
         }
     },
     watch: {
@@ -596,6 +606,7 @@ export default {
                         "Tgl Kirim": d.delivery_date,
                         "ETA": d.eta,
                         "Tgl Terima": d.delivered_date,
+                        "Penerima": d.receiver,
                         "Jml Koli": d.quantity,
                         "Berat": d.weight,
                         "Berat Volume": d.volume_weight,

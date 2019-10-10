@@ -10,6 +10,6 @@ class Customer extends Model
         'code', 'name', 'phone', 'email',
         'address', 'active', 'contact_person',
         'fax', 'website', 'contact_person_email',
-        'contact_person_phone'
+        'contact_person_phone', 'company_id'
     ];
 }

@@ -22,7 +22,15 @@ class UserController extends Controller
             ->join('companies', 'companies.id', '=', 'users.company_id', 'LEFT')
             ->join('customers', 'customers.id', '=', 'users.customer_id', 'LEFT')
             ->join('agents', 'agents.id', '=', 'users.agent_id', 'LEFT')
-            ->when($request->keyword, function ($q) use ($request) {
+            // user admin hanya boleh manage user dengan level dibawahnya
+            ->when($request->user()->role == User::ROLE_ADMIN, function($q) {
+                return $q->whereIn('role', [
+                    User::ROLE_ADMIN,
+                    User::ROLE_CUSTOMER,
+                    User::ROLE_AGENT,
+                    User::ROLE_OPERATOR,
+                ])->where('users.company_id', auth()->user()->company_id);
+            })->when($request->keyword, function ($q) use ($request) {
                 return $q->where('users.name', 'LIKE', '%' . $request->keyword . '%')
                     ->orWhere('users.email', 'LIKE', '%' . $request->keyword . '%');
             })->when($request->role, function ($q) use ($request) {
@@ -69,6 +77,10 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        if (auth()->user()->role == User::ROLE_ADMIN && $user->role == User::ROLE_ADMIN && $user->id != $request->user()->id) {
+            return response(['message' => 'Anda tidak bisa mengedit akun admin.'], 500);
+        }
+
         $input = $request->all();
 
         if ($request->password) {
@@ -90,6 +102,10 @@ class UserController extends Controller
     {
         if ($user->id == auth()->user()->id) {
             return response(['message' => 'Anda tidak bisa menghapus akun sendiri.'], 500);
+        }
+
+        if (auth()->user()->role == User::ROLE_ADMIN && $user->role == User::ROLE_ADMIN) {
+            return response(['message' => 'Anda tidak bisa menghapus akun admin.'], 500);
         }
 
         $user->delete();

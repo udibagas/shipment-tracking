@@ -14,40 +14,22 @@
         </el-form>
 
         <el-table :data="tableData.data" stripe
+        @row-dblclick="(row, column, event) => { selectedData = row; showDetail = true; }"
         :default-sort = "{prop: sort, order: order}"
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column fixed="left" type="expand">
-                <template slot-scope="scope">
-                    <table>
-                        <tbody>
-                            <tr><td class="td-label">Code</td><td class="td-value">{{scope.row.code}}</td></tr>
-                            <tr><td class="td-label">Name</td><td class="td-value">{{scope.row.name}}</td></tr>
-                            <tr><td class="td-label">Address</td><td class="td-value">{{scope.row.address}}</td></tr>
-                            <tr><td class="td-label">Phone</td><td class="td-value">{{scope.row.phone}}</td></tr>
-                            <tr><td class="td-label">Fax</td><td class="td-value">{{scope.row.fax}}</td></tr>
-                            <tr><td class="td-label">Email</td><td class="td-value">{{scope.row.email}}</td></tr>
-                            <tr><td class="td-label">Website</td><td class="td-value">{{scope.row.website}}</td></tr>
-                            <tr><td class="td-label">Contact Person</td><td class="td-value">{{scope.row.contact_person}}</td></tr>
-                            <tr><td class="td-label">Contact Person Email</td><td class="td-value">{{scope.row.contact_person_email}}</td></tr>
-                            <tr><td class="td-label">Contact Person Phone</td><td class="td-value">{{scope.row.contact_person_phone}}</td></tr>
-                            <tr><td class="td-label">Status</td><td class="td-value">{{scope.row.status ? 'Active' : 'Inactive'}}</td></tr>
-                        </tbody>
-                    </table>
-                </template>
-            </el-table-column>
-            <el-table-column fixed="left" prop="code" label="Code" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
-            <el-table-column fixed="left" prop="name" label="Name" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
+            <el-table-column fixed="left" prop="code" label="Kode" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
+            <el-table-column fixed="left" prop="name" label="Nama" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="address" label="Address" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="contact_person" label="Contact Person" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="contact_person_phone" label="Contact Person Phone" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="contact_person_email" label="Contact Person Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="phone" label="No Telp" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="address" label="ALamat" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="contact_person" label="Nama Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="contact_person_phone" label="No. HP Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="contact_person_email" label="Email Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="status" label="Status" sortable="custom" min-width="100px">
                 <template slot-scope="scope">
-                    <el-tag size="mini" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Active' : 'Inactive'}}</el-tag>
+                    <el-tag size="mini" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Aktif' : 'Nonaktif'}}</el-tag>
                 </template>
             </el-table-column>
 
@@ -58,8 +40,9 @@
                             <i class="el-icon-more"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native.prevent="openForm(scope.row)"><i class="el-icon-edit-outline"></i> Edit</el-dropdown-item>
-                            <el-dropdown-item @click.native.prevent="deleteData(scope.row.id)"><i class="el-icon-delete"></i> Delete</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-zoom-in" @click.native.prevent="() => { selectedData = scope.row; showDetail = true; }">Lihat Detail</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-edit-outline" @click.native.prevent="openForm(scope.row)">Edit</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-delete" @click.native.prevent="deleteData(scope.row.id)">Hapus</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -77,9 +60,27 @@
         :total="tableData.total">
         </el-pagination>
 
+        <el-dialog title="DETAIL AGENT" center :visible.sync="showDetail">
+            <table class="table table-sm table-striped" v-if="!!selectedData.id">
+                <tbody>
+                    <tr><td class="text-bold" style="width:150px">Kode</td><td>: {{selectedData.code}}</td></tr>
+                    <tr><td class="text-bold">Nama</td><td>: {{selectedData.name}}</td></tr>
+                    <tr><td class="text-bold">Alamat</td><td>: {{selectedData.address}}</td></tr>
+                    <tr><td class="text-bold">No. Telp.</td><td>: {{selectedData.phone}}</td></tr>
+                    <tr><td class="text-bold">Fax</td><td>: {{selectedData.fax}}</td></tr>
+                    <tr><td class="text-bold">Email</td><td>: {{selectedData.email}}</td></tr>
+                    <tr><td class="text-bold">Website</td><td>: {{selectedData.website}}</td></tr>
+                    <tr><td class="text-bold">Contact Person</td><td>: {{selectedData.contact_person}}</td></tr>
+                    <tr><td class="text-bold">Email Contact Person</td><td>: {{selectedData.contact_person_email}}</td></tr>
+                    <tr><td class="text-bold">No Hp. Contact Person</td><td>: {{selectedData.contact_person_phone}}</td></tr>
+                    <tr><td class="text-bold">Status</td><td>: {{selectedData.status ? 'Active' : 'Inactive'}}</td></tr>
+                </tbody>
+            </table>
+        </el-dialog>
+
         <el-dialog top="60px"
         :visible.sync="showForm"
-        :title="!!formModel.id ? 'EDIT AGENT' : 'ADD NEW AGENT'"
+        :title="!!formModel.id ? 'EDIT AGENT' : 'TAMBAH AGENT'"
         width="550px"
         v-loading="loading"
         :close-on-click-modal="false">
@@ -91,13 +92,13 @@
             </el-alert>
 
             <el-form label-width="170px" label-position="left">
-                <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
-                    <el-input placeholder="Code" v-model="formModel.code"></el-input>
+                <el-form-item label="Kode" :class="formErrors.code ? 'is-error' : ''">
+                    <el-input placeholder="Kode" v-model="formModel.code"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
                 </el-form-item>
 
-                <el-form-item label="Name" :class="formErrors.name ? 'is-error' : ''">
-                    <el-input placeholder="Name" v-model="formModel.name"></el-input>
+                <el-form-item label="Nama" :class="formErrors.name ? 'is-error' : ''">
+                    <el-input placeholder="Nama" v-model="formModel.name"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>
                 </el-form-item>
 
@@ -113,15 +114,13 @@
                     <div class="el-form-item__error" v-if="formErrors.active">{{formErrors.active[0]}}</div>
                 </el-form-item>
 
-                <el-divider></el-divider>
-
-                <el-form-item label="Address" :class="formErrors.address ? 'is-error' : ''">
-                    <el-input type="textarea" rows="3" placeholder="Address" v-model="formModel.address"></el-input>
+                <el-form-item label="Alamat" :class="formErrors.address ? 'is-error' : ''">
+                    <el-input type="textarea" rows="3" placeholder="Alamat" v-model="formModel.address"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.address">{{formErrors.address[0]}}</div>
                 </el-form-item>
 
-                <el-form-item label="Phone" :class="formErrors.phone ? 'is-error' : ''">
-                    <el-input placeholder="Phone" v-model="formModel.phone"></el-input>
+                <el-form-item label="No. Telp." :class="formErrors.phone ? 'is-error' : ''">
+                    <el-input placeholder="No. Telp." v-model="formModel.phone"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.phone">{{formErrors.phone[0]}}</div>
                 </el-form-item>
 
@@ -140,26 +139,24 @@
                     <div class="el-form-item__error" v-if="formErrors.website">{{formErrors.website[0]}}</div>
                 </el-form-item>
 
-                <el-divider></el-divider>
-
-                <el-form-item label="Contact Person Name" :class="formErrors.contact_person ? 'is-error' : ''">
-                    <el-input placeholder="Contact Person" v-model="formModel.contact_person"></el-input>
+                <el-form-item label="Nama Contact Person" :class="formErrors.contact_person ? 'is-error' : ''">
+                    <el-input placeholder="Nama Contact Person" v-model="formModel.contact_person"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.contact_person">{{formErrors.contact_person[0]}}</div>
                 </el-form-item>
 
-                <el-form-item label="Contact Person Email" :class="formErrors.contact_person_email ? 'is-error' : ''">
-                    <el-input placeholder="Contact Person Email" v-model="formModel.contact_person_email"></el-input>
+                <el-form-item label="Email Contact Person" :class="formErrors.contact_person_email ? 'is-error' : ''">
+                    <el-input placeholder=" EmailContact Person" v-model="formModel.contact_person_email"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.contact_person_email">{{formErrors.contact_person_email[0]}}</div>
                 </el-form-item>
 
-                <el-form-item label="Contact Person Phone" :class="formErrors.contact_person_phone ? 'is-error' : ''">
-                    <el-input placeholder="Contact Person Phone" v-model="formModel.contact_person_phone"></el-input>
+                <el-form-item label="No. HP Contact Person" :class="formErrors.contact_person_phone ? 'is-error' : ''">
+                    <el-input placeholder="No. HP Contact Person" v-model="formModel.contact_person_phone"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.contact_person_phone">{{formErrors.contact_person_phone[0]}}</div>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="() => !!formModel.id ? update() : store()"><i class="el-icon-success"></i> SAVE</el-button>
-                <el-button type="info" @click="showForm = false"><i class="el-icon-error"></i> CANCEL</el-button>
+                <el-button icon="el-icon-success" type="primary" @click="() => !!formModel.id ? update() : store()">SIMPAN</el-button>
+                <el-button icon="el-icon-error" type="info" @click="showForm = false">BATAL</el-button>
             </span>
         </el-dialog>
     </div>
@@ -179,7 +176,9 @@ export default {
             tableData: {},
             sort: 'name',
             order: 'ascending',
-            loading: false
+            loading: false,
+            showDetail: false,
+            selectedData: {}
         }
     },
     methods: {
@@ -196,6 +195,7 @@ export default {
         },
         store() {
             this.loading = true;
+            this.formModel.company_id = this.$store.state.user.company_id
             axios.post('/agent', this.formModel).then(r => {
                 this.showForm = false;
                 this.$message({
@@ -275,7 +275,7 @@ export default {
             }).catch(e => {
                 if (e.response.status == 500) {
                     this.$message({
-                        message: e.response.data.message + '\n' + e.response.data.file + ':' + e.response.data.line,
+                        message: e.response.data.message,
                         type: 'error',
                         showClose: true
                     });
@@ -290,8 +290,4 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>
 

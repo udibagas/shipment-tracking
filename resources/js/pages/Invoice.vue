@@ -33,15 +33,15 @@
                     {{scope.row.date | readableDate}}
                 </template>
             </el-table-column>
-            <el-table-column prop="number" label="Nomor" sortable="custom" min-width="150" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="customer" label="Customer" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="service_type" label="Layanan" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="total" label="Total" sortable="custom" align="right" header-align="right">
+            <el-table-column prop="number" label="Nomor" sortable="custom" min-width="120" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="customer" label="Customer" sortable="custom" show-overflow-tooltip min-width="120"></el-table-column>
+            <el-table-column prop="service_type" label="Layanan" sortable="custom" show-overflow-tooltip min-width="100"></el-table-column>
+            <el-table-column prop="total" label="Total" sortable="custom" align="right" header-align="right" min-width="120">
                 <template slot-scope="scope">
                     Rp {{scope.row.total | formatNumber}}
                 </template>
             </el-table-column>
-            <el-table-column label="Status" prop="status" sortable="custom" align="center" header-align="center">
+            <el-table-column label="Status" prop="status" sortable="custom" align="center" header-align="center"  min-width="100">
                 <template slot-scope="scope">
                     {{scope.row.status ? 'Final' : 'Draft'}}
                 </template>
@@ -51,7 +51,7 @@
                     {{scope.row.updated_at | readableDateTime}}
                 </template>
             </el-table-column>
-            <el-table-column label="User" prop="user" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column label="User" prop="user" sortable="custom" show-overflow-tooltip min-width="120"></el-table-column>
             <el-table-column width="40px">
                 <template slot-scope="scope">
                     <el-dropdown>
@@ -491,6 +491,30 @@ export default {
                     d.total = d.price + d.tax
                     return d
                 }).forEach(p => this.formModel.items.push(p))
+
+                clonedData.filter(d => d.forwarder_cost > 0).map(d => {
+                    d.description = {
+                        delivery_id: d.id,
+                        delivery_date: d.delivery_date,
+                        delivered_date: d.delivered_date,
+                        service_type: 'BIAYA PENERUS',
+                        origin: d.origin,
+                        destination: d.destination,
+                        vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
+                        spb_number: d.spb_number,
+                        total_coli: d.quantity
+                    }
+
+                    d.service_type = 'BIAYA PENERUS'
+                    d.quantity = d.packing_volume
+                    d.unit = ''
+                    d.fare = 0
+                    d.price = 0
+                    d.tax = 0
+                    d.total = d.forwarder_cost
+                    return d
+                }).forEach(p => this.formModel.items.push(p))
+                // biaya penerus
             }).catch(e => {
                 this.$message({
                     message: e.response.data.message,

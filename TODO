@@ -1,11 +1,15 @@
-- Email notifikasi untuk setiap update progress ke customer terkait
-- Kirim report dari halaman pengiriman domestik (email)
 - Dashboard customer
 - Dashboard agent
 - Logo di company
-- Rapikan view domestic dlivery
-    - table : format tanggal, column width
-    - detail : format tanggal
+- Create user ga boleh role admin
+- Foreign key!!!
+
+- Input Data
+    - PT JJ LAPP
+        - kereta
+        - truck
+    - Hexindo
+        - reguler
 
 Hak akses
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Customer;
 use App\Http\Requests\CustomerRequest;
+use App\User;
 
 class CustomerController extends Controller
 {
@@ -19,11 +20,15 @@ class CustomerController extends Controller
         $order = $request->order == 'ascending' ? 'asc' : 'desc';
 
         return Customer::when($request->keyword, function ($q) use ($request) {
-                return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
+                return $q->where(function($qq) use ($request) {
+                    return $qq->where('name', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
+                });
+            })->when($request->user()->role == User::ROLE_ADMIN, function($q) {
+                return $q->where('company_id', auth()->user()->company_id);
             })->when($request->status, function ($q) use ($request) {
                 return $q->whereIn('status', $request->status);
             })->orderBy($sort, $order)->paginate($request->pageSize);
@@ -78,8 +83,9 @@ class CustomerController extends Controller
 
     public function getList()
     {
-        return Customer::select(['id', 'code', 'name', 'email'])
-            ->orderBy('code', 'asc')
-            ->get();
+        return Customer::select(['id', 'code', 'name', 'email', 'company_id'])
+            ->when(auth()->user()->company_id, function($q) {
+                return $q->where('company_id', auth()->user()->company_id);
+            })->orderBy('code', 'asc')->get();
     }
 }

@@ -35,7 +35,8 @@ class DomesticDelivery extends Model
         'packing_cost', 'packing_cost_ppn', 'total_cost',
         'volume_weight', 'invoice_weight', 'invoice_status',
         'packing_volume', 'delivery_rate', 'packing_rate',
-        'created_at', 'updated_at'
+        'created_at', 'updated_at', 'forwarder_cost', 'additional_cost',
+        'additional_cost_description'
     ];
 
     protected $with = ['items', 'vehicleType'];
