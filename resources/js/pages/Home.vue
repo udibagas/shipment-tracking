@@ -23,7 +23,8 @@
             </el-col>
         </el-row> -->
 
-        <el-card>
+        <Report v-if="$store.state.user.role == 41" />
+        <el-card v-else>
             <div slot="header">
                 <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-refresh" @click="requestData">Refresh</el-button>
                 SUMMARY PENGIRIMAN DOMESTIK
@@ -53,11 +54,15 @@
                 <el-table-column label="Total" prop="total" header-align="center" align="center"></el-table-column>
             </el-table>
         </el-card>
+
     </div>
 </template>
 
 <script>
+import Report from './Report'
+
 export default {
+    components: { Report },
     data() {
         return {
             summary: [],

@@ -60,13 +60,12 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     // superadmin, admin, operator only
     Route::group(['middleware' => 'role:11, 21, 31'], function() {
-        Route::get('deliveryProgress', 'DeliveryProgressController@index');
         Route::post('deliveryProgress', 'DeliveryProgressController@store');
         Route::delete('domesticDeliveryItem/{domesticDeliveryItem}', 'DomesticDeliveryItemController@destroy');
         Route::get('domesticDelivery/search', 'DomesticDeliveryController@search');
         Route::get('domesticDelivery/printResi/{domesticDelivery}', 'DomesticDeliveryController@printResi');
         Route::get('domesticDelivery/printAwb/{domesticDelivery}', 'DomesticDeliveryController@printAwb');
-        Route::resource('domesticDelivery', 'DomesticDeliveryController')->except(['create', 'edit']);
+        Route::resource('domesticDelivery', 'DomesticDeliveryController')->only(['store', 'update', 'destroy']);
         Route::get('invoice/print/{invoice}', 'InvoiceController@print');
         Route::resource('invoice', 'InvoiceController')->except(['create', 'edit']);
 
@@ -89,7 +88,8 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     // TODO : menu buat operator, customer & agent
     Route::group(['middleware' => 'role:11, 21, 31, 41, 51'], function() {
-        // belum ada halaman untuk customer & agent
+        Route::get('domesticDelivery', 'DomesticDeliveryController@index');
+        Route::get('deliveryProgress', 'DeliveryProgressController@index');
     });
 
     Route::get('checkAuth', 'AppController@checkAuth');

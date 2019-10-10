@@ -7,7 +7,8 @@
                     <el-option v-for="y in $store.state.filterYearList.map(y => y.year).filter(y => !!y)" :key="y" :value="y" :label="y"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item>
+            <!-- kalau customer ga liat ini -->
+            <el-form-item v-if="$store.state.user.role != 41">
                 <el-select v-model="customer_id" placeholder="Pilih Customer" @change="requestData">
                     <el-option v-for="c in $store.state.customerList" :key="c.id" :value="c.id" :label="c.name"></el-option>
                 </el-select>
@@ -133,11 +134,12 @@ export default {
     mounted() {
         this.$store.commit('getCustomerList')
         this.$store.commit('getFilterYear')
+
+        if (this.$store.state.user.role == 41) {
+            this.customer_id = this.$store.state.user.customer_id
+        }
+
         this.requestData()
     }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

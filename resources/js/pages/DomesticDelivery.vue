@@ -2,24 +2,18 @@
     <div>
         <el-page-header @back="$emit('back')" content="PENGIRIMAN DOMESTIK"> </el-page-header>
         <el-divider></el-divider>
-
-        <Table />
+        <Customer v-if="$store.state.user.role == 41" />
+        <Table v-else />
     </div>
 </template>
 
 <script>
 
 import Table from './domestic-delivery/Table'
+import Customer from './domestic-delivery/Customer'
 
 export default {
-    components: { Table },
-    computed: {
-        statuses() {
-            let statuses = JSON.parse(JSON.stringify(this.$store.state.deliveryStatusList))
-            statuses.push({ id: '-1', name: 'Summary' })
-            return statuses
-        }
-    },
+    components: { Table, Customer },
     mounted() {
         this.$store.commit('getCityList');
         this.$store.commit('getDeliveryTypeList');

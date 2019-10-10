@@ -55,6 +55,7 @@ class DomesticDeliveryController extends Controller
                         ->orWhere('users.name', 'LIKE', '%' . $request->keyword . '%')
                         ->orWhere('origin', 'LIKE', '%' . $request->keyword . '%')
                         ->orWhere('destination', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('delivery_address', 'LIKE', '%' . $request->keyword . '%')
                         ->orWhere('customers.name', 'LIKE', '%' . $request->keyword . '%')
                         ->orWhere('vehicle_types.name', 'LIKE', '%' . $request->keyword . '%')
                         ->orWhere('agents.name', 'LIKE', '%' . $request->keyword . '%')
