@@ -203,8 +203,8 @@ class DomesticDeliveryController extends Controller
             return $q->where('customer_id', $request->customer_id);
         })->when($request->tracking_number, function($q) use ($request) {
             return $q->where(function($qq) use ($request) {
-                return $qq->where('spb_number', 'LIKE', '%'.$request->tracking_number.'%')
-                    ->orWhere('resi_number', 'LIKE', '%'.$request->tracking_number.'%');
+                return $qq->where('spb_number', $request->tracking_number)
+                    ->orWhere('resi_number', $request->tracking_number);
             });
         })->when($request->company_id, function($q) use ($request) {
             return $q->where('company_id', $request->company_id);
