@@ -7,10 +7,9 @@
         :timestamp="p.time"
         :type="p.type"
         placement="top">
-            <!-- <el-card> -->
-                <strong>{{p.status_name}}</strong>
-                <p>{{p.note}}</p>
-            <!-- </el-card> -->
+            <strong>{{p.status_name}}</strong>
+            <img v-if="p.image" :src="'data:image/jpeg;base64,' + p.image" style="width:300px;margin-bottom:15px;">
+            <p>{{p.note}}</p>
         </el-timeline-item>
     </el-timeline>
 </template>
