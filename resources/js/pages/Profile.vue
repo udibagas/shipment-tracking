@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="MY PROFILE" v-loading="loading" :visible="show" :show-close="false" width="550px">
+    <el-dialog title="PROFIL SAYA" v-loading="loading" :visible="show" :show-close="false" width="550px">
         <el-alert type="error" title="ERROR"
             :description="error.message + '\n' + error.file + ':' + error.line"
             v-show="error.message"
@@ -16,10 +16,6 @@
                 <div class="el-form-item__error" v-if="formErrors.email">{{formErrors.email[0]}}</div>
             </el-form-item>
 
-            <el-form-item label="Role">
-                <el-input readonly :value="formModel.role ? 'Admin' : 'Operator'"></el-input>
-            </el-form-item>
-
             <el-form-item label="Password" :class="formErrors.password ? 'is-error' : ''">
                 <el-input type="password" placeholder="Password" v-model="formModel.password"></el-input>
                 <div class="el-form-item__error" v-if="formErrors.password">{{formErrors.password[0]}}</div>
@@ -30,8 +26,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer">
-            <el-button type="primary" @click="save" icon="el-icon-success">SAVE</el-button>
-            <el-button type="info" @click="$emit('close')" icon="el-icon-error">CLOSE</el-button>
+            <el-button type="primary" @click="save" icon="el-icon-success">SIMPAN</el-button>
+            <el-button type="info" @click="$emit('close')" icon="el-icon-error">TUTUP</el-button>
         </span>
     </el-dialog>
 </template>
