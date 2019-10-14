@@ -8,8 +8,8 @@
         :type="p.type"
         placement="top">
             <strong>{{p.status_name}}</strong>
+            <p>{{p.note}}</p><br>
             <img v-if="p.image" :src="'data:image/jpeg;base64,' + p.image" style="width:300px;margin-bottom:15px;">
-            <p>{{p.note}}</p>
         </el-timeline-item>
     </el-timeline>
 </template>
