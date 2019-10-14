@@ -198,7 +198,8 @@ class DomesticDeliveryController extends Controller
 
     public function searchApi(Request $request)
     {
-        return DomesticDelivery::when($request->customer_id, function($q) use ($request) {
+        return DomesticDelivery::with(['customer'])
+        ->when($request->customer_id, function($q) use ($request) {
             return $q->where('customer_id', $request->customer_id);
         })->when($request->tracking_number, function($q) use ($request) {
             return $q->where(function($qq) use ($request) {
