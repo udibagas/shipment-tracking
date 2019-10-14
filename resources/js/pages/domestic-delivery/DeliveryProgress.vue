@@ -9,6 +9,7 @@
         placement="top">
             <el-card>
                 <div slot="header" style="font-size:20px;">{{p.status_name}}</div>
+                <img v-if="p.image" :src="'data:image/jpeg;base64,' + p.image" style="width:300px;margin-bottom:15px;">
                 <table class="table table-sm table-bordered">
                     <tbody>
                         <tr v-if="p.status == 0"><td class="td-label">Nomor Resi</td><td class="td-value">{{data.resi_number}}</td></tr>
