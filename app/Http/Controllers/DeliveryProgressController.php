@@ -33,7 +33,7 @@ class DeliveryProgressController extends Controller
             'payment_date' => 'required_if:status,6|date',
         ]);
 
-        $input = $request->except(['status', 'delivery_id', 'note']);
+        $input = $request->only((new DomesticDelivery())->getFillable());
         $input['delivery_status_id'] = $request->status;
         $input['status_note'] = $request->note;
         DomesticDelivery::where('id', $request->delivery_id)->update($input);
