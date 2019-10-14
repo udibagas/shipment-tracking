@@ -198,7 +198,7 @@ class DomesticDeliveryController extends Controller
 
     public function searchApi(Request $request)
     {
-        return DomesticDelivery::with(['customer'])
+        $data = DomesticDelivery::with(['customer'])
         ->when($request->customer_id, function($q) use ($request) {
             return $q->where('customer_id', $request->customer_id);
         })->when($request->tracking_number, function($q) use ($request) {
@@ -211,5 +211,11 @@ class DomesticDeliveryController extends Controller
         })->when($request->delivery_status_id, function($q) use ($request) {
             return $q->where('delivery_status_id', $request->delivery_status_id);
         })->first();
+
+        if (!$data) {
+            return response(['message' => 'Tidak ada data yang cocok'], 404);
+        }
+
+        return $data;
     }
 }
