@@ -87,11 +87,13 @@ class MasterFareController extends Controller
             'company_id' => 'required',
             'customer_id' => 'required',
             'destination' => 'required',
+            'vehicle_type_id' => 'required',
         ]);
 
         $fare = MasterFare::where('company_id', $request->company_id)
             ->where('customer_id', $request->customer_id)
             ->where('destination', $request->destination)
+            ->where('vehicle_type_id', $request->vehicle_type_id)
             ->first();
 
         if (!$fare) {
