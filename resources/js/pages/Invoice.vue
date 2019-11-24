@@ -462,7 +462,7 @@ export default {
                     d.unit = 'KG'
                     d.fare = d.delivery_rate
                     d.price = d.delivery_cost
-                    d.tax = d.delivery_cost_ppn
+                    d.tax = d.delivery_cost_ppn * 0.1 * d.price
                     d.total = d.price + d.tax
                     d.vehicle_type = d.vehicle_type ? d.vehicle_type.name : ''
                     return d
@@ -487,11 +487,12 @@ export default {
                     d.unit = 'M3'
                     d.fare = d.packing_rate
                     d.price = d.packing_cost
-                    d.tax = d.packing_cost_ppn
+                    d.tax = d.packing_cost_ppn * 0.1 * d.price
                     d.total = d.price + d.tax
                     return d
                 }).forEach(p => this.formModel.items.push(p))
 
+                // biaya penerus
                 clonedData.filter(d => d.forwarder_cost > 0).map(d => {
                     d.description = {
                         delivery_id: d.id,
@@ -506,15 +507,39 @@ export default {
                     }
 
                     d.service_type = 'BIAYA PENERUS'
-                    d.quantity = d.packing_volume
+                    d.quantity = 1
                     d.unit = ''
                     d.fare = 0
-                    d.price = 0
-                    d.tax = 0
-                    d.total = d.forwarder_cost
+                    d.price = d.forwarder_cost
+                    d.tax = d.forwarder_cost_ppn * 0.1 * d.price
+                    d.total = d.price + d.tax
                     return d
                 }).forEach(p => this.formModel.items.push(p))
-                // biaya penerus
+
+                // biaya lain - lain
+                clonedData.filter(d => d.forwarder_cost > 0).map(d => {
+                    d.description = {
+                        delivery_id: d.id,
+                        delivery_date: d.delivery_date,
+                        delivered_date: d.delivered_date,
+                        service_type: 'BIAYA LAIN - LAIN :' + d.additional_cost_description,
+                        origin: d.origin,
+                        destination: d.destination,
+                        vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
+                        spb_number: d.spb_number,
+                        total_coli: d.quantity
+                    }
+
+                    d.service_type = 'BIAYA LAIN - LAIN :' + d.additional_cost_description
+                    d.quantity = 1
+                    d.unit = ''
+                    d.fare = 0
+                    d.price = d.additional_cost
+                    d.tax = d.additional_cost_ppn * 0.1 * d.price
+                    d.total = d.price + d.tax
+                    return d
+                }).forEach(p => this.formModel.items.push(p))
+
             }).catch(e => {
                 this.$message({
                     message: e.response.data.message,
