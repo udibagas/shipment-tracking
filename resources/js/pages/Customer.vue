@@ -19,19 +19,19 @@
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column fixed="left" prop="code" label="Kode" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
-            <el-table-column fixed="left" prop="name" label="Nama" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
+            <el-table-column label="Status" sortable="custom" min-width="100px">
+                <template slot-scope="scope">
+                    <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Aktif' : 'Nonaktif'}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="code" label="Kode" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="name" label="Nama" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="No. Telp." sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="address" label="ALamat" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person" label="Nama Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person_phone" label="No. HP Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person_email" label="Email Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="status" label="Status" sortable="custom" min-width="100px">
-                <template slot-scope="scope">
-                    <el-tag size="mini" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Aktif' : 'Nonaktif'}}</el-tag>
-                </template>
-            </el-table-column>
 
             <el-table-column fixed="right" width="40px">
                 <template slot-scope="scope">
@@ -73,7 +73,7 @@
                     <tr><td class="text-bold">Nama Contact Person</td><td>: {{selectedData.contact_person}}</td></tr>
                     <tr><td class="text-bold">Email Contact Person</td><td>: {{selectedData.contact_person_email}}</td></tr>
                     <tr><td class="text-bold">No HP Contact Person</td><td>: {{selectedData.contact_person_phone}}</td></tr>
-                    <tr><td class="text-bold">Status</td><td>: {{selectedData.status ? 'Inaktif' : 'Nonaktif'}}</td></tr>
+                    <tr><td class="text-bold">Status</td><td>: {{selectedData.active ? 'Inaktif' : 'Nonaktif'}}</td></tr>
                 </tbody>
             </table>
         </el-dialog>
@@ -153,7 +153,7 @@
                     <div class="el-form-item__error" v-if="formErrors.contact_person_phone">{{formErrors.contact_person_phone[0]}}</div>
                 </el-form-item>
             </el-form>
-            <span slot="footer" class="dialog-footer">
+            <span slot="footer">
                 <el-button icon="el-icon-success" type="primary" @click="() => !!formModel.id ? update() : store()">SIMPAN</el-button>
                 <el-button icon="el-icon-error" type="info" @click="showForm = false">BATAL</el-button>
             </span>

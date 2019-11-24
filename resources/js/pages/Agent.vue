@@ -19,19 +19,19 @@
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column fixed="left" prop="code" label="Kode" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
-            <el-table-column fixed="left" prop="name" label="Nama" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
+            <el-table-column label="Status" sortable="custom" min-width="100px">
+                <template slot-scope="scope">
+                    <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Aktif' : 'Nonaktif'}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="code" label="Kode" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="name" label="Nama" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="No Telp" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="address" label="ALamat" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person" label="Nama Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person_phone" label="No. HP Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person_email" label="Email Contact Person" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="status" label="Status" sortable="custom" min-width="100px">
-                <template slot-scope="scope">
-                    <el-tag size="mini" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Aktif' : 'Nonaktif'}}</el-tag>
-                </template>
-            </el-table-column>
 
             <el-table-column fixed="right" width="40px">
                 <template slot-scope="scope">
