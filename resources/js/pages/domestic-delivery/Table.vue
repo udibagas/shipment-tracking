@@ -47,7 +47,7 @@
                 <template slot-scope="scope">
                     <el-tag effect="dark" size="small" class="rounded full-width text-center"
                     :type="$store.state.deliveryStatusList[scope.row.delivery_status_id].type">
-                        {{scope.row.statusName}}
+                        {{scope.row.statusName.toUpperCase()}}
                     </el-tag>
                 </template>
             </el-table-column>

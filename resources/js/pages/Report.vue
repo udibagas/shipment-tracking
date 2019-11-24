@@ -16,7 +16,7 @@
         </el-form>
         <v-chart style="height: 300px;width:100%" :options="chart"></v-chart>
         <br>
-        <el-table stripe :data="summaries" height="calc(100vh - 580px)">
+        <el-table stripe :data="summaries">
             <el-table-column prop="month" label="Bulan" header-align="center"> </el-table-column>
             <el-table-column label="Ontime" header-align="center">
                 <el-table-column prop="ontime" label="Total" header-align="center" align="center"></el-table-column>

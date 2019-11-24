@@ -28,22 +28,22 @@
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
+            <el-table-column label="Status" sortable="custom" min-width="100px" align="center" header-align="center">
+                <template slot-scope="scope">
+                    <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.status ? 'success' : 'info'">{{scope.row.status ? 'FINAL' : 'DRAFT'}}</el-tag>
+                </template>
+            </el-table-column>
             <el-table-column prop="date" label="Tanggal" sortable="custom" width="120" header-align="center" align="center">
                 <template slot-scope="scope">
                     {{scope.row.date | readableDate}}
                 </template>
             </el-table-column>
-            <el-table-column prop="number" label="Nomor" sortable="custom" min-width="120" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="customer" label="Customer" sortable="custom" show-overflow-tooltip min-width="120"></el-table-column>
-            <el-table-column prop="service_type" label="Layanan" sortable="custom" show-overflow-tooltip min-width="100"></el-table-column>
+            <el-table-column prop="number" label="Nomor" sortable="custom" min-width="120"></el-table-column>
+            <el-table-column prop="customer" label="Customer" sortable="custom" min-width="120"></el-table-column>
+            <el-table-column prop="service_type" label="Layanan" sortable="custom" min-width="100"></el-table-column>
             <el-table-column prop="total" label="Total" sortable="custom" align="right" header-align="right" min-width="120">
                 <template slot-scope="scope">
                     Rp {{scope.row.total | formatNumber}}
-                </template>
-            </el-table-column>
-            <el-table-column label="Status" prop="status" sortable="custom" align="center" header-align="center"  min-width="100">
-                <template slot-scope="scope">
-                    {{scope.row.status ? 'Final' : 'Draft'}}
                 </template>
             </el-table-column>
             <el-table-column label="Update Terakhir" prop="updated_at" min-width="150" sortable="custom" align="center" header-align="center">
@@ -51,7 +51,7 @@
                     {{scope.row.updated_at | readableDateTime}}
                 </template>
             </el-table-column>
-            <el-table-column label="User" prop="user" sortable="custom" show-overflow-tooltip min-width="120"></el-table-column>
+            <el-table-column label="User" prop="user" sortable="custom" min-width="120"></el-table-column>
             <el-table-column width="40px">
                 <template slot-scope="scope">
                     <el-dropdown>
@@ -141,9 +141,9 @@
                         {{scope.row.delivered_date | readableDate}}
                     </template>
                 </el-table-column>
-                <el-table-column label="Surat Pengantar" prop="spb_number" min-width="110" show-overflow-tooltip></el-table-column>
-                <el-table-column label="Asal" prop="origin" show-overflow-tooltip min-width="100"></el-table-column>
-                <el-table-column label="Tujuan" prop="destination" show-overflow-tooltip min-width="100"></el-table-column>
+                <el-table-column label="Surat Pengantar" prop="spb_number" min-width="110"></el-table-column>
+                <el-table-column label="Asal" prop="origin" min-width="100"></el-table-column>
+                <el-table-column label="Tujuan" prop="destination" min-width="100"></el-table-column>
                 <el-table-column label="Layanan" prop="service_type" min-width="100">
                     <template slot-scope="scope">
                         {{scope.row.service_type == 'CHARTER' ? 'CHARTER ' + scope.row.vehicle_type : scope.row.service_type}}
