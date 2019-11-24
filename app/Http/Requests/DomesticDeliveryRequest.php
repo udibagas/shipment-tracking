@@ -38,6 +38,7 @@ class DomesticDeliveryRequest extends FormRequest
             'quantity' => 'numeric',
             'delivery_type_id' => 'required|exists:delivery_types,id',
             'delivery_address' => 'required',
+            'minimum_weight' => 'required|numeric'
         ];
     }
 
@@ -61,6 +62,7 @@ class DomesticDeliveryRequest extends FormRequest
             'etd' => 'ETD',
             'eta' => 'ETA',
             'delivery_address' => 'Delive Address',
+            'minimum_weight' => 'Berat Minimum'
         ];
     }
 }

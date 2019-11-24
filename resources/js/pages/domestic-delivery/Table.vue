@@ -339,6 +339,11 @@
                             </el-select>
                             <div class="el-form-item__error" v-if="formErrors.vehicle_type_id">{{formErrors.vehicle_type_id[0]}}</div>
                         </el-form-item>
+
+                        <el-form-item label="Berat Minimum (KG)" :class="formErrors.minimum_weight ? 'is-error' : ''">
+                            <el-input type="number" placeholder="Berat Minimum (KG)" v-model="formModel.minimum_weight"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.minimum_weight">{{formErrors.minimum_weight[0]}}</div>
+                        </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
@@ -421,7 +426,7 @@
                         <td class="td-label"> {{formModel.service_type}} - {{formModel.destination}} </td>
                         <td class="td-value text-right">{{totalInvoiceWeight | formatNumber}} KG</td>
                         <td class="td-value text-right">
-                            <el-input size="small" type="number" v-model="delivery_rate.fare"></el-input>
+                            <el-input size="small" type="number" v-model="formModel.delivery_rate"></el-input>
                         </td>
                         <td class="td-value text-right">Rp. {{delivery_cost | formatNumber}}</td>
                         <td class="td-value text-right">
@@ -433,7 +438,7 @@
                         <td class="td-label">PACKING PETI</td>
                         <td class="td-value text-right">{{totalVolumePacking | formatNumber}} M<sup>3</sup></td>
                         <td class="td-value text-right">
-                            <el-input size="small" type="number" v-model="packing_rate.fare"></el-input>
+                            <el-input size="small" type="number" v-model="formModel.packing_rate"></el-input>
                         </td>
                         <td class="td-value text-right">Rp. {{packing_cost | formatNumber}}</td>
                         <td class="td-value text-right">
@@ -533,8 +538,8 @@ export default {
             }, 0);
 
             // kalau dia reguler
-            if (!!this.delivery_rate.minimum) {
-                return total >= this.delivery_rate.minimum ? total : this.delivery_rate.minimum;
+            if (!!this.formModel.minimum_weight) {
+                return total >= this.formModel.minimum_weight ? total : this.formModel.minimum_weight;
             }
 
             return total
@@ -544,34 +549,32 @@ export default {
         },
         delivery_cost() {
             return this.formModel.service_type == 'CHARTER'
-                ? this.delivery_rate.fare
-                : this.delivery_rate.fare * this.totalInvoiceWeight
+                ? this.formModel.delivery_rate
+                : this.formModel.delivery_rate * this.totalInvoiceWeight
         },
         packing_cost() {
-            return this.packing_rate.fare * this.totalVolumePacking
+            return this.formModel.packing_rate * this.totalVolumePacking
         },
         total_cost() {
-            return parseInt(this.delivery_cost)
-                + parseInt(this.packing_cost)
+            return parseInt(this.formModel.delivery_cost)
+                + parseInt(this.formModel.packing_cost)
                 + parseInt(this.formModel.forwarder_cost)
                 + parseInt(this.formModel.additional_cost)
-                + this.formModel.packing_cost_ppn * 0.1 * parseInt(this.packing_cost)
-                + this.formModel.delivery_cost_ppn * 0.1 * parseInt(this.delivery_cost)
+                + (this.formModel.packing_cost_ppn * 0.1 * parseInt(this.formModel.packing_cost))
+                + (this.formModel.delivery_cost_ppn * 0.1 * parseInt(this.formModel.delivery_cost))
                 + (this.formModel.forwarder_cost_ppn * 0.1 * parseInt(this.formModel.forwarder_cost))
                 + (this.formModel.additional_cost_ppn * 0.1 * parseInt(this.formModel.additional_cost))
         }
     },
     watch: {
-        'formModel.id'(v, o) {
-            this.getFare()
-            this.getFarePacking()
-        },
         'formModel.customer_id'(v, o) {
             const customer = this.$store.state.customerList.find(c => c.id == v)
             if (customer) {
                 this.formModel.customer_name = customer.name
-                this.getFare();
-                this.getFarePacking();
+                if (!this.formModel.id) {
+                    this.getFare();
+                    this.getFarePacking();
+                }
             }
         }
     },
@@ -594,8 +597,6 @@ export default {
             showDetailDialog: false,
             filters: {},
             dateRange: '',
-            delivery_rate: { fare: 0, ppn: false },
-            packing_rate: { fare: 0, ppn: false },
             showCustomerList: false
         }
     },
@@ -624,16 +625,24 @@ export default {
             }
 
             axios.get(url, { params: params }).then(r => {
-                this.delivery_rate = r.data
+                this.formModel.delivery_rate = r.data.fare
+                this.formModel.delivery_cost_ppn = r.data.ppn
+                if (this.formModel.service_type == 'REGULER') {
+                    this.formModel.minimum_weight = r.data.minimum
+                }
             }).catch(e => {
-                this.delivery_rate = { fare: 0, ppn: false }
+                this.formModel.delivery_rate = 0
+                this.formModel.delivery_cost_ppn = false
+
+                if (this.formModel.service_type == 'REGULER') {
+                    this.formModel.minimum_weight = 0
+                }
+
                 this.$message({
                     message: e.response.data.message,
                     type: 'error',
                     showClose: true
                 });
-            }).finally(() => {
-                this.formModel.delivery_cost_ppn = this.delivery_rate.ppn
             })
         },
         getFarePacking() {
@@ -647,16 +656,16 @@ export default {
             }
 
             axios.get('/masterFarePacking/search', { params: params }).then(r => {
-                this.packing_rate = r.data
+                this.formModel.packing_rate = r.data.fare
+                this.formModel.packing_cost_ppn = r.data.ppn
             }).catch(e => {
-                this.packing_rate = { fare: 0, ppn: false }
+                this.formModel.packing_rate = 0
+                this.formModel.packing_cost_ppn = false
                 this.$message({
                     message: e.response.data.message,
                     type: 'error',
                     showClose: true
                 });
-            }).finally(() => {
-                this.formModel.packing_cost_ppn = this.packing_rate.ppn
             })
         },
         printResi(data) {
@@ -840,8 +849,6 @@ export default {
             this.formModel.delivery_cost = this.delivery_cost
             this.formModel.packing_cost = this.packing_cost
             this.formModel.total_cost = this.total_cost
-            this.formModel.delivery_rate = this.delivery_rate.fare
-            this.formModel.packing_rate = this.packing_rate.fare
             this.formModel.packing = this.totalVolumePacking > 0 ? 1 : 0
 
             // cari data item yg ga lengkap
@@ -859,7 +866,7 @@ export default {
             }
 
             // kalau tarifnya ga ada
-            if (!this.delivery_rate.id) {
+            if (!this.formModel.delivery_rate) {
                 this.$message({
                     message: 'Tarif untuk data terkait tidak ada. Silakan lengkapi data master tarif terlebih dahulu.',
                     type: 'error',
@@ -869,7 +876,7 @@ export default {
             }
 
             // kalau volume packing ada tapi tafir packing ga ada
-            if (this.totalVolumePacking > 0 && !this.packing_rate.id) {
+            if (this.totalVolumePacking > 0 && !this.formModel.packing_rate) {
                 this.$message({
                     message: 'Tarif packing peti untuk data terkait tidak ada. Silakan lengkapi data master tarif terlebih dahulu.',
                     type: 'error',
