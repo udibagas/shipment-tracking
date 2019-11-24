@@ -594,8 +594,8 @@ export default {
             showDetailDialog: false,
             filters: {},
             dateRange: '',
-            delivery_rate: { fare: 0, ppn: 0 },
-            packing_rate: { fare: 0, ppn: 0 },
+            delivery_rate: { fare: 0, ppn: false },
+            packing_rate: { fare: 0, ppn: false },
             showCustomerList: false
         }
     },
@@ -626,12 +626,14 @@ export default {
             axios.get(url, { params: params }).then(r => {
                 this.delivery_rate = r.data
             }).catch(e => {
-                this.delivery_rate = { fare: 0, ppn: 0 }
+                this.delivery_rate = { fare: 0, ppn: false }
                 this.$message({
                     message: e.response.data.message,
                     type: 'error',
                     showClose: true
                 });
+            }).finally(() => {
+                this.formModel.delivery_cost_ppn = this.delivery_rate.ppn
             })
         },
         getFarePacking() {
@@ -647,12 +649,14 @@ export default {
             axios.get('/masterFarePacking/search', { params: params }).then(r => {
                 this.packing_rate = r.data
             }).catch(e => {
-                this.packing_rate = { fare: 0, ppn: 0 }
+                this.packing_rate = { fare: 0, ppn: false }
                 this.$message({
                     message: e.response.data.message,
                     type: 'error',
                     showClose: true
                 });
+            }).finally(() => {
+                this.formModel.packing_cost_ppn = this.packing_rate.ppn
             })
         },
         printResi(data) {

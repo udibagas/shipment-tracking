@@ -10,4 +10,8 @@ class MasterFare extends Model
         'company_id', 'customer_id', 'destination', 'vehicle_type_id',
         'fare', 'lead_time', 'minimum', 'user_id', 'ppn'
     ];
+
+    protected $casts = [
+        'ppn' => 'boolean'
+    ];
 }
