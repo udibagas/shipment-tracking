@@ -123,7 +123,7 @@
                     <br>
                     <br>
                     <br>
-                    Theuis Yuliati
+                    {{$data->company->director_name}}
                 </td>
             </tr>
         </tbody>

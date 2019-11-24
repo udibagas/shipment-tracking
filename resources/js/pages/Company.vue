@@ -41,19 +41,19 @@
                     </table>
                 </template>
             </el-table-column>
-            <el-table-column fixed="left" prop="code" label="Code" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
-            <el-table-column fixed="left" prop="name" label="Name" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
+            <el-table-column label="Status" sortable="custom" min-width="100px" align="center" header-align="center">
+                <template slot-scope="scope">
+                    <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Aktif' : 'Nonaktif'}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="code" label="Code" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="name" label="Name" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="address" label="Address" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person" label="Contact Person" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person_phone" label="Contact Person Phone" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="contact_person_email" label="Contact Person Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="status" label="Status" sortable="custom" min-width="100px">
-                <template slot-scope="scope">
-                    <el-tag size="mini" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'Active' : 'Inactive'}}</el-tag>
-                </template>
-            </el-table-column>
 
             <el-table-column fixed="right" width="40px">
                 <template slot-scope="scope">
@@ -97,14 +97,19 @@
             <el-form label-width="160px" label-position="left">
                 <el-tabs type="card">
                     <el-tab-pane label="Basic Information">
-                        <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
-                            <el-input placeholder="Code" v-model="formModel.code"></el-input>
+                        <el-form-item label="Kode" :class="formErrors.code ? 'is-error' : ''">
+                            <el-input placeholder="Kode" v-model="formModel.code"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Name" :class="formErrors.name ? 'is-error' : ''">
-                            <el-input placeholder="Name" v-model="formModel.name"></el-input>
+                        <el-form-item label="Nama Perusahaan" :class="formErrors.name ? 'is-error' : ''">
+                            <el-input placeholder="Nama Perusahaan" v-model="formModel.name"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>
+                        </el-form-item>
+
+                        <el-form-item label="Nama Direktur" :class="formErrors.director_name ? 'is-error' : ''">
+                            <el-input placeholder="Nama Direktur" v-model="formModel.director_name"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.director_name">{{formErrors.director_name[0]}}</div>
                         </el-form-item>
 
                         <el-form-item label="Logo">

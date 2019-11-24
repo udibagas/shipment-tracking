@@ -19,9 +19,14 @@
                         <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
                     </el-form-item>
 
-                    <el-form-item label="Name" :class="formErrors.name ? 'is-error' : ''">
-                        <el-input placeholder="Name" v-model="formModel.name"></el-input>
+                    <el-form-item label="Nama Perusahaan" :class="formErrors.name ? 'is-error' : ''">
+                        <el-input placeholder="Nama Perusahaan" v-model="formModel.name"></el-input>
                         <div class="el-form-item__error" v-if="formErrors.name">{{formErrors.name[0]}}</div>
+                    </el-form-item>
+
+                    <el-form-item label="Nama Direktur" :class="formErrors.director_name ? 'is-error' : ''">
+                        <el-input placeholder="Nama Direktur" v-model="formModel.director_name"></el-input>
+                        <div class="el-form-item__error" v-if="formErrors.director_name">{{formErrors.director_name[0]}}</div>
                     </el-form-item>
 
                     <el-form-item label="Logo">

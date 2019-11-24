@@ -26,7 +26,18 @@ class CompanyRequest extends FormRequest
         return [
             'code' => 'required',
             'name' => 'required',
-            'email' => 'email'
+            'email' => 'email',
+            'director_name' => 'required'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'code' => 'Kode',
+            'name' => 'Nama',
+            'email' => 'Email',
+            'director_name' => 'Nama Direktur'
         ];
     }
 }
