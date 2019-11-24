@@ -36,6 +36,9 @@
         </el-row>
 
         <el-tabs type="card">
+            <el-tab-pane lazy label="PROGRESS">
+                <DeliveryProgressCustomer :id="data.id" :data="data" />
+            </el-tab-pane>
             <el-tab-pane label="ITEM">
                 <el-table striped :data="data.items" style="margin-top:10px" stripe show-summary :summary-method="getSummaryItem">
                     <el-table-column type="index"></el-table-column>
@@ -101,20 +104,32 @@
                             <td class="td-value text-right">{{data.invoice_weight | formatNumber}} KG</td>
                             <td class="td-value text-right">Rp {{data.delivery_rate | formatNumber}}</td>
                             <td class="td-value text-right">Rp. {{data.delivery_cost | formatNumber}}</td>
-                            <td class="td-value text-right">Rp. {{data.delivery_cost_ppn | formatNumber}}</td>
-                            <td class="td-value text-right">Rp. {{data.delivery_cost + data.delivery_cost_ppn | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.delivery_cost_ppn * 0.1 * data.delivery_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.delivery_cost + (data.delivery_cost_ppn * 0.1 * data.delivery_cost) | formatNumber}}</td>
                         </tr>
                         <tr>
                             <td class="td-value">PACKING PETI</td>
                             <td class="td-value text-right">{{data.packing_volume | formatNumber}} M<sup>3</sup></td>
                             <td class="td-value text-right">Rp {{data.packing_rate | formatNumber}}</td>
                             <td class="td-value text-right">Rp. {{data.packing_cost | formatNumber}}</td>
-                            <td class="td-value text-right">Rp. {{data.packing_cost_ppn | formatNumber}}</td>
-                            <td class="td-value text-right">Rp. {{data.packing_cost + data.packing_cost_ppn | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.packing_cost_ppn * 0.1 * data.packing_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.packing_cost + (data.packing_cost_ppn * 0.1 * data.packing_cost) | formatNumber}}</td>
                         </tr>
                         <tr>
                             <td class="td-value">BIAYA PENERUS</td>
-                            <td class="td-value text-right" colspan="5">Rp. {{data.forwarder_cost | formatNumber}}</td>
+                            <td></td>
+                            <td></td>
+                            <td class="td-value text-right">Rp. {{data.forwarder_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.forwarder_cost_ppn * 0.1 * data.forwarder_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.forwarder_cost + (data.forwarder_cost_ppn * 0.1 * data.forwarder_cost) | formatNumber}}</td>
+                        </tr>
+                        <tr>
+                            <td class="td-value">BIAYA LAIN - LAIN</td>
+                            <td>{{data.additional_cost_description}}</td>
+                            <td></td>
+                            <td class="td-value text-right">Rp. {{data.additional_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.additional_cost_ppn * 0.1 * data.additional_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.additional_cost + (data.additional_cost_ppn * 0.1 * data.additional_cost) | formatNumber}}</td>
                         </tr>
                         <tr>
                             <td class="td-value">TOTAL</td>
@@ -122,9 +137,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </el-tab-pane>
-            <el-tab-pane lazy label="PROGRESS">
-                <DeliveryProgressCustomer :id="data.id" :data="data" />
             </el-tab-pane>
         </el-tabs>
 

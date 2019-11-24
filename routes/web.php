@@ -21,6 +21,7 @@ ROLE USER:
 */
 
 Route::post('login', 'AuthController@login');
+Route::get('deliveryProgress', 'DeliveryProgressController@index');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     // untuk dropdown di form
@@ -89,7 +90,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     // TODO : menu buat operator, customer & agent
     Route::group(['middleware' => 'role:11, 21, 31, 41, 51'], function() {
         Route::get('domesticDelivery', 'DomesticDeliveryController@index');
-        Route::get('deliveryProgress', 'DeliveryProgressController@index');
+        // Route::get('deliveryProgress', 'DeliveryProgressController@index');
     });
 
     Route::get('checkAuth', 'AppController@checkAuth');
