@@ -43,6 +43,13 @@ class DomesticDelivery extends Model
 
     protected $appends = ['statusName', 'isDelay', 'isOntime'];
 
+    protected $casts = [
+        'delivery_cost_ppn' => 'boolean',
+        'packing_cost_ppn' => 'boolean',
+        'forwarder_cost_ppn' => 'boolean',
+        'additional_cost_ppn' => 'boolean',
+    ];
+
     public function getStatusNameAttribute()
     {
         $statuses = [
