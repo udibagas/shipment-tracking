@@ -42,7 +42,11 @@
                     Rp. {{scope.row.fare | formatNumber}}
                 </template>
             </el-table-column>
-            <el-table-column prop="lead_time" label="Lead Time" sortable="custom" align="center" header-align="center"></el-table-column>
+            <el-table-column prop="lead_time" label="Lead Time" sortable="custom" align="center" header-align="center">
+                <template slot-scope="scope">
+                    {{scope.row.lead_time}} HARI
+                </template>
+            </el-table-column>
             <el-table-column prop="minimum" label="Min. Charge" sortable="custom" align="center" header-align="center">
                 <template slot-scope="scope">
                     {{scope.row.minimum}} KG
@@ -132,7 +136,7 @@
                 </el-form-item>
 
                 <el-form-item label="Lead Time" :class="formErrors.lead_time ? 'is-error' : ''">
-                    <el-input placeholder="Lead Time" v-model="formModel.lead_time"></el-input>
+                    <el-input type="number" placeholder="Lead Time" v-model="formModel.lead_time"></el-input>
                     <div class="el-form-item__error" v-if="formErrors.lead_time">{{formErrors.lead_time[0]}}</div>
                 </el-form-item>
 

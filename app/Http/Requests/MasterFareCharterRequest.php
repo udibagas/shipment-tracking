@@ -27,7 +27,7 @@ class MasterFareCharterRequest extends FormRequest
             'customer_id' => 'required',
             'destination' => 'required',
             'fare' => 'required|numeric',
-            'lead_time' => 'required',
+            'lead_time' => 'required|numeric',
             'vehicle_type_id' => 'required'
         ];
     }

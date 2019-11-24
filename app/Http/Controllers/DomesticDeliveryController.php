@@ -201,6 +201,8 @@ class DomesticDeliveryController extends Controller
         $data = DomesticDelivery::with(['customer'])
         ->when($request->customer_id, function($q) use ($request) {
             return $q->where('customer_id', $request->customer_id);
+        })->when($request->agent_id, function($q) use ($request) {
+            return $q->where('agent_id', $request->agent_id);
         })->when($request->tracking_number, function($q) use ($request) {
             return $q->where(function($qq) use ($request) {
                 return $qq->where('spb_number', $request->tracking_number)

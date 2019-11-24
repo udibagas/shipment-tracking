@@ -37,7 +37,7 @@ class DomesticDeliveryRequest extends FormRequest
             'weight' => 'numeric',
             'quantity' => 'numeric',
             'delivery_type_id' => 'required|exists:delivery_types,id',
-            'delivery_address' => 'required'
+            'delivery_address' => 'required',
         ];
     }
 
