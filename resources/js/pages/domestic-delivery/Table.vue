@@ -409,7 +409,7 @@
                 <thead>
                     <tr>
                         <th>Jenis Biaya</th>
-                        <th class="text-right" style="width:200px" v-if="formModel.service_type == 'REGULER'">Berat/Volume</th>
+                        <th class="text-right" style="width:200px">Berat/Volume</th>
                         <th class="text-right" style="width:100px">Tarif</th>
                         <th class="text-right" style="width:100px">Biaya</th>
                         <th class="text-right" style="width:100px">PPN</th>
@@ -419,7 +419,7 @@
                 <tbody>
                     <tr>
                         <td class="td-label"> {{formModel.service_type}} - {{formModel.destination}} </td>
-                        <td  v-if="formModel.service_type == 'REGULER'" class="td-value text-right">{{totalInvoiceWeight | formatNumber}} KG</td>
+                        <td class="td-value text-right">{{totalInvoiceWeight | formatNumber}} KG</td>
                         <td class="td-value text-right">
                             <el-input size="small" type="number" v-model="delivery_rate.fare"></el-input>
                         </td>
@@ -427,7 +427,7 @@
                         <td class="td-value text-right">
                             <el-checkbox v-model="formModel.delivery_cost_ppn"></el-checkbox>
                         </td>
-                        <td class="td-value text-right">Rp. {{delivery_cost + (formModel.delivery_cost_ppn * 0.1 * delivery_cost) | formatNumber}}</td>
+                        <td class="td-value text-right">Rp. {{parseInt(delivery_cost) + (formModel.delivery_cost_ppn * 0.1 * parseInt(delivery_cost)) | formatNumber}}</td>
                     </tr>
                     <tr>
                         <td class="td-label">PACKING PETI</td>
@@ -439,7 +439,7 @@
                         <td class="td-value text-right">
                             <el-checkbox v-model="formModel.packing_cost_ppn"></el-checkbox>
                         </td>
-                        <td class="td-value text-right">Rp. {{packing_cost + (formModel.packing_cost_ppn * 0.1 * packing_cost) | formatNumber}}</td>
+                        <td class="td-value text-right">Rp. {{parseInt(packing_cost) + (formModel.packing_cost_ppn * 0.1 * parseInt(packing_cost)) | formatNumber}}</td>
                     </tr>
                     <tr>
                         <td class="td-label">BIAYA PENERUS</td>
@@ -551,12 +551,12 @@ export default {
             return this.packing_rate.fare * this.totalVolumePacking
         },
         total_cost() {
-            return this.delivery_cost
-                + this.packing_cost
+            return parseInt(this.delivery_cost)
+                + parseInt(this.packing_cost)
                 + parseInt(this.formModel.forwarder_cost)
                 + parseInt(this.formModel.additional_cost)
-                + this.formModel.packing_cost_ppn * 0.1 * this.packing_cost
-                + this.formModel.delivery_cost_ppn * 0.1 * this.delivery_cost
+                + this.formModel.packing_cost_ppn * 0.1 * parseInt(this.packing_cost)
+                + this.formModel.delivery_cost_ppn * 0.1 * parseInt(this.delivery_cost)
                 + (this.formModel.forwarder_cost_ppn * 0.1 * parseInt(this.formModel.forwarder_cost))
                 + (this.formModel.additional_cost_ppn * 0.1 * parseInt(this.formModel.additional_cost))
         }
