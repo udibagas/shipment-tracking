@@ -7,8 +7,11 @@
         :timestamp="p.time"
         :type="p.type"
         placement="top">
-            <strong>{{p.status_name}}</strong>
-            <p>{{p.note}}</p><br>
+            <el-tag effect="dark" size="small" class="rounded text-center" style="width:150px"
+            :type="$store.state.deliveryStatusList[p.status].type">
+                {{p.status_name.toUpperCase()}}
+            </el-tag><br>
+            <p>{{p.note}}</p>
             <img v-if="p.image" :src="'data:image/jpeg;base64,' + p.image" style="width:300px;margin-bottom:15px;">
         </el-timeline-item>
     </el-timeline>

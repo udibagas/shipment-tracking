@@ -28,7 +28,15 @@
                                 {{!!data.receiver ? ' oleh ' + data.receiver : ''}}
                             </td>
                         </tr>
-                        <tr><td class="td-label">Status</td><td class="td-value">{{data.statusName}}</td></tr>
+                        <tr>
+                            <td class="td-label">Status</td>
+                            <td class="td-value">
+                                <el-tag effect="dark" size="small" class="rounded text-center"
+                                :type="$store.state.deliveryStatusList[data.delivery_status_id].type">
+                                    {{data.statusName.toUpperCase()}}
+                                </el-tag>
+                            </td>
+                        </tr>
                         <tr><td class="td-label">Note</td><td class="td-value">{{data.status_note}}</td></tr>
                     </tbody>
                 </table>

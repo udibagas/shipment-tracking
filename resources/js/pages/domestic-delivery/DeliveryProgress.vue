@@ -8,7 +8,12 @@
         :type="p.type"
         placement="top">
             <el-card>
-                <div slot="header" style="font-size:20px;">{{p.status_name}}</div>
+                <div slot="header">
+                    <el-tag effect="dark" size="small" class="rounded text-center" style="width:150px"
+                    :type="$store.state.deliveryStatusList[p.status].type">
+                        {{p.status_name.toUpperCase()}}
+                    </el-tag>
+                </div>
                 <img v-if="p.image" :src="'data:image/jpeg;base64,' + p.image" style="width:300px;margin-bottom:15px;">
                 <table class="table table-sm table-bordered">
                     <tbody>

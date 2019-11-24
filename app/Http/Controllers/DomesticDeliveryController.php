@@ -198,6 +198,10 @@ class DomesticDeliveryController extends Controller
 
     public function searchApi(Request $request)
     {
+        $request->validate([
+            'tracking_number' => 'required'
+        ]);
+
         $data = DomesticDelivery::with(['customer'])
         ->when($request->customer_id, function($q) use ($request) {
             return $q->where('customer_id', $request->customer_id);

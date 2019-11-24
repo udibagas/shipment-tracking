@@ -56,7 +56,7 @@ export default {
             email: '',
             password: '',
             year: moment().format('YYYY'),
-            cekResiDialog: true,
+            cekResiDialog: false,
             tracking_number: '',
             delivery_data: null,
             email_phone: '',
