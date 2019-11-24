@@ -119,16 +119,16 @@
                             <td class="td-value text-right">{{data.invoice_weight | formatNumber}} KG</td>
                             <td class="td-value text-right">Rp {{data.delivery_rate | formatNumber}}</td>
                             <td class="td-value text-right">Rp. {{data.delivery_cost | formatNumber}}</td>
-                            <td class="td-value text-right">Rp. {{data.delivery_cost_ppn | formatNumber}}</td>
-                            <td class="td-value text-right">Rp. {{data.delivery_cost + data.delivery_cost_ppn | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.delivery_cost_ppn * 0.1 * data.delivery_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.delivery_cost + (data.delivery_cost_ppn * 0.1 * data.delivery_cost) | formatNumber}}</td>
                         </tr>
                         <tr>
                             <td class="td-value">PACKING PETI</td>
                             <td class="td-value text-right">{{data.packing_volume | formatNumber}} M<sup>3</sup></td>
                             <td class="td-value text-right">Rp {{data.packing_rate | formatNumber}}</td>
                             <td class="td-value text-right">Rp. {{data.packing_cost | formatNumber}}</td>
-                            <td class="td-value text-right">Rp. {{data.packing_cost_ppn | formatNumber}}</td>
-                            <td class="td-value text-right">Rp. {{data.packing_cost + data.packing_cost_ppn | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.packing_cost_ppn * 0.1 * data.packing_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.packing_cost + (data.packing_cost_ppn * 0.1 * data.packing_cost) | formatNumber}}</td>
                         </tr>
                         <tr>
                             <td class="td-value">BIAYA PENERUS</td>

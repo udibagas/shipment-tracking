@@ -218,14 +218,14 @@
         :total="tableData.total">
         </el-pagination>
 
-        <el-dialog title="DETAIL PENGIRIMAN DOMESTIC" :visible.sync="showDetailDialog" fullscreen>
+        <el-dialog title="DETAIL PENGIRIMAN DOMESTIK" :visible.sync="showDetailDialog" fullscreen>
             <Detail v-if="!!selectedData" :data="selectedData" />
         </el-dialog>
 
         <el-dialog
         fullscreen
         :visible.sync="showForm"
-        :title="!!formModel.id ? 'EDIT PENGIRIMAN DOMESTIC' : 'PENGIRIMAN DOMESTIC BARU'"
+        :title="!!formModel.id ? 'EDIT PENGIRIMAN DOMESTIK' : 'PENGIRIMAN DOMESTIK BARU'"
         v-loading="loading"
         :close-on-click-modal="false">
 
@@ -262,11 +262,6 @@
                             </el-select> -->
                             <div class="el-form-item__error" v-if="formErrors.customer_id">{{formErrors.customer_id[0]}}</div>
                         </el-form-item>
-
-                        <!-- <el-form-item label="Charge To" :class="formErrors.charge_to ? 'is-error' : ''">
-                            <el-input placeholder="Charge To" v-model="formModel.charge_to"></el-input>
-                            <div class="el-form-item__error" v-if="formErrors.charge_to">{{formErrors.charge_to[0]}}</div>
-                        </el-form-item> -->
 
                         <el-form-item label="Asal" :class="formErrors.origin ? 'is-error' : ''">
                             <el-select v-model="formModel.origin" placeholder="Asal" filterable default-first-option style="width:100%">
@@ -323,7 +318,7 @@
                             <el-select v-model="formModel.delivery_type_id" placeholder="Jenis Pengiriman" filterable default-first-option style="width:100%">
                                 <el-option v-for="(t, i) in $store.state.deliveryTypeList"
                                 :value="t.id"
-                                :label="t.code + ' - ' + t.name"
+                                :label="t.name"
                                 :key="i">
                                 </el-option>
                             </el-select>
@@ -459,7 +454,7 @@
                             <el-checkbox v-model="formModel.forwarder_cost_ppn"></el-checkbox>
                         </td>
                         <td class="td-value text-right">
-                            Rp. {{formModel.forwarder_cost + (formModel.forwarder_cost_ppn * 0.1 * formModel.forwarder_cost) | formatNumber}}
+                            Rp. {{parseInt(formModel.forwarder_cost) + (formModel.forwarder_cost_ppn * 0.1 * parseInt(formModel.forwarder_cost)) | formatNumber}}
                         </td>
                     </tr>
                     <tr>
@@ -478,7 +473,7 @@
                             <el-checkbox v-model="formModel.additional_cost_ppn"></el-checkbox>
                         </td>
                         <td class="td-value text-right">
-                            Rp. {{formModel.additional_cost + (formModel.additional_cost_ppn * 0.1 * formModel.additional_cost) | formatNumber}}
+                            Rp. {{parseInt(formModel.additional_cost) + (formModel.additional_cost_ppn * 0.1 * parseInt(formModel.additional_cost)) | formatNumber}}
                         </td>
                     </tr>
                     <tr>
@@ -558,12 +553,12 @@ export default {
         total_cost() {
             return this.delivery_cost
                 + this.packing_cost
-                + this.formModel.forwarder_cost
-                + this.formModel.additional_cost
+                + parseInt(this.formModel.forwarder_cost)
+                + parseInt(this.formModel.additional_cost)
                 + this.formModel.packing_cost_ppn * 0.1 * this.packing_cost
                 + this.formModel.delivery_cost_ppn * 0.1 * this.delivery_cost
-                + (this.formModel.forwarder_cost_ppn * 0.1 * this.formModel.forwarder_cost)
-                + (this.formModel.additional_cost_ppn * 0.1 * this.formModel.additional_cost)
+                + (this.formModel.forwarder_cost_ppn * 0.1 * parseInt(this.formModel.forwarder_cost))
+                + (this.formModel.additional_cost_ppn * 0.1 * parseInt(this.formModel.additional_cost))
         }
     },
     watch: {
@@ -573,7 +568,11 @@ export default {
         },
         'formModel.customer_id'(v, o) {
             const customer = this.$store.state.customerList.find(c => c.id == v)
-            if (customer) this.formModel.customer_name = customer.name
+            if (customer) {
+                this.formModel.customer_name = customer.name
+                this.getFare();
+                this.getFarePacking();
+            }
         }
     },
     data() {
