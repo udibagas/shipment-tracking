@@ -53,8 +53,8 @@ class DomesticDelivery extends Model
     public function getStatusNameAttribute()
     {
         $statuses = [
-            'Registered', 'Ready For Delivery',
-            'On Delivery', 'Delivered', 'Received',
+            'Terdaftar', 'Siap Kirim',
+            'Dalam Pengiriman', 'Terkirim', 'Diterima',
             'Invoice Sent', 'Invoice Paid'
         ];
 
