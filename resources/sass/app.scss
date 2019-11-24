@@ -52,13 +52,13 @@ body {
     text-align: right;
 }
 
+.text-center {
+    text-align: center;
+}
+
 .text-white, .text-white:hover, .text-white:active, .text-white:focus {
     color: #fff !important;
 }
-
-// .el-form-item__label {
-//     font-weight: bold;
-// }
 
 .bg-blue {
     background-color: $blue;
@@ -295,3 +295,15 @@ table {
 //     background-color: #e77431;
 //     color: #fff;
 // }
+
+.el-tag.rounded {
+    border-radius: 13px;
+}
+
+.el-tag.full-width {
+    width: 100%;
+}
+
+.el-table .cell {
+    word-break: normal;
+}
