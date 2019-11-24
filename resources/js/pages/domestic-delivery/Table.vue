@@ -35,21 +35,39 @@
         v-loading="loading"
         @filter-change="(f) => { let c = Object.keys(f)[0]; filters[c] = Object.values(f[c]); page = 1; requestData(); }"
         @sort-change="sortChange">
+
+            <el-table-column
+            align="center"
+            header-align="center"
+            column-key="status"
+            label="Status"
+            sortable="custom"
+            min-width="150px"
+            :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
+                <template slot-scope="scope">
+                    <el-tag effect="dark" size="small" class="rounded full-width text-center"
+                    :type="$store.state.deliveryStatusList[scope.row.delivery_status_id].type">
+                        {{scope.row.statusName}}
+                    </el-tag>
+                </template>
+            </el-table-column>
+
+            <el-table-column prop="resi_number" label="Nomor Resi" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="spb_number" label="Nomor SPB" sortable="custom" min-width="150px"></el-table-column>
+
             <el-table-column
             prop="customer"
             label="Customer"
             sortable="custom"
             min-width="150px"
             :filters="$store.state.customerList.map(c => { return { value: c.id, text: c.name } })"
-            column-key="customer_id"
-            show-overflow-tooltip>
+            column-key="customer_id">
             </el-table-column>
 
-            <!-- <el-table-column prop="charge_to" label="Charge To" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column> -->
-            <el-table-column prop="origin" label="Asal" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="destination" label="Tujuan" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="delivery_address" label="Alamat Pengiriman" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="pick_up_date" label="Tanggal Pick Up" sortable="custom" min-width="140px" align="center" header-align="center">
+            <el-table-column prop="origin" label="Asal" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="destination" label="Tujuan" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="delivery_address" label="Alamat Pengiriman" sortable="custom" min-width="170px"></el-table-column>
+            <el-table-column prop="pick_up_date" label="Tanggal Pick Up" sortable="custom" min-width="150px" align="center" header-align="center">
                 <template slot-scope="scope">
                     {{ scope.row.pick_up_date | readableDate }}
                 </template>
@@ -74,20 +92,23 @@
                     {{ scope.row.delivered_date | readableDate }}
                 </template>
             </el-table-column>
-            <el-table-column prop="receiver" label="Penerima" sortable="custom" min-width="100px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="receiver" label="Penerima" sortable="custom" min-width="100px"></el-table-column>
             <!-- <el-table-column prop="received_date" label="Tgl Terima" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column> -->
-            <!-- <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column> -->
-            <!-- <el-table-column prop="payment_date" label="Payment Date" sortable="custom" min-width="140px" show-overflow-tooltip></el-table-column> -->
-            <el-table-column prop="resi_number" label="Nomor Resi" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="spb_number" label="Nomor SPB" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <!-- <el-table-column prop="tracking_number" label="Nomor Tracking" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column> -->
-            <el-table-column prop="delivery_type" label="Jenis Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="service_type" label="Layanan Pengiriman" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="vehicle_type.name" label="Jenis Armada" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px"></el-table-column> -->
+            <!-- <el-table-column prop="payment_date" label="Payment Date" sortable="custom" min-width="140px"></el-table-column> -->
+            <!-- <el-table-column prop="tracking_number" label="Nomor Tracking" sortable="custom" min-width="150px"></el-table-column> -->
+            <el-table-column prop="delivery_type" label="Jenis Pengiriman" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="service_type" label="Layanan Pengiriman" sortable="custom" min-width="170px"></el-table-column>
+            <el-table-column prop="vehicle_type.name" label="Jenis Armada" sortable="custom" min-width="170px"></el-table-column>
             <el-table-column prop="quantity" label="Jml Koli" sortable="custom" min-width="150px" header-align="center" align="center"></el-table-column>
             <el-table-column prop="volume" label="Volume" sortable="custom" min-width="100px" header-align="right" align="right">
                 <template slot-scope="scope">
                     {{ scope.row.volume | formatNumber }} M<sup>3</sup>
+                </template>
+            </el-table-column>
+            <el-table-column prop="packing_volume" label="Volume Packing" sortable="custom" min-width="140px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.packing_volume | formatNumber }} M<sup>3</sup>
                 </template>
             </el-table-column>
             <el-table-column prop="weight" label="Berat" sortable="custom" min-width="100px" header-align="right" align="right">
@@ -125,6 +146,26 @@
                     Rp. {{ scope.row.packing_cost_ppn | formatNumber }}
                 </template>
             </el-table-column>
+            <el-table-column prop="forwarder_cost" label="Biaya Penerus" sortable="custom" min-width="150px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.forwarder_cost | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="forwarder_cost_ppn" label="PPN Biaya Penerus" sortable="custom" min-width="170px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.forwarder_cost_ppn | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="additional_cost" label="Biaya Lain - Lain" sortable="custom" min-width="170px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.additional_cost | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="additional_cost_ppn" label="PPN Biaya Lain - Lain" sortable="custom" min-width="170px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.additional_cost_ppn | formatNumber }}
+                </template>
+            </el-table-column>
             <el-table-column prop="total_cost" label="Total Biaya" sortable="custom" min-width="150px" header-align="right" align="right">
                 <template slot-scope="scope">
                     Rp. {{ scope.row.total_cost | formatNumber }}
@@ -137,23 +178,16 @@
             sortable="custom"
             min-width="150px"
             :filters="$store.state.agentList.map(c => { return { value: c.id, text: c.name } })"
-            column-key="agent_id"
-            show-overflow-tooltip>
-
+            column-key="agent_id">
             </el-table-column>
 
-            <el-table-column prop="ship_name" label="Nama Kapal" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="vehicle_number" label="No. Plat Armada" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="driver_name" label="Nama Driver" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="driver_phone" label="No. HP Driver" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="user" label="Diupdate Oleh" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="ship_name" label="Nama Kapal" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="vehicle_number" label="No. Plat Armada" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="driver_name" label="Nama Driver" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="driver_phone" label="No. HP Driver" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="user" label="Diupdate Oleh" sortable="custom" min-width="150px"></el-table-column>
             <el-table-column prop="updated_at" label="Update Terkahir" sortable="custom" min-width="150px"></el-table-column>
-            <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column fixed="right" column-key="status" label="Status" sortable="custom" min-width="150px" :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
-                <template slot-scope="scope">
-                    <el-tag :type="$store.state.deliveryStatusList[scope.row.delivery_status_id].type" size="small">{{scope.row.statusName}}</el-tag>
-                </template>
-            </el-table-column>
+            <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px"></el-table-column>
             <el-table-column fixed="right" width="40px">
                 <template slot-scope="scope">
                     <el-dropdown>
@@ -165,7 +199,7 @@
                             <!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printResi(scope.row)"><i class="el-icon-printer"></i> Print Receipt</el-dropdown-item> -->
                             <!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printAwb(scope.row)"><i class="el-icon-printer"></i> Print Airway Bill</el-dropdown-item> -->
                             <el-dropdown-item icon="el-icon-warning-outline" v-if="scope.row.delivery_status_id < 6" @click.native.prevent="openStatusForm(scope.row)">Update Status</el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-edit-outline" divided v-if="scope.row.delivery_status_id == 0" @click.native.prevent="openForm(scope.row)">Edit</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-edit-outline" divided @click.native.prevent="openForm(scope.row)">Edit</el-dropdown-item>
                             <el-dropdown-item icon="el-icon-delete" v-if="scope.row.delivery_status_id == 0" @click.native.prevent="deleteData(scope.row.id)">Hapus</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -205,8 +239,15 @@
 
                 <el-row :gutter="30">
                     <el-col :span="8">
+
                         <el-form-item label="Customer" :class="formErrors.customer_id ? 'is-error' : ''">
-                            <el-select
+                            <el-input v-model="formModel.customer_name" placeholder="Customer" disabled>
+                                <el-popover placement="bottom" trigger="manual" v-model="showCustomerList" width="700" slot="append" ref="popover">
+                                    <CustomerList :selection="true" @select="selectCustomer" />
+                                    <el-button slot="reference" @click="showCustomerList = !showCustomerList" icon="el-icon-search"></el-button>
+                                </el-popover>
+                            </el-input>
+                            <!-- <el-select
                             @change="() => { getFare(); getFarePacking(); }"
                             v-model="formModel.customer_id"
                             placeholder="Customer"
@@ -218,7 +259,7 @@
                                 :label="t.code + ' - ' + t.name"
                                 :key="i">
                                 </el-option>
-                            </el-select>
+                            </el-select> -->
                             <div class="el-form-item__error" v-if="formErrors.customer_id">{{formErrors.customer_id[0]}}</div>
                         </el-form-item>
 
@@ -250,7 +291,7 @@
                         </el-form-item>
 
                         <el-form-item label="Alamat Pengiriman" :class="formErrors.delivery_address ? 'is-error' : ''">
-                            <el-input type="textarea" rows="3" placeholder="Alamat Pengiriman" v-model="formModel.delivery_address"></el-input>
+                            <el-input type="textarea" rows="5" placeholder="Alamat Pengiriman" v-model="formModel.delivery_address"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.delivery_address">{{formErrors.delivery_address[0]}}</div>
                         </el-form-item>
                     </el-col>
@@ -361,49 +402,83 @@
                 </el-table-column>
                 <el-table-column width="70px" align="right" header-align="right">
                     <template slot="header">
-                        <el-button @click="addItem" icon="el-icon-plus" type="primary" plain size="small"></el-button>
+                        <el-button @click="addItem" icon="el-icon-plus" type="primary" size="small"></el-button>
                     </template>
                     <template slot-scope="scope">
-                        <el-button @click="deleteItem(scope.$index, scope.row.id)" icon="el-icon-delete" type="danger" plain size="small"></el-button>
+                        <el-button @click="deleteItem(scope.$index, scope.row.id)" icon="el-icon-delete" type="danger" size="small"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
 
-            <table style="width:100%;margin-top:20px" class="table" v-if="!!delivery_rate.id">
+            <table style="width:100%;margin-top:20px" class="table" v-if="!!formModel.service_type">
                 <thead>
                     <tr>
                         <th>Jenis Biaya</th>
-                        <th v-if="formModel.service_type == 'REGULER'">Berat/Volume</th>
-                        <th>Tarif</th>
-                        <th>Biaya</th>
-                        <th>PPN</th>
-                        <th>Total</th>
+                        <th class="text-right" style="width:200px" v-if="formModel.service_type == 'REGULER'">Berat/Volume</th>
+                        <th class="text-right" style="width:100px">Tarif</th>
+                        <th class="text-right" style="width:100px">Biaya</th>
+                        <th class="text-right" style="width:100px">PPN</th>
+                        <th class="text-right" style="width:100px">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="td-label"> {{formModel.service_type}} - {{formModel.destination}} </td>
                         <td  v-if="formModel.service_type == 'REGULER'" class="td-value text-right">{{totalInvoiceWeight | formatNumber}} KG</td>
-                        <td class="td-value text-right">Rp {{delivery_rate.fare | formatNumber}}</td>
+                        <td class="td-value text-right">
+                            <el-input size="small" type="number" v-model="delivery_rate.fare"></el-input>
+                        </td>
                         <td class="td-value text-right">Rp. {{delivery_cost | formatNumber}}</td>
-                        <td class="td-value text-right">Rp. {{delivery_cost_ppn | formatNumber}}</td>
-                        <td class="td-value text-right">Rp. {{delivery_cost + delivery_cost_ppn | formatNumber}}</td>
+                        <td class="td-value text-right">
+                            <el-checkbox v-model="formModel.delivery_cost_ppn"></el-checkbox>
+                        </td>
+                        <td class="td-value text-right">Rp. {{delivery_cost + (formModel.delivery_cost_ppn * 0.1 * delivery_cost) | formatNumber}}</td>
                     </tr>
                     <tr>
                         <td class="td-label">PACKING PETI</td>
                         <td class="td-value text-right">{{totalVolumePacking | formatNumber}} M<sup>3</sup></td>
-                        <td class="td-value text-right">Rp {{packing_rate.fare | formatNumber}}</td>
+                        <td class="td-value text-right">
+                            <el-input size="small" type="number" v-model="packing_rate.fare"></el-input>
+                        </td>
                         <td class="td-value text-right">Rp. {{packing_cost | formatNumber}}</td>
-                        <td class="td-value text-right">Rp. {{packing_cost_ppn | formatNumber}}</td>
-                        <td class="td-value text-right">Rp. {{packing_cost + packing_cost_ppn | formatNumber}}</td>
+                        <td class="td-value text-right">
+                            <el-checkbox v-model="formModel.packing_cost_ppn"></el-checkbox>
+                        </td>
+                        <td class="td-value text-right">Rp. {{packing_cost + (formModel.packing_cost_ppn * 0.1 * packing_cost) | formatNumber}}</td>
                     </tr>
                     <tr>
                         <td class="td-label">BIAYA PENERUS</td>
-                        <td class="td-value text-right" colspan="5">
-                            <input type="number"
+                        <td></td>
+                        <td class="td-value text-right">
+                            <el-input size="small" type="number"
                             v-model="formModel.forwarder_cost"
-                            placeholder="Biaya Penerus"
-                            style="border:none;text-align:right;">
+                            placeholder="Biaya Penerus"></el-input>
+                        </td>
+                        <td class="td-value text-right">Rp. {{formModel.forwarder_cost | formatNumber}}</td>
+                        <td class="td-value text-right">
+                            <el-checkbox v-model="formModel.forwarder_cost_ppn"></el-checkbox>
+                        </td>
+                        <td class="td-value text-right">
+                            Rp. {{formModel.forwarder_cost + (formModel.forwarder_cost_ppn * 0.1 * formModel.forwarder_cost) | formatNumber}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">BIAYA LAIN-LAIN</td>
+                        <td class="td-value text-right">
+                            <el-input size="small" v-model="formModel.additional_cost_description"
+                            placeholder="Keterangan"></el-input>
+                        </td>
+                        <td class="td-value text-right">
+                            <el-input size="small" type="number"
+                            v-model="formModel.additional_cost"
+                            placeholder="Biaya Penerus"></el-input>
+                        </td>
+                        <td class="td-value text-right">Rp. {{formModel.additional_cost | formatNumber}}</td>
+                        <td class="td-value text-right">
+                            <el-checkbox v-model="formModel.additional_cost_ppn"></el-checkbox>
+                        </td>
+                        <td class="td-value text-right">
+                            Rp. {{formModel.additional_cost + (formModel.additional_cost_ppn * 0.1 * formModel.additional_cost) | formatNumber}}
                         </td>
                     </tr>
                     <tr>
@@ -415,7 +490,7 @@
 
             <span slot="footer">
                 <el-button type="primary" @click="save" icon="el-icon-success">SIMPAN</el-button>
-                <el-button type="info" @click="showForm = false" icon="el-icon-error">BATAL</el-button>
+                <el-button type="info" @click="showForm = false; showCustomerList = false" icon="el-icon-error">BATAL</el-button>
             </span>
         </el-dialog>
 
@@ -430,9 +505,10 @@ import UpdateForm from './UpdateForm'
 import ReportForm from './ReportForm'
 import Detail from './Detail'
 import exportFromJSON from 'export-from-json'
+import CustomerList from '../CustomerList'
 
 export default {
-    components: { UpdateForm, Detail, ReportForm },
+    components: { UpdateForm, Detail, ReportForm, CustomerList },
     computed: {
         totalWeight() {
             return this.formModel.items.reduce((prev, curr) => {
@@ -476,23 +552,28 @@ export default {
                 ? this.delivery_rate.fare
                 : this.delivery_rate.fare * this.totalInvoiceWeight
         },
-        delivery_cost_ppn() {
-            return this.delivery_rate.ppn ? this.delivery_cost * 10 / 100 : 0
-        },
         packing_cost() {
             return this.packing_rate.fare * this.totalVolumePacking
         },
-        packing_cost_ppn() {
-            return this.packing_rate.ppn ? this.packing_cost * 10 / 100 : 0
-        },
         total_cost() {
-            return this.delivery_cost + this.delivery_cost_ppn + this.packing_cost + this.packing_cost_ppn + Number(this.formModel.forwarder_cost)
+            return this.delivery_cost
+                + this.packing_cost
+                + this.formModel.forwarder_cost
+                + this.formModel.additional_cost
+                + this.formModel.packing_cost_ppn * 0.1 * this.packing_cost
+                + this.formModel.delivery_cost_ppn * 0.1 * this.delivery_cost
+                + (this.formModel.forwarder_cost_ppn * 0.1 * this.formModel.forwarder_cost)
+                + (this.formModel.additional_cost_ppn * 0.1 * this.formModel.additional_cost)
         }
     },
     watch: {
         'formModel.id'(v, o) {
             this.getFare()
             this.getFarePacking()
+        },
+        'formModel.customer_id'(v, o) {
+            const customer = this.$store.state.customerList.find(c => c.id == v)
+            if (customer) this.formModel.customer_name = customer.name
         }
     },
     data() {
@@ -514,11 +595,18 @@ export default {
             showDetailDialog: false,
             filters: {},
             dateRange: '',
-            delivery_rate: {},
-            packing_rate: {}
+            delivery_rate: { fare: 0, ppn: 0 },
+            packing_rate: { fare: 0, ppn: 0 },
+            showCustomerList: false
         }
     },
     methods: {
+        selectCustomer(customer) {
+            this.formModel.customer_name = customer.name;
+            this.formModel.customer_id = customer.id;
+            this.$forceUpdate()
+            this.showCustomerList = false
+        },
         getFare() {
             if (!this.formModel.customer_id
                 || !this.formModel.destination
@@ -539,7 +627,7 @@ export default {
             axios.get(url, { params: params }).then(r => {
                 this.delivery_rate = r.data
             }).catch(e => {
-                this.delivery_rate = {}
+                this.delivery_rate = { fare: 0, ppn: 0 }
                 this.$message({
                     message: e.response.data.message,
                     type: 'error',
@@ -560,7 +648,7 @@ export default {
             axios.get('/masterFarePacking/search', { params: params }).then(r => {
                 this.packing_rate = r.data
             }).catch(e => {
-                this.packing_rate = {}
+                this.packing_rate = { fare: 0, ppn: 0 }
                 this.$message({
                     message: e.response.data.message,
                     type: 'error',
@@ -617,6 +705,10 @@ export default {
                         "PPN Biaya Kirim": d.delivery_cost_ppn,
                         "Biaya Packing": d.packing_cost,
                         "PPN Biaya Packing": d.packing_cost_ppn,
+                        "Biaya Penerus": d.packing_cost,
+                        "PPN Biaya Penerus": d.packing_cost_ppn,
+                        "Biaya Lain - Lain": d.packing_cost,
+                        "PPN Biaya Lain - Lain": d.packing_cost_ppn,
                         "Total Biaya": d.total_cost,
                         "Status": d.statusName,
                         "Waktu Update": d.updated_at,
@@ -743,9 +835,7 @@ export default {
             this.formModel.packing_volume = this.totalVolumePacking
             this.formModel.quantity = this.totalQuantity
             this.formModel.delivery_cost = this.delivery_cost
-            this.formModel.delivery_cost_ppn = this.delivery_cost_ppn
             this.formModel.packing_cost = this.packing_cost
-            this.formModel.packing_cost_ppn = this.packing_cost_ppn
             this.formModel.total_cost = this.total_cost
             this.formModel.delivery_rate = this.delivery_rate.fare
             this.formModel.packing_rate = this.packing_rate.fare

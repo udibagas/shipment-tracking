@@ -132,7 +132,19 @@
                         </tr>
                         <tr>
                             <td class="td-value">BIAYA PENERUS</td>
-                            <td class="td-value text-right" colspan="5">Rp. {{data.forwarder_cost | formatNumber}}</td>
+                            <td></td>
+                            <td></td>
+                            <td class="td-value text-right">Rp. {{data.forwarder_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.forwarder_cost_ppn * 0.1 * data.forwarder_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.forwarder_cost + (data.forwarder_cost_ppn * 0.1 * data.forwarder_cost) | formatNumber}}</td>
+                        </tr>
+                        <tr>
+                            <td class="td-value">BIAYA LAIN - LAIN</td>
+                            <td>{{data.additional_cost_description}}</td>
+                            <td></td>
+                            <td class="td-value text-right">Rp. {{data.additional_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.additional_cost_ppn * 0.1 * data.additional_cost | formatNumber}}</td>
+                            <td class="td-value text-right">Rp. {{data.additional_cost + (data.additional_cost_ppn * 0.1 * data.additional_cost) | formatNumber}}</td>
                         </tr>
                         <tr>
                             <td class="td-value">TOTAL</td>
