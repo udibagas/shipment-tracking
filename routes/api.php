@@ -7,4 +7,4 @@ Route::group(['middleware' => 'auth.jwt'], function() {
     Route::post('deliveryProgress', 'DeliveryProgressController@store');
 });
 
-Route::post('cekResi', 'DomesticDeliveryController@searchApi');
+Route::post('cekResi', 'DomesticDeliveryController@cekResi');

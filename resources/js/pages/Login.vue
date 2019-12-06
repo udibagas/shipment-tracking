@@ -27,12 +27,15 @@
             <el-dialog v-loading="loading" :visible.sync="cekResiDialog" fullscreen title="CEK RESI">
                 <div style="width:350px;margin:0 auto 20px;">
                     <el-form>
-                        <el-form-item>
+                        <el-form-item label="Nomor SPB/Nomor Resi" :class="formErrors.tracking_number ? 'is-error' : ''">
                             <el-input class="text-center" placeholder="NOMOR SPB/NOMOR RESI PENGIRIMAN" v-model="tracking_number"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.tracking_number">{{formErrors.tracking_number[0]}}</div>
                         </el-form-item>
-                        <el-form-item>
-                            <el-input class="text-center" placeholder="NOMOR HP/EMAIL" v-model="email_phone"></el-input>
+                        <el-form-item label="Nomor HP/Email" :class="formErrors.phone_or_email ? 'is-error' : ''">
+                            <el-input class="text-center" placeholder="NOMOR HP/EMAIL" v-model="phone_or_email"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.phone_or_email">{{formErrors.phone_or_email[0]}}</div>
                         </el-form-item>
+                        <br>
                         <el-form-item>
                             <el-button @click="cekResi" type="primary" style="width:100%">TAMPILKAN DATA</el-button>
                         </el-form-item>
@@ -59,23 +62,35 @@ export default {
             cekResiDialog: false,
             tracking_number: '',
             delivery_data: null,
-            email_phone: '',
-            loading: false
+            phone_or_email: '',
+            loading: false,
+            formErrors: {}
         }
     },
     methods: {
         cekResi() {
-            if (!this.tracking_number) return;
-            const data = { tracking_number: this.tracking_number }
+            const data = {
+                tracking_number: this.tracking_number,
+                phone_or_email: this.phone_or_email
+            }
+
             this.loading = true
             axios.post('/api/cekResi', data).then(r => {
                 this.delivery_data = r.data;
             }).catch(e => {
-                this.$message({
-                    message: e.response.data.message,
-                    type: 'error',
-                    showClose: true
-                })
+                const status = e.response.status
+
+                if (status == 422) {
+                    this.formErrors = e.response.data.errors;
+                }
+
+                if (status == 404 || status == 500) {
+                    this.$message({
+                        message: e.response.data.message,
+                        type: 'error',
+                        showClose: true
+                    })
+                }
             }).finally(() => {
                 this.loading = false
             })

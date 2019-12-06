@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use App\DeliveryProgress;
 use Illuminate\Http\Request;
 use App\Http\Requests\DomesticDeliveryRequest;
@@ -217,6 +218,45 @@ class DomesticDeliveryController extends Controller
         })->when($request->delivery_status_id, function($q) use ($request) {
             return $q->where('delivery_status_id', $request->delivery_status_id);
         })->first();
+
+        if (!$data) {
+            return response(['message' => 'Tidak ada data yang cocok'], 404);
+        }
+
+        return $data;
+    }
+
+    public function cekResi(Request $request)
+    {
+        $request->validate([
+            'tracking_number' => ['required', function($attribute, $value, $fail) {
+                $exists = DomesticDelivery::where('resi_number', $value)->orWhere('spb_number', $value)->first();
+
+                if (!$exists) {
+                    $fail('Nomor resi atau Nomor SPB tidak terdaftar');
+                }
+            }],
+            'phone_or_email' => ['required', function($attribute, $value, $fail) {
+                $exists = Customer::where('phone', $value)->orWhere('email', 'LIKE', '%'.$value.'%')->first();
+
+                if (!$exists) {
+                    $fail('Email atau No. HP tidak terdaftar');
+                }
+            }]
+        ], [], [
+            'tracking_number' => 'Nomor Resi/Nomor SPB',
+            'phone_or_email' => 'Nomor HP/Email'
+        ]);
+
+        $data = DomesticDelivery::join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
+            ->where(function($q) use ($request) {
+                return $q->where('phone', $request->phone)
+                    ->orWhere('email', $request->email);
+            })
+            ->where(function($q) use ($request) {
+                return $q->where('domestic_deliveries.spb_number', $request->tracking_number)
+                    ->orWhere('domestic_deliveries.resi_number', $request->tracking_number);
+            })->first();
 
         if (!$data) {
             return response(['message' => 'Tidak ada data yang cocok'], 404);
