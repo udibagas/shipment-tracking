@@ -208,6 +208,7 @@ export default {
             this.loading = true;
             axios.put('/company/' + this.formModel.id, this.formModel).then(r => {
                 this.formModel = r.data
+                this.$store.commit('getCompanyByUser')
                 this.$message({
                     message: 'Data berhasil disimpan.',
                     type: 'success',
