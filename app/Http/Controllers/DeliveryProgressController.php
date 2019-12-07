@@ -46,20 +46,24 @@ class DeliveryProgressController extends Controller
         if ($request->status == DomesticDelivery::STATUS_DELIVERED)
         {
             $company = Company::find($request->user()->company_id);
-            Config::set('app.name', $company->name . ' Shipment Tracking');
-            Config::set('mail.host', $company->smtp_host);
-            Config::set('mail.port', $company->smtp_port);
-            Config::set('mail.from', [
-                'address' => $company->smtp_username,
-                'name' => $company->name,
-            ]);
-            Config::set('mail.username', $company->smtp_username);
-            Config::set('mail.password', $company->smtp_password);
-            Config::set('mail.encryption', $company->smtp_encryption);
 
-            Mail::to(explode(', ', $delivery->customer->email))
-                ->cc($request->user()->email)
-                ->send(new ShipmentDelivered($delivery));
+            if ($company)
+            {
+                Config::set('app.name', $company->name . ' Shipment Tracking');
+                Config::set('mail.host', $company->smtp_host);
+                Config::set('mail.port', $company->smtp_port);
+                Config::set('mail.from', [
+                    'address' => $company->smtp_username,
+                    'name' => $company->name,
+                ]);
+                Config::set('mail.username', $company->smtp_username);
+                Config::set('mail.password', $company->smtp_password);
+                Config::set('mail.encryption', $company->smtp_encryption);
+
+                Mail::to(explode(', ', $delivery->customer->email))
+                    ->cc($request->user()->email)
+                    ->send(new ShipmentDelivered($delivery));
+            }
         }
 
         $input = $request->all();
