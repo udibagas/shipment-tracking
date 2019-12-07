@@ -6,7 +6,7 @@
             <CompanyProfile v-if="$store.state.user.role == 21" :show="showCompanyProfile" @close="showCompanyProfile = false" />
             <el-aside width="auto">
                 <div class="brand-box">
-                    <img src="/images/rubarta-logo.jpg" :style="collapse ? 'height:40px;margin:25px 0' : 'height:60px;margin:25px 0'" alt="">
+                    <img :src="baseUrl + $store.state.company.logo" :style="collapse ? 'height:40px;margin:25px 0' : 'height:60px;margin:25px 0'" alt="">
 
                     <div v-show="!collapse">
                         <el-avatar :size="50" icon="el-icon-user"></el-avatar>
@@ -69,12 +69,15 @@ export default {
     computed: {
         menus() {
             return this.$store.state.navigation
+        },
+        appName() {
+            return APP_NAME + ' - ' + this.$store.state.company.name
         }
     },
     data() {
         return {
             collapse: false,
-            appName: APP_NAME,
+            baseUrl: BASE_URL,
             showProfile: false,
             showCompanyProfile: false,
             loginForm: !this.$store.state.is_logged_in
@@ -107,6 +110,7 @@ export default {
     },
     mounted() {
         this.$store.commit('getNavigation')
+        this.$store.commit('getCompanyByUser')
     }
 }
 </script>

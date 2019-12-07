@@ -27,6 +27,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     // untuk dropdown di form
     Route::get('agent/getList', 'AgentController@getList');
     Route::get('city/getList', 'CityController@getList');
+    Route::get('company/byUser', 'CompanyController@byUser');
     Route::get('company/getList', 'CompanyController@getList');
     Route::get('customer/getList', 'CustomerController@getList');
     Route::get('deliveryStatus/getList', 'DeliveryStatusController@getList');
@@ -53,6 +54,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     // superadmin & admin
     Route::group(['middleware' => 'role:11, 21'], function() {
         Route::resource('city', 'CityController')->only(['index', 'store', 'update', 'destroy']);
+        Route::post('company/uploadLogo', 'CompanyController@uploadLogo');
         Route::resource('company', 'CompanyController')->only(['show', 'update']);
         Route::resource('user', 'UserController')->except(['create', 'edit']);
         Route::resource('agent', 'AgentController')->except(['create', 'edit']);

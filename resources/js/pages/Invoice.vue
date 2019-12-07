@@ -28,7 +28,7 @@
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column label="Status" sortable="custom" min-width="100px" align="center" header-align="center">
+            <el-table-column label="Status" sortable="custom" min-width="80px" align="center" header-align="center">
                 <template slot-scope="scope">
                     <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.status ? 'success' : 'info'">{{scope.row.status ? 'FINAL' : 'DRAFT'}}</el-tag>
                 </template>
@@ -43,7 +43,7 @@
             <el-table-column prop="service_type" label="Layanan" sortable="custom" min-width="100"></el-table-column>
             <el-table-column prop="total" label="Total" sortable="custom" align="right" header-align="right" min-width="120">
                 <template slot-scope="scope">
-                    Rp {{scope.row.total | formatNumber}}
+                    <el-tag size="small" effect="dark" type="info">Rp {{scope.row.total | formatNumber}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="Update Terakhir" prop="updated_at" min-width="150" sortable="custom" align="center" header-align="center">

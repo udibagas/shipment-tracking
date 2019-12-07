@@ -226,6 +226,7 @@ class DomesticDeliveryController extends Controller
         return $data;
     }
 
+    // untuk cek resi di front end
     public function cekResi(Request $request)
     {
         $request->validate([

@@ -91,4 +91,31 @@ class CompanyController extends Controller
             ->orderBy('code', 'asc')
             ->get();
     }
+
+    public function uploadLogo(Request $request)
+    {
+        $file = $request->file('file');
+        $fileName = time() . $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+
+        if (!in_array(strtolower($extension), ['png', 'jpg', 'jpeg'])) {
+            return response(['message' => 'File extension not permitted'], 500);
+        }
+
+        try {
+            $file->move('uploads/', $fileName);
+        } catch (\Exception $e) {
+            return response(['message' => 'Failed to move file'], 500);
+        }
+
+        return ['path' => '/uploads/' . $fileName];
+    }
+
+    public function byUser(Request $request)
+    {
+        return Company::selectRaw('companies.*')
+            ->join('users', 'users.company_id', 'companies.id')
+            ->where('users.id', $request->user()->id)
+            ->first();
+    }
 }

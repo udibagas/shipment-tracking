@@ -31,7 +31,8 @@ export default new Vuex.Store({
         userList: [],
         roleList: [],
         navigation: [],
-        filterYearList: []
+        filterYearList: [],
+        company: {name: 'Super Admin'}
     },
     mutations: {
         getAgentList(state) {
@@ -99,5 +100,10 @@ export default new Vuex.Store({
                 state.navigation = r.data
             }).catch(e => console.log(e))
         },
+        getCompanyByUser(state) {
+            axios.get('company/byUser')
+                .then(r => state.company = r.data)
+                .catch(e => console.log(e))
+        }
     }
 })

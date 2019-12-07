@@ -116,6 +116,7 @@ export default {
                 this.password = ''
                 this.$router.push({path: '/'})
                 this.$store.commit('getNavigation')
+                this.$store.commit('getCompanyByUser')
             }).catch(e => {
                 this.$message({
                     message: e.response.data.message || e.response.message,

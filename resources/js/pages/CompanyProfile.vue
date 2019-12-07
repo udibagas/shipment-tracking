@@ -29,19 +29,6 @@
                         <div class="el-form-item__error" v-if="formErrors.director_name">{{formErrors.director_name[0]}}</div>
                     </el-form-item>
 
-                    <el-form-item label="Logo">
-                        <el-upload
-                        action="company/uploadLogo"
-                        :headers="{'Authorization': 'bearer ' + $store.state.token, 'Accept': 'application/json, plain/text, */*'}"
-                        :limit="1"
-                        :on-success="handleSuccess"
-                        :on-error="handleError"
-                        :on-remove="handleRemove">
-                            <el-button size="small" type="primary">Click to upload</el-button>
-                            <!-- <div slot="tip" class="el-upload__tip">jpg/png file only</div> -->
-                        </el-upload>
-                    </el-form-item>
-
                     <el-form-item label="Status" :class="formErrors.active ? 'is-error' : ''">
                         <el-switch
                         disabled
@@ -54,6 +41,22 @@
 
                         <div class="el-form-item__error" v-if="formErrors.active">{{formErrors.active[0]}}</div>
                     </el-form-item>
+
+                    <el-form-item label="Logo" :class="formErrors.logo ? 'is-error' : ''">
+                        <el-upload
+                        ref="upload"
+                        class="avatar-uploader"
+                        :action="baseUrl + '/company/uploadLogo'"
+                        :headers="{'Authorization': 'bearer ' + $store.state.token, 'Accept': 'application/json, plain/text, */*'}"
+                        :show-file-list="false"
+                        :on-error="handleUploadImageError"
+                        :on-success="handleUploadImageSuccess">
+                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <div class="el-form-item__error" v-if="formErrors.logo">{{formErrors.logo[0]}}</div>
+                    </el-form-item>
+
                 </el-tab-pane>
                 <el-tab-pane label="Address">
                     <el-form-item label="Address" :class="formErrors.address ? 'is-error' : ''">
@@ -148,7 +151,7 @@
 
         <span slot="footer" class="dialog-footer">
             <el-button type="primary" @click="update" icon="el-icon-success">SIMPAN</el-button>
-            <el-button type="info" @click="$emit('close')" icon="el-icon-error">TUTUP</el-button>
+            <el-button type="info" @click="closeForm()" icon="el-icon-error">TUTUP</el-button>
         </span>
     </el-dialog>
 </template>
@@ -158,16 +161,28 @@ export default {
     props: ['show'],
     data() {
         return {
+            baseUrl: BASE_URL,
             formModel: {},
             formErrors: {},
             error: {},
-            loading: false
+            loading: false,
+            imageUrl: ''
         }
     },
     methods: {
+        closeForm() {
+            this.error = {};
+            this.formErrors = {};
+            if (this.$refs.upload) {
+                this.$refs.upload.clearFiles();
+            }
+            this.imageUrl = ''
+            this.$emit('close');
+        },
         getData() {
             axios.get('/company/' + this.$store.state.user.company_id).then(r => {
                 this.formModel = r.data
+                this.imageUrl = r.data.logo
             }).catch(e => {
                 this.$message({
                     message: 'Gagal mengambil data.',
@@ -176,11 +191,15 @@ export default {
                 });
             })
         },
-        handleSuccess() {
-
+        handleUploadImageSuccess(res, file, fileList) {
+            this.imageUrl = URL.createObjectURL(file.raw);
+            this.formModel.logo = res.path
+            this.$forceUpdate();
         },
-        handleError() {
-
+        handleUploadImageError(err, file, fileList) {
+            this.formErrors.logo = [JSON.parse(err.message).message]
+            this.$forceUpdate();
+            console.log(err);
         },
         handleRemove() {
 
@@ -216,5 +235,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.avatar-uploader {
+    border: 1px dashed #d9d9d9;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+}
 
+.avatar-uploader:hover {
+    border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    display: block;
+}
+
+img.thumbnail {
+    height: 50px;
+    border: 1px solid #ddd;
+}
 </style>

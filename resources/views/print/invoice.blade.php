@@ -5,7 +5,7 @@
         <tbody>
             <tr>
                 <td style="width:100px">
-                    <img src="{{asset('/images/kml-logo.jpg')}}" alt="" style="width:80%">
+                    <img src="{{asset($data->company->logo)}}" alt="" style="width:80%">
                 </td>
                 <td>
                     <h2 style="margin:0">{{$data->company->name}}</h2>
