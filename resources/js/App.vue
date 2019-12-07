@@ -49,7 +49,7 @@
                         </el-col>
                     </el-row>
                 </el-header>
-                <el-main>
+                <el-main style="height:calc(100vh - 60px);overflow:auto;">
                     <el-collapse-transition>
                         <router-view @back="goBack"></router-view>
                     </el-collapse-transition>
