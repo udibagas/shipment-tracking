@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\DeliveryProgress;
 use App\DomesticDelivery;
+use App\Mail\ShipmentDelivered;
+use Illuminate\Support\Facades\Mail;
+use App\Company;
+use Illuminate\Support\Facades\Config;
 
 class DeliveryProgressController extends Controller
 {
@@ -36,7 +40,27 @@ class DeliveryProgressController extends Controller
         $input = $request->only((new DomesticDelivery())->getFillable());
         $input['delivery_status_id'] = $request->status;
         $input['status_note'] = $request->note;
-        DomesticDelivery::where('id', $request->delivery_id)->update($input);
+        $delivery = DomesticDelivery::where('id', $request->delivery_id)->first();
+        $delivery->update($input);
+
+        if ($request->status == DomesticDelivery::STATUS_DELIVERED)
+        {
+            $company = Company::find($request->user()->company_id);
+            Config::set('app.name', $company->name . ' Shipment Tracking');
+            Config::set('mail.host', $company->smtp_host);
+            Config::set('mail.port', $company->smtp_port);
+            Config::set('mail.from', [
+                'address' => $company->smtp_username,
+                'name' => $company->name,
+            ]);
+            Config::set('mail.username', $company->smtp_username);
+            Config::set('mail.password', $company->smtp_password);
+            Config::set('mail.encryption', $company->smtp_encryption);
+
+            Mail::to(explode(', ', $delivery->customer->email))
+                ->cc($request->user()->email)
+                ->send(new ShipmentDelivered($delivery));
+        }
 
         $input = $request->all();
         $input['user_id'] = $request->user()->id;
