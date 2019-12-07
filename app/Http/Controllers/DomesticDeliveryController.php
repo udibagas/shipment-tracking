@@ -251,8 +251,8 @@ class DomesticDeliveryController extends Controller
 
         $data = DomesticDelivery::join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
             ->where(function($q) use ($request) {
-                return $q->where('customers.phone', $request->phone)
-                    ->orWhere('customers.email', $request->email);
+                return $q->where('customers.phone', $request->phone_or_email)
+                    ->orWhere('customers.email', $request->phone_or_email);
             })
             ->where(function($q) use ($request) {
                 return $q->where('domestic_deliveries.spb_number', $request->tracking_number)
