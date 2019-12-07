@@ -249,7 +249,8 @@ class DomesticDeliveryController extends Controller
             'phone_or_email' => 'Nomor HP/Email'
         ]);
 
-        $data = DomesticDelivery::join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
+        $data = DomesticDelivery::selectRaw('domestic_deliveries.*')
+            ->join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
             ->where(function($q) use ($request) {
                 return $q->where('customers.phone', $request->phone_or_email)
                     ->orWhere('customers.email', $request->phone_or_email);
