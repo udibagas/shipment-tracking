@@ -19,7 +19,7 @@ import DeliveryType from './DeliveryType'
 import DelayCause from './DelayCause'
 
 export default {
-    components: { ServiceType, DeliveryType, DelayCause },
+    components: { DeliveryType, DelayCause },
     data() {
         return {
 

@@ -1,6 +1,6 @@
 <template>
     <el-dialog fullscreen
-    :before-close="(done) => { $emit('close') }"
+    :before-close="(done) => { closeForm() }"
     :visible.sync="show"
     :title="!!formModel.id ? 'EDIT PENGIRIMAN DOMESTIK' : 'PENGIRIMAN DOMESTIK BARU'"
     v-loading="loading">

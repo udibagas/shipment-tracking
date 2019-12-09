@@ -145,8 +145,7 @@ class DomesticDeliveryController extends Controller
                     ->delete();
 
                 DB::table('domestic_delivery_items')->insert(array_map(function($item) use ($domesticDelivery) {
-                    $deliveryItem = new DomesticDeliveryItem();
-                    $data = array_only($item, $deliveryItem->getFillable());
+                    $data = array_only($item, (new DomesticDeliveryItem())->getFillable());
                     $data['domestic_delivery_id'] = $domesticDelivery->id;
                     $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
                     $item['volume_weight'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 4000;
@@ -204,6 +203,7 @@ class DomesticDeliveryController extends Controller
         ]);
 
         $data = DomesticDelivery::with(['customer'])
+        ->where('company_id', $request->company_id) // cuma user yg ada company-nya yg boleh (company, agent, customer)
         ->when($request->customer_id, function($q) use ($request) {
             return $q->where('customer_id', $request->customer_id);
         })->when($request->agent_id, function($q) use ($request) {
@@ -213,8 +213,6 @@ class DomesticDeliveryController extends Controller
                 return $qq->where('spb_number', $request->tracking_number)
                     ->orWhere('resi_number', $request->tracking_number);
             });
-        })->when($request->company_id, function($q) use ($request) {
-            return $q->where('company_id', $request->company_id);
         })->when($request->delivery_status_id, function($q) use ($request) {
             return $q->where('delivery_status_id', $request->delivery_status_id);
         })->first();
