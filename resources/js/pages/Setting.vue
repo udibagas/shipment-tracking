@@ -4,7 +4,7 @@
         <el-divider></el-divider>
         <el-tabs type="card">
             <!-- <el-tab-pane lazy label="Delivery Statuses"><DeliveryStatus /></el-tab-pane> -->
-            <el-tab-pane lazy label="Delivery Services"><ServiceType /></el-tab-pane>
+            <!-- <el-tab-pane lazy label="Delivery Services"><ServiceType /></el-tab-pane> -->
             <el-tab-pane lazy label="Delivery Types"><DeliveryType /></el-tab-pane>
             <el-tab-pane lazy label="Delay Causes"><DelayCause /></el-tab-pane>
         </el-tabs>
@@ -14,7 +14,7 @@
 
 <script>
 // import DeliveryStatus from './DeliveryStatus'
-import ServiceType from './ServiceType'
+// import ServiceType from './ServiceType'
 import DeliveryType from './DeliveryType'
 import DelayCause from './DelayCause'
 

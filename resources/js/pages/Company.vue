@@ -22,17 +22,13 @@
                 <template slot-scope="scope">
                     <table>
                         <tbody>
-                            <tr><td class="td-label">Code</td><td class="td-value">{{scope.row.code}}</td></tr>
-                            <tr><td class="td-label">Name</td><td class="td-value">{{scope.row.name}}</td></tr>
-                            <tr><td class="td-label">Address</td><td class="td-value">{{scope.row.address}}</td></tr>
+                            <tr><td class="td-label">Kode</td><td class="td-value">{{scope.row.code}}</td></tr>
+                            <tr><td class="td-label">Nama Perusahaan</td><td class="td-value">{{scope.row.name}}</td></tr>
+                            <tr><td class="td-label">Alamat</td><td class="td-value">{{scope.row.address}}</td></tr>
                             <tr><td class="td-label">Phone</td><td class="td-value">{{scope.row.phone}}</td></tr>
                             <tr><td class="td-label">Fax</td><td class="td-value">{{scope.row.fax}}</td></tr>
                             <tr><td class="td-label">Email</td><td class="td-value">{{scope.row.email}}</td></tr>
                             <tr><td class="td-label">Website</td><td class="td-value">{{scope.row.website}}</td></tr>
-                            <tr><td class="td-label">Bank</td><td class="td-value">{{scope.row.bank_name}}</td></tr>
-                            <tr><td class="td-label">Cabang</td><td class="td-value">{{scope.row.bank_branch}}</td></tr>
-                            <tr><td class="td-label">No. Rekening</td><td class="td-value">{{scope.row.account_number}}</td></tr>
-                            <tr><td class="td-label">Nama Pemegang Rekening</td><td class="td-value">{{scope.row.account_holder}}</td></tr>
                             <tr><td class="td-label">Contact Person</td><td class="td-value">{{scope.row.contact_person}}</td></tr>
                             <tr><td class="td-label">Contact Person Email</td><td class="td-value">{{scope.row.contact_person_email}}</td></tr>
                             <tr><td class="td-label">Contact Person Phone</td><td class="td-value">{{scope.row.contact_person_phone}}</td></tr>
@@ -46,7 +42,7 @@
                     <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'AKTIF' : 'NONAKTIF'}}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="code" label="Code" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="code" label="Kode" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="name" label="Name" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
             <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
@@ -96,7 +92,7 @@
 
             <el-form label-width="160px" label-position="left">
                 <el-tabs type="card">
-                    <el-tab-pane label="Basic Information">
+                    <el-tab-pane label="Informasi Perusahaan">
                         <el-form-item label="Kode" :class="formErrors.code ? 'is-error' : ''">
                             <el-input placeholder="Kode" v-model="formModel.code"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
@@ -112,19 +108,6 @@
                             <div class="el-form-item__error" v-if="formErrors.director_name">{{formErrors.director_name[0]}}</div>
                         </el-form-item>
 
-                        <el-form-item label="Logo">
-                            <el-upload
-                            action="company/uploadLogo"
-                            :headers="{'Authorization': 'bearer ' + $store.state.token, 'Accept': 'application/json, plain/text, */*'}"
-                            :limit="1"
-                            :on-success="handleSuccess"
-                            :on-error="handleError"
-                            :on-remove="handleRemove">
-                                <el-button size="small" type="primary">Click to upload</el-button>
-                                <!-- <div slot="tip" class="el-upload__tip">jpg/png file only</div> -->
-                            </el-upload>
-                        </el-form-item>
-
                         <el-form-item label="Status" :class="formErrors.active ? 'is-error' : ''">
                             <el-switch
                             :active-value="1"
@@ -137,9 +120,9 @@
                             <div class="el-form-item__error" v-if="formErrors.active">{{formErrors.active[0]}}</div>
                         </el-form-item>
                     </el-tab-pane>
-                    <el-tab-pane label="Address">
-                        <el-form-item label="Address" :class="formErrors.address ? 'is-error' : ''">
-                            <el-input type="textarea" rows="3" placeholder="Address" v-model="formModel.address"></el-input>
+                    <el-tab-pane label="Alamat">
+                        <el-form-item label="Alamat" :class="formErrors.address ? 'is-error' : ''">
+                            <el-input type="textarea" rows="3" placeholder="Alamat" v-model="formModel.address"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.address">{{formErrors.address[0]}}</div>
                         </el-form-item>
 
@@ -161,27 +144,6 @@
                         <el-form-item label="Website" :class="formErrors.website ? 'is-error' : ''">
                             <el-input placeholder="Website" v-model="formModel.website"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.website">{{formErrors.website[0]}}</div>
-                        </el-form-item>
-                    </el-tab-pane>
-                    <el-tab-pane label="Bank Information">
-                        <el-form-item label="Nama Bank" :class="formErrors.bank_name ? 'is-error' : ''">
-                            <el-input placeholder="Nama Bank" v-model="formModel.bank_name"></el-input>
-                            <div class="el-form-item__error" v-if="formErrors.bank_name">{{formErrors.bank_name[0]}}</div>
-                        </el-form-item>
-
-                        <el-form-item label="Nama Cabang Bank" :class="formErrors.bank_branch ? 'is-error' : ''">
-                            <el-input placeholder="Nama Cabang Bank" v-model="formModel.bank_branch"></el-input>
-                            <div class="el-form-item__error" v-if="formErrors.bank_branch">{{formErrors.bank_branch[0]}}</div>
-                        </el-form-item>
-
-                        <el-form-item label="Nomor Rekening" :class="formErrors.account_number ? 'is-error' : ''">
-                            <el-input placeholder="Nomor Rekening" v-model="formModel.account_number"></el-input>
-                            <div class="el-form-item__error" v-if="formErrors.account_number">{{formErrors.account_number[0]}}</div>
-                        </el-form-item>
-
-                        <el-form-item label="Rekening Atas Nama" :class="formErrors.account_holder ? 'is-error' : ''">
-                            <el-input placeholder="Rekening Atas Nama" v-model="formModel.account_holder"></el-input>
-                            <div class="el-form-item__error" v-if="formErrors.account_holder">{{formErrors.account_holder[0]}}</div>
                         </el-form-item>
                     </el-tab-pane>
                     <el-tab-pane label="Contact Person">
@@ -254,20 +216,6 @@ export default {
         }
     },
     methods: {
-        handleError(err, file, fileList) {
-            console.log(err)
-            this.$message({
-                message: JSON.parse(err).message,
-                type: 'error',
-                showClose: true
-            })
-        },
-        handleSuccess(response, file, fileList) {
-
-        },
-        handleRemove(file, fileList) {
-
-        },
         sortChange(c) {
             if (c.prop != this.sort || c.order != this.order) {
                 this.sort = c.prop; this.order = c.order; this.requestData()
