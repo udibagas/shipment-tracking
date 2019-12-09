@@ -42,14 +42,14 @@
                     <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'AKTIF' : 'NONAKTIF'}}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="code" label="Kode" sortable="custom" min-width="80px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="name" label="Name" sortable="custom" min-width="200px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="address" label="Address" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="contact_person" label="Contact Person" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="contact_person_phone" label="Contact Person Phone" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="contact_person_email" label="Contact Person Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="code" label="Kode" sortable="custom" min-width="80px"></el-table-column>
+            <el-table-column prop="name" label="Name" sortable="custom" min-width="200px"></el-table-column>
+            <el-table-column prop="email" label="Email" sortable="custom" min-width="180px"></el-table-column>
+            <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="address" label="Address" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="contact_person" label="Contact Person" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="contact_person_phone" label="Contact Person Phone" sortable="custom" min-width="180px"></el-table-column>
+            <el-table-column prop="contact_person_email" label="Contact Person Email" sortable="custom" min-width="180px"></el-table-column>
 
             <el-table-column fixed="right" width="40px">
                 <template slot-scope="scope">

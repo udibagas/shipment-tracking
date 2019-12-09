@@ -90,7 +90,7 @@ router.beforeEach((to, from, next) => {
             next()
         }).catch(e => {
             Message({
-                message: 'Anda tidak berhak mengakses halaman ini.',
+                message: 'Anda tidak berhak mengakses halaman ini atau sesi anda telah berakhir. Silakan login ulang.',
                 type: 'error',
                 showClose: true,
                 duration: 10000
