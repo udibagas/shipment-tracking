@@ -443,6 +443,8 @@ export default {
                 service_type: this.formModel.service_type
             }
 
+            this.formModel.items = []
+
             axios.get('/domesticDelivery/search', { params: params }).then(r => {
                 if (r.data.length == 0) {
                     this.$message({
@@ -453,9 +455,9 @@ export default {
                     return
                 }
 
-                let clonedData = JSON.parse(JSON.stringify(r.data))
-                // biaya pengiriman
-                this.formModel.items = r.data.map(d => {
+                r.data.forEach(data => {
+                    // Biaya kirim
+                    let d = JSON.parse(JSON.stringify(data))
                     d.description = {
                         delivery_id: d.id,
                         delivery_date: d.delivery_date,
@@ -475,80 +477,85 @@ export default {
                     d.tax = d.delivery_cost_ppn * 0.1 * d.price
                     d.total = d.price + d.tax
                     d.vehicle_type = d.vehicle_type ? d.vehicle_type.name : ''
-                    return d
+                    this.formModel.items.push(d)
+                    console.log(this.formModel.items)
+
+                    // biaya packing
+                    if (d.packing_cost > 0) {
+                        let d = JSON.parse(JSON.stringify(data))
+                        d.description = {
+                            delivery_id: d.id,
+                            delivery_date: d.delivery_date,
+                            delivered_date: d.delivered_date,
+                            service_type: 'PACKING PETI',
+                            origin: d.origin,
+                            destination: d.destination,
+                            vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
+                            spb_number: d.spb_number,
+                            total_coli: d.quantity
+                        }
+
+                        d.service_type = 'PACKING PETI'
+                        d.quantity = d.packing_volume
+                        d.unit = 'M3'
+                        d.fare = d.packing_rate
+                        d.price = d.packing_cost
+                        d.tax = d.packing_cost_ppn * 0.1 * d.price
+                        d.total = d.price + d.tax
+                        this.formModel.items.push(d)
+                        console.log(this.formModel.items)
+                    }
+
+                    // biaya penerus
+                    if (d.forwarder_cost > 0) {
+                        let d = JSON.parse(JSON.stringify(data))
+                        d.description = {
+                            delivery_id: d.id,
+                            delivery_date: d.delivery_date,
+                            delivered_date: d.delivered_date,
+                            service_type: 'BIAYA PENERUS',
+                            origin: d.origin,
+                            destination: d.destination,
+                            vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
+                            spb_number: d.spb_number,
+                            total_coli: d.quantity
+                        }
+
+                        d.service_type = 'BIAYA PENERUS'
+                        d.quantity = 1
+                        d.unit = '-'
+                        d.fare = 0
+                        d.price = d.forwarder_cost
+                        d.tax = d.forwarder_cost_ppn * 0.1 * d.price
+                        d.total = d.price + d.tax
+                        this.formModel.items.push(d)
+                    }
+
+                    // biaya lain - lain
+                    if (d.additional_cost > 0) {
+                        let d = JSON.parse(JSON.stringify(data))
+                        d.description = {
+                            delivery_id: d.id,
+                            delivery_date: d.delivery_date,
+                            delivered_date: d.delivered_date,
+                            service_type: 'BIAYA LAIN - LAIN : ' + d.additional_cost_description,
+                            origin: d.origin,
+                            destination: d.destination,
+                            vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
+                            spb_number: d.spb_number,
+                            total_coli: d.quantity
+                        }
+
+                        d.service_type = 'BIAYA LAIN - LAIN : ' + d.additional_cost_description
+                        d.quantity = 1
+                        d.unit = '-'
+                        d.fare = 0
+                        d.price = d.additional_cost
+                        d.tax = d.additional_cost_ppn * 0.1 * d.price
+                        d.total = d.price + d.tax
+                        this.formModel.items.push(d)
+                    }
                 })
-
-                // biaya packing
-                clonedData.filter(d => d.packing_cost > 0).map(d => {
-                    d.description = {
-                        delivery_id: d.id,
-                        delivery_date: d.delivery_date,
-                        delivered_date: d.delivered_date,
-                        service_type: 'PACKING PETI',
-                        origin: d.origin,
-                        destination: d.destination,
-                        vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
-                        spb_number: d.spb_number,
-                        total_coli: d.quantity
-                    }
-
-                    d.service_type = 'PACKING PETI'
-                    d.quantity = d.packing_volume
-                    d.unit = 'M3'
-                    d.fare = d.packing_rate
-                    d.price = d.packing_cost
-                    d.tax = d.packing_cost_ppn * 0.1 * d.price
-                    d.total = d.price + d.tax
-                    return d
-                }).forEach(p => this.formModel.items.push(p))
-
-                // biaya penerus
-                clonedData.filter(d => d.forwarder_cost > 0).map(d => {
-                    d.description = {
-                        delivery_id: d.id,
-                        delivery_date: d.delivery_date,
-                        delivered_date: d.delivered_date,
-                        service_type: 'BIAYA PENERUS',
-                        origin: d.origin,
-                        destination: d.destination,
-                        vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
-                        spb_number: d.spb_number,
-                        total_coli: d.quantity
-                    }
-
-                    d.service_type = 'BIAYA PENERUS'
-                    d.quantity = 1
-                    d.unit = ''
-                    d.fare = 0
-                    d.price = d.forwarder_cost
-                    d.tax = d.forwarder_cost_ppn * 0.1 * d.price
-                    d.total = d.price + d.tax
-                    return d
-                }).forEach(p => this.formModel.items.push(p))
-
-                // biaya lain - lain
-                // clonedData.filter(d => d.forwarder_cost > 0).map(d => {
-                //     d.description = {
-                //         delivery_id: d.id,
-                //         delivery_date: d.delivery_date,
-                //         delivered_date: d.delivered_date,
-                //         service_type: 'BIAYA LAIN - LAIN : ' + d.additional_cost_description,
-                //         origin: d.origin,
-                //         destination: d.destination,
-                //         vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
-                //         spb_number: d.spb_number,
-                //         total_coli: d.quantity
-                //     }
-
-                //     d.service_type = 'BIAYA LAIN - LAIN : ' + d.additional_cost_description
-                //     d.quantity = 1
-                //     d.unit = ''
-                //     d.fare = 0
-                //     d.price = d.additional_cost
-                //     d.tax = d.additional_cost_ppn * 0.1 * d.price
-                //     d.total = d.price + d.tax
-                //     return d
-                // }).forEach(p => this.formModel.items.push(p))
 
             }).catch(e => {
                 this.$message({
