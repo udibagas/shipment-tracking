@@ -48,7 +48,7 @@
 
 <script>
 export default {
-    props: ['items'],
+    props: ['data', 'items'],
     methods: {
         getSummaryItem(param) {
             const { columns, data } = param;

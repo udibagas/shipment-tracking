@@ -48,7 +48,7 @@
                 <DeliveryProgressCustomer :id="data.id" :data="data" />
             </el-tab-pane>
             <el-tab-pane label="ITEM">
-                <DetailItem :items="data.items" />
+                <DetailItem :data="data" :items="data.items" />
             </el-tab-pane>
             <el-tab-pane label="BIAYA">
                 <DetailBiaya :data="data" />
