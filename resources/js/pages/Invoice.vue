@@ -234,7 +234,7 @@ export default {
             }
         },
         print(id) {
-            window.open(BASE_URL + '/invoice/print/' + id + '?token=' + this.$store.state.token, '_blank')
+            window.open(BASE_URL + '/invoice/print/' + id + '?print=1&token=' + this.$store.state.token, '_blank')
         },
         terbilang(v) {
             let bilangan = 'nol,satu,dua,tiga,empat,lima,enam,tujuh,delapan,sembilan'.split(',')

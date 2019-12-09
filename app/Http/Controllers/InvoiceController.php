@@ -135,8 +135,8 @@ class InvoiceController extends Controller
         return ['message' => 'Data berhasil dihapus'];
     }
 
-    public function print(Invoice $invoice)
+    public function print(Request $request, Invoice $invoice)
     {
-        return view('print.invoice', ['data' => $invoice]);
+        return view('print.invoice', ['data' => $invoice, 'print' => $request->print]);
     }
 }

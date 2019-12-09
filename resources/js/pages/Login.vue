@@ -76,6 +76,7 @@ export default {
 
             this.loading = true
             axios.post('/api/cekResi', data).then(r => {
+                this.formErrors = {}
                 this.delivery_data = r.data;
             }).catch(e => {
                 const status = e.response.status
