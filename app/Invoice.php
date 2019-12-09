@@ -19,6 +19,17 @@ class Invoice extends Model
         return $this->hasMany(InvoiceItem::class);
     }
 
+    public function groupedItems()
+    {
+        $items = [];
+
+        foreach ($this->items as $item) {
+            $items[$item->description['spb_number']][] = $item;
+        }
+
+        return $items;
+    }
+
     public function customer() {
         return $this->belongsTo(Customer::class);
     }

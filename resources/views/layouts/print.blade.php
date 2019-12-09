@@ -71,8 +71,10 @@
 </head>
 <body>
     <div class="container">@yield('content')</div>
+    @if ($print)
     <script type="text/javascript">
-        // window.print()
+        window.print()
     </script>
+    @endif
 </body>
 </html>

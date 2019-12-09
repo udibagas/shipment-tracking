@@ -71,18 +71,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($data->groupedItems() as $items)
-            @foreach($items as $i => $item)
+            @foreach ($data->items as $item)
             <tr>
-                @if ($i == 0)
-                <td rowspan="{{count($items)}}">{{$loop->index + 1}}</td>
-                <td rowspan="{{count($items)}}" class="text-center">{{date('d/m/Y', strtotime($item->description['delivery_date']))}}</td>
-                {{-- <td rowspan="{{count($item)}}">{{$item->description['delivered_date']}}</td> --}}
-                <td rowspan="{{count($items)}}">{{$item->description['spb_number']}}</td>
-                {{-- <td rowspan="{{count($item)}}">{{$item->description['origin']}}</td> --}}
-                <td style="width:150px" rowspan="{{count($items)}}">{{$item->description['destination']}}</td>
-                @endif
-                <td style="width:180px">
+                <td>{{$loop->index + 1}}</td>
+                <td class="text-center">{{date('d/m/Y', strtotime($item->description['delivery_date']))}}</td>
+                {{-- <td>{{$item->description['delivered_date']}}</td> --}}
+                <td>{{$item->description['spb_number']}}</td>
+                {{-- <td>{{$item->description['origin']}}</td> --}}
+                <td>{{$item->description['destination']}}</td>
+                <td>
                     {{$item->description['service_type'] == 'CHARTER' ? 'CHARTER - ' . $item->description['vehicle_type'] : $item->description['service_type']}}
                 </td>
                 @if ($data->service_type == 'REGULER')
@@ -94,7 +91,6 @@
                 <td class="text-right">Rp. {{number_format($item->tax, 0, ',', '.')}}</td>
                 <td class="text-right">Rp. {{number_format($item->total, 0, ',', '.')}}</td>
             </tr>
-            @endforeach
             @endforeach
         </tbody>
         <tfoot style="background-color:#eee;">
