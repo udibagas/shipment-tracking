@@ -37,6 +37,7 @@
                         <tr v-if="p.status == 2 && !!data.driver_phone"><td class="td-label">No. HP Driver</td><td class="td-value">{{data.driver_phone}}</td></tr>
                         <tr v-if="p.status == 3"><td class="td-label">Tanggal Terima</td><td class="td-value">{{data.delivered_date | readableDate}}</td></tr>
                         <tr v-if="p.status == 3"><td class="td-label">Penerima</td><td class="td-value">{{data.receiver}}</td></tr>
+                        <tr v-if="p.status == 4"><td class="td-label">Tanggal Terima STT</td><td class="td-value">{{data.stt_received_date | readableDate}}</td></tr>
                         <tr v-if="!!p.note"><td class="td-label">Note</td><td class="td-value">{{p.note}}</td></tr>
                     </tbody>
                 </table>

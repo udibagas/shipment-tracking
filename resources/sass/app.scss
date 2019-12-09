@@ -129,12 +129,13 @@ table {
 
 .table thead th {
     vertical-align: middle;
-    border-bottom: 2px solid #eceeef;
+    background-color: #006098;
+    color: #fff;
 }
 
-.table tbody + tbody {
-    border-top: 2px solid #eceeef;
-}
+// .table tbody + tbody {
+//     border-top: 1px solid #eceeef;
+// }
 
 .table .table {
     background-color: #fff;
@@ -149,14 +150,9 @@ table {
     border: 1px solid #eceeef;
 }
 
-.table-bordered th,
-.table-bordered td {
-    border: 1px solid #eceeef;
-}
-
-.table-bordered thead th,
-.table-bordered thead td {
-    border-bottom-width: 2px;
+.table-bordered th:not(:last-of-type),
+.table-bordered td:not(:last-of-type) {
+    border-right: 1px solid #eceeef;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -291,10 +287,11 @@ table {
     font-weight: bold;
 }
 
-// .el-table th {
-//     background-color: #e77431;
-//     color: #fff;
-// }
+.el-table th {
+    background-color: #006098;
+    color: #fff;
+    padding: 4px 0;
+}
 
 .el-tag.rounded {
     border-radius: 13px;

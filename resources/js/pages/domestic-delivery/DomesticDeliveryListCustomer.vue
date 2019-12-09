@@ -31,35 +31,38 @@
         v-loading="loading"
         @filter-change="(f) => { let c = Object.keys(f)[0]; filters[c] = Object.values(f[c]); page = 1; requestData(); }"
         @sort-change="sortChange">
-            <el-table-column prop="spb_number" label="Nomor SPB" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="resi_number" label="Nomor Resi" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="destination" label="Tujuan" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="delivery_address" label="Alamat Pengiriman" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="delivery_type" label="Jenis Pengiriman" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="service_type" label="Layanan Pengiriman" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="vehicle_type.name" label="Jenis Armada" sortable="custom" min-width="170px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="quantity" label="Jml Koli" sortable="custom" min-width="150px" header-align="center" align="center"></el-table-column>
-            <el-table-column prop="volume" label="Volume" sortable="custom" min-width="100px" header-align="right" align="right">
+            <el-table-column
+            align="center"
+            header-align="center"
+            column-key="status"
+            label="Status"
+            sortable="custom"
+            min-width="150px"
+            :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
                 <template slot-scope="scope">
-                    {{ scope.row.volume | formatNumber }} M<sup>3</sup>
+                    <el-tag effect="dark" size="small" class="rounded full-width text-center"
+                    :type="$store.state.deliveryStatusList[scope.row.delivery_status_id].type">
+                        {{scope.row.statusName.toUpperCase()}}
+                    </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="weight" label="Berat" sortable="custom" min-width="100px" header-align="right" align="right">
-                <template slot-scope="scope">
-                    {{ scope.row.weight | formatNumber }} KG
-                </template>
+
+            <el-table-column prop="resi_number" label="Nomor Resi" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="spb_number" label="Nomor SPB" sortable="custom" min-width="150px"></el-table-column>
+
+            <el-table-column
+            prop="customer"
+            label="Customer"
+            sortable="custom"
+            min-width="150px"
+            :filters="$store.state.customerList.map(c => { return { value: c.id, text: c.name } })"
+            column-key="customer_id">
             </el-table-column>
-            <el-table-column prop="volume_weight" label="Berat Volume" sortable="custom" min-width="130px" header-align="right" align="right">
-                <template slot-scope="scope">
-                    {{ scope.row.volume_weight | formatNumber }} KG
-                </template>
-            </el-table-column>
-            <el-table-column prop="invoice_weight" label="Berat Invoice" sortable="custom" min-width="120px" header-align="right" align="right">
-                <template slot-scope="scope">
-                    {{ scope.row.invoice_weight | formatNumber }} KG
-                </template>
-            </el-table-column>
-            <el-table-column prop="pick_up_date" label="Tanggal Pick Up" sortable="custom" min-width="140px" align="center" header-align="center">
+
+            <el-table-column prop="origin" label="Asal" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="destination" label="Tujuan" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="delivery_address" label="Alamat Pengiriman" sortable="custom" min-width="170px"></el-table-column>
+            <el-table-column prop="pick_up_date" label="Tanggal Pick Up" sortable="custom" min-width="150px" align="center" header-align="center">
                 <template slot-scope="scope">
                     {{ scope.row.pick_up_date | readableDate }}
                 </template>
@@ -84,7 +87,45 @@
                     {{ scope.row.delivered_date | readableDate }}
                 </template>
             </el-table-column>
-            <el-table-column prop="receiver" label="Penerima" sortable="custom" min-width="100px" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="stt_received_date" label="Tgl Terima STT" sortable="custom" min-width="140px" header-align="center" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.stt_received_date | readableDate }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="receiver" label="Penerima" sortable="custom" min-width="100px"></el-table-column>
+            <!-- <el-table-column prop="received_date" label="Tgl Terima" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column> -->
+            <!-- <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px"></el-table-column> -->
+            <!-- <el-table-column prop="payment_date" label="Payment Date" sortable="custom" min-width="140px"></el-table-column> -->
+            <!-- <el-table-column prop="tracking_number" label="Nomor Tracking" sortable="custom" min-width="150px"></el-table-column> -->
+            <el-table-column prop="delivery_type" label="Jenis Pengiriman" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="service_type" label="Layanan Pengiriman" sortable="custom" min-width="170px"></el-table-column>
+            <el-table-column prop="vehicle_type.name" label="Jenis Armada" sortable="custom" min-width="130px"></el-table-column>
+            <el-table-column prop="quantity" label="Jml Koli" sortable="custom" min-width="100px" header-align="center" align="center"></el-table-column>
+            <el-table-column prop="volume" label="Volume" sortable="custom" min-width="100px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.volume | formatNumber }} M<sup>3</sup>
+                </template>
+            </el-table-column>
+            <el-table-column prop="packing_volume" label="Volume Packing" sortable="custom" min-width="140px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.packing_volume | formatNumber }} M<sup>3</sup>
+                </template>
+            </el-table-column>
+            <el-table-column prop="weight" label="Berat" sortable="custom" min-width="100px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.weight | formatNumber }} KG
+                </template>
+            </el-table-column>
+            <el-table-column prop="volume_weight" label="Berat Volume" sortable="custom" min-width="130px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.volume_weight | formatNumber }} KG
+                </template>
+            </el-table-column>
+            <el-table-column prop="invoice_weight" label="Berat Invoice" sortable="custom" min-width="120px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.invoice_weight | formatNumber }} KG
+                </template>
+            </el-table-column>
             <el-table-column prop="delivery_cost" label="Biaya Pengiriman" sortable="custom" min-width="150px" header-align="right" align="right">
                 <template slot-scope="scope">
                     Rp. {{ scope.row.delivery_cost | formatNumber }}
@@ -92,7 +133,7 @@
             </el-table-column>
             <el-table-column prop="delivery_cost_ppn" label="PPN Biaya Pengiriman" sortable="custom" min-width="180px" header-align="right" align="right">
                 <template slot-scope="scope">
-                    Rp. {{ scope.row.delivery_cost_ppn | formatNumber }}
+                    Rp. {{ (scope.row.delivery_cost_ppn * 0.1 * scope.row.delivery_cost).toFixed(0) | formatNumber }}
                 </template>
             </el-table-column>
             <el-table-column prop="packing_cost" label="Biaya Packing" sortable="custom" min-width="150px" header-align="right" align="right">
@@ -102,7 +143,27 @@
             </el-table-column>
             <el-table-column prop="packing_cost_ppn" label="PPN Biaya Packing" sortable="custom" min-width="170px" header-align="right" align="right">
                 <template slot-scope="scope">
-                    Rp. {{ scope.row.packing_cost_ppn | formatNumber }}
+                    Rp. {{ (scope.row.packing_cost_ppn * 0.1 * scope.row.packing_cost).toFixed(0) | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="forwarder_cost" label="Biaya Penerus" sortable="custom" min-width="150px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.forwarder_cost | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="forwarder_cost_ppn" label="PPN Biaya Penerus" sortable="custom" min-width="170px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ (scope.row.forwarder_cost_ppn * 0.1 * scope.row.forwarder_cost).toFixed(0) | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="additional_cost" label="Biaya Lain - Lain" sortable="custom" min-width="170px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ scope.row.additional_cost | formatNumber }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="additional_cost_ppn" label="PPN Biaya Lain - Lain" sortable="custom" min-width="170px" header-align="right" align="right">
+                <template slot-scope="scope">
+                    Rp. {{ (scope.row.additional_cost_ppn * 0.1 * scope.row.additional_cost).toFixed(0) | formatNumber }}
                 </template>
             </el-table-column>
             <el-table-column prop="total_cost" label="Total Biaya" sortable="custom" min-width="150px" header-align="right" align="right">
@@ -111,16 +172,25 @@
                 </template>
             </el-table-column>
 
-            <el-table-column prop="updated_at" label="Update Terkahir" sortable="custom" min-width="150px"></el-table-column>
-            <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column fixed="right" column-key="status" label="Status" sortable="custom" min-width="150px" :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
-                <template slot-scope="scope">
-                    <el-tag :type="$store.state.deliveryStatusList[scope.row.delivery_status_id].type" size="small">{{scope.row.statusName}}</el-tag>
-                </template>
+            <el-table-column
+            prop="agent"
+            label="Agent"
+            sortable="custom"
+            min-width="150px"
+            :filters="$store.state.agentList.map(c => { return { value: c.id, text: c.name } })"
+            column-key="agent_id">
             </el-table-column>
+
+            <el-table-column prop="ship_name" label="Nama Kapal" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="vehicle_number" label="No. Plat Armada" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="driver_name" label="Nama Driver" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="driver_phone" label="No. HP Driver" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="user" label="Diupdate Oleh" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="updated_at" label="Update Terkahir" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px"></el-table-column>
             <el-table-column fixed="right" width="40px">
                 <template slot-scope="scope">
-                    <a style="text-decoration:none;" class="el-icon-zoom-in" href="#" @click.prevent="() => { selectedData = scope.row; showDetailDialog = true; }"></a>
+                    <el-button icon="el-icon-zoom-in" type="text" @click.native.prevent="() => { selectedData = scope.row; showDetailDialog = true; }"></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -236,29 +306,41 @@ export default {
                     return {
                         "Nomor SPB": d.spb_number,
                         "Nomor Resi": d.resi_number,
+                        "Customer": d.customer,
+                        "Asal": d.origin,
                         "Tujuan": d.destination,
                         "Alamat Pengiriman": d.delivery_address,
                         "Jenis Pengiriman": d.delivery_type,
                         "Layanan": d.service_type,
                         "Jenis Armada": d.vehicle_type ? d.vehicle_type.name : '',
-                        "Jml Koli": d.quantity,
-                        "Berat": d.weight,
-                        "Berat Volume": d.volume_weight,
-                        "Berat Invoice": d.invoice_weight,
-                        "Volume": d.volume,
-                        "Volume Packing": d.packing_volume,
+                        "Agent": d.agent,
+                        "Nama Kapal": d.ship_name,
+                        "No. Plat Armada": d.vehicle_number,
+                        "Driver Armada": d.driver_name,
+                        "No. HP Driver": d.driver_phone,
                         "Tgl Pick Up": d.pick_up_date,
                         "ETD": d.etd,
                         "Tgl Kirim": d.delivery_date,
                         "ETA": d.eta,
                         "Tgl Terima": d.delivered_date,
                         "Penerima": d.receiver,
+                        "Tgl Terima STT": d.stt_received_date,
+                        "Jml Koli": d.quantity,
+                        "Berat": d.weight,
+                        "Berat Volume": d.volume_weight,
+                        "Berat Invoice": d.invoice_weight,
+                        "Volume": d.volume,
+                        "Volume Packing": d.packing_volume,
                         "Biaya Kirim": d.delivery_cost,
-                        "PPN Biaya Kirim": d.delivery_cost_ppn,
+                        "PPN Biaya Kirim": d.delivery_cost_ppn * 0.1 * d.delivery_cost,
                         "Biaya Packing": d.packing_cost,
-                        "PPN Biaya Packing": d.packing_cost_ppn,
+                        "PPN Biaya Packing": d.packing_cost_ppn * 0.1 * d.packing_cost,
+                        "Biaya Penerus": d.packing_cost,
+                        "PPN Biaya Penerus": d.packing_cost_ppn * 0.1 * d.packing_cost,
+                        "Biaya Lain - Lain": d.packing_cost,
+                        "PPN Biaya Lain - Lain": d.packing_cost_ppn * 0.1 * d.packing_cost,
                         "Total Biaya": d.total_cost,
-                        "Status": d.statusName,
+                        "Status": d.statusName.toUpperCase(),
                         "Waktu Update": d.updated_at,
                     }
                 })

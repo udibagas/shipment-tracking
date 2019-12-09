@@ -55,7 +55,7 @@ class DomesticDelivery extends Model
     {
         $statuses = [
             'Terdaftar', 'Siap Kirim',
-            'Dalam Pengiriman', 'Terkirim', 'Diterima',
+            'Dalam Pengiriman', 'Terkirim', 'STT Diterima',
             'Invoice Sent', 'Invoice Paid'
         ];
 

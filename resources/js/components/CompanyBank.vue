@@ -12,7 +12,7 @@
             <el-table-column label="Pemegang Rekening" prop="account_holder"> </el-table-column>
 
             <el-table-column fixed="right" width="70px" align="center" header-align="center">
-                <template slot-scope="scope" slot="header">
+                <template slot="header">
                     <el-button icon="el-icon-plus" type="primary" size="small" @click="() => { formModel = {}; showForm = true;}"></el-button>
                 </template>
                 <template slot-scope="scope">

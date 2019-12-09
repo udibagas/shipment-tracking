@@ -130,7 +130,9 @@
                 </el-row>
 
                 <el-form-item label="Terbilang" :class="formErrors.total_said ? 'is-error' : ''">
-                    <el-input disabled placeholder="Terbilang" :value="terbilang(total)"></el-input>
+                    <div style="height:40px;line-height:40px;border:1px solid #ddd;border-radius:4px;background-color:yellow;padding-left:20px;">
+                        {{terbilang(total)}}
+                    </div>
                     <div class="el-form-item__error" v-if="formErrors.total_said">{{formErrors.total_said[0]}}</div>
                 </el-form-item>
             </el-form>
@@ -525,28 +527,28 @@ export default {
                 }).forEach(p => this.formModel.items.push(p))
 
                 // biaya lain - lain
-                clonedData.filter(d => d.forwarder_cost > 0).map(d => {
-                    d.description = {
-                        delivery_id: d.id,
-                        delivery_date: d.delivery_date,
-                        delivered_date: d.delivered_date,
-                        service_type: 'BIAYA LAIN - LAIN :' + d.additional_cost_description,
-                        origin: d.origin,
-                        destination: d.destination,
-                        vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
-                        spb_number: d.spb_number,
-                        total_coli: d.quantity
-                    }
+                // clonedData.filter(d => d.forwarder_cost > 0).map(d => {
+                //     d.description = {
+                //         delivery_id: d.id,
+                //         delivery_date: d.delivery_date,
+                //         delivered_date: d.delivered_date,
+                //         service_type: 'BIAYA LAIN - LAIN : ' + d.additional_cost_description,
+                //         origin: d.origin,
+                //         destination: d.destination,
+                //         vehicle_type: d.vehicle_type ? d.vehicle_type.name : '',
+                //         spb_number: d.spb_number,
+                //         total_coli: d.quantity
+                //     }
 
-                    d.service_type = 'BIAYA LAIN - LAIN :' + d.additional_cost_description
-                    d.quantity = 1
-                    d.unit = ''
-                    d.fare = 0
-                    d.price = d.additional_cost
-                    d.tax = d.additional_cost_ppn * 0.1 * d.price
-                    d.total = d.price + d.tax
-                    return d
-                }).forEach(p => this.formModel.items.push(p))
+                //     d.service_type = 'BIAYA LAIN - LAIN : ' + d.additional_cost_description
+                //     d.quantity = 1
+                //     d.unit = ''
+                //     d.fare = 0
+                //     d.price = d.additional_cost
+                //     d.tax = d.additional_cost_ppn * 0.1 * d.price
+                //     d.total = d.price + d.tax
+                //     return d
+                // }).forEach(p => this.formModel.items.push(p))
 
             }).catch(e => {
                 this.$message({

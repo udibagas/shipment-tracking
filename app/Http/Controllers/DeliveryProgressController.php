@@ -31,8 +31,8 @@ class DeliveryProgressController extends Controller
             'delivery_date' => 'required_if:status,2|date',
             'eta' => 'required_if:status,2|date',
             'delivered_date' => 'required_if:status,3|date',
-            'received_date' => 'required_if:status,4|date',
-            'receiver' => 'required_if:status,3,4',
+            'stt_received_date' => 'required_if:status,4|date',
+            'receiver' => 'required_if:status,3',
             'invoice_date' => 'required_if:status,5|date',
             'payment_date' => 'required_if:status,6|date',
         ]);
