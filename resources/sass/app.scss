@@ -287,7 +287,7 @@ table {
     font-weight: bold;
 }
 
-.el-table th {
+.el-table th, .el-table thead.is-group th {
     background-color: #006098;
     color: #fff;
     padding: 4px 0;
