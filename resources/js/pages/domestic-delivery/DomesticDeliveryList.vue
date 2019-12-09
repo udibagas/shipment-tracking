@@ -15,9 +15,11 @@
                 v-model="dateRange"></el-date-picker>
             </el-form-item>
             <el-form-item>
-                <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
-                    <el-button @click="() => { page = 1; keyword = ''; requestData(); }" slot="append" icon="el-icon-refresh"></el-button>
-                </el-input>
+                <el-input
+                v-model="keyword"
+                placeholder="Cari"
+                prefix-icon="el-icon-search"
+                :clearable="true" @change="(v) => { keyword = v; requestData(); }"> </el-input>
             </el-form-item>
             <el-form-item v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
                 <el-button-group>
@@ -173,7 +175,7 @@
             </el-table-column>
             <el-table-column prop="total_cost" label="Total Biaya" sortable="custom" min-width="150px" header-align="right" align="right">
                 <template slot-scope="scope">
-                    Rp. {{ scope.row.total_cost | formatNumber }}
+                    <el-tag effect="dark" size="small" type="primary">Rp. {{ scope.row.total_cost | formatNumber }}</el-tag>
                 </template>
             </el-table-column>
 
@@ -194,6 +196,9 @@
             <el-table-column prop="updated_at" label="Update Terkahir" sortable="custom" min-width="150px"></el-table-column>
             <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px"></el-table-column>
             <el-table-column fixed="right" width="40px">
+                <template slot="header">
+                    <el-button @click="() => { page = 1; keyword = ''; requestData(); }" type="text" icon="el-icon-refresh"></el-button>
+                </template>
                 <template slot-scope="scope">
                     <el-dropdown>
                         <span class="el-dropdown-link">

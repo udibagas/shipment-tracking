@@ -24,6 +24,7 @@
         </el-form>
 
         <el-table :data="tableData.data" stripe
+        @row-dblclick="(row, column, event) => { selectedData = row; showDetail = true; } "
         :default-sort = "{prop: sort, order: order}"
         height="calc(100vh - 290px)"
         v-loading="loading"
@@ -44,7 +45,7 @@
             <el-table-column prop="service_type" label="Layanan" sortable="custom" min-width="100"></el-table-column>
             <el-table-column prop="total" label="Total" sortable="custom" align="right" header-align="right" min-width="120">
                 <template slot-scope="scope">
-                    <el-tag size="small" effect="dark" type="info">Rp {{scope.row.total | formatNumber}}</el-tag>
+                    <el-tag size="small" effect="dark" type="primary">Rp {{scope.row.total | formatNumber}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="Update Terakhir" prop="updated_at" min-width="150" sortable="custom" align="center" header-align="center">

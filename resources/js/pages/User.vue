@@ -24,17 +24,17 @@
                     <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'AKTIF' : 'NONAKTIF'}}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="name" label="Name" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="email" label="Email" sortable="custom" min-width="180px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="role" label="Role" sortable="custom" min-width="100px" show-overflow-tooltip>
+            <el-table-column prop="name" label="Name" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="email" label="Email" sortable="custom" min-width="180px"></el-table-column>
+            <el-table-column prop="phone" label="Phone" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="role" label="Role" sortable="custom" min-width="100px">
                 <template slot-scope="scope">
                     {{$store.state.roleList[scope.row.role]}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="$store.state.user.role == 11" prop="company" label="Company" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="customer" label="Customer" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="agent" label="Agent" sortable="custom" min-width="150px" show-overflow-tooltip></el-table-column>
+            <el-table-column v-if="$store.state.user.role == 11" prop="company" label="Company" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="customer" label="Customer" sortable="custom" min-width="150px"></el-table-column>
+            <el-table-column prop="agent" label="Agent" sortable="custom" min-width="150px"></el-table-column>
 
             <el-table-column fixed="right" width="40px">
                 <template slot-scope="scope">
