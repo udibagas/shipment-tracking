@@ -25,7 +25,7 @@
         </tbody>
     </table>
 
-    <hr>
+    {{-- <hr> --}}
     <br>
 
     <table class="bordered">
@@ -38,11 +38,11 @@
                 </td>
                 <td width="50%" style="border-top:1px solid #ddd">
                     Pembayaran ditransfer ke:  <br>
+                    @foreach($data->company->banks()->where('active', 1)->get() as $bank)
                     <strong>
-                        Bank {{$data->company->bank_name}} Cab. {{$data->company->bank_branch}} <br>
-                        No. Rek. {{$data->company->account_number}} <br>
-                        a/n {{$data->company->account_holder}} <br>
-                    </strong>
+                        - Bank {{$bank->bank_name}} Cab. {{$bank->bank_branch}} No. Rek. {{$bank->account_number}} a/n {{$bank->account_holder}}
+                    </strong><br>
+                    @endforeach
                 </td>
             </tr>
         </tbody>

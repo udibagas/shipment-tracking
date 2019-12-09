@@ -92,6 +92,11 @@
                     {{ scope.row.delivered_date | readableDate }}
                 </template>
             </el-table-column>
+            <el-table-column prop="stt_received_date" label="Tgl Terima STT" sortable="custom" min-width="140px" header-align="center" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.stt_received_date | readableDate }}
+                </template>
+            </el-table-column>
             <el-table-column prop="receiver" label="Penerima" sortable="custom" min-width="100px"></el-table-column>
             <!-- <el-table-column prop="received_date" label="Tgl Terima" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column> -->
             <!-- <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px"></el-table-column> -->
@@ -133,7 +138,7 @@
             </el-table-column>
             <el-table-column prop="delivery_cost_ppn" label="PPN Biaya Pengiriman" sortable="custom" min-width="180px" header-align="right" align="right">
                 <template slot-scope="scope">
-                    Rp. {{ scope.row.delivery_cost_ppn * 0.1 * scope.row.delivery_cost | formatNumber }}
+                    Rp. {{ (scope.row.delivery_cost_ppn * 0.1 * scope.row.delivery_cost).toFixed(0) | formatNumber }}
                 </template>
             </el-table-column>
             <el-table-column prop="packing_cost" label="Biaya Packing" sortable="custom" min-width="150px" header-align="right" align="right">
@@ -143,7 +148,7 @@
             </el-table-column>
             <el-table-column prop="packing_cost_ppn" label="PPN Biaya Packing" sortable="custom" min-width="170px" header-align="right" align="right">
                 <template slot-scope="scope">
-                    Rp. {{ scope.row.packing_cost_ppn * 0.1 * scope.row.packing_cost | formatNumber }}
+                    Rp. {{ (scope.row.packing_cost_ppn * 0.1 * scope.row.packing_cost).toFixed(0) | formatNumber }}
                 </template>
             </el-table-column>
             <el-table-column prop="forwarder_cost" label="Biaya Penerus" sortable="custom" min-width="150px" header-align="right" align="right">
@@ -153,7 +158,7 @@
             </el-table-column>
             <el-table-column prop="forwarder_cost_ppn" label="PPN Biaya Penerus" sortable="custom" min-width="170px" header-align="right" align="right">
                 <template slot-scope="scope">
-                    Rp. {{ scope.row.forwarder_cost_ppn * 0.1 * scope.row.forwarder_cost | formatNumber }}
+                    Rp. {{ (scope.row.forwarder_cost_ppn * 0.1 * scope.row.forwarder_cost).toFixed(0) | formatNumber }}
                 </template>
             </el-table-column>
             <el-table-column prop="additional_cost" label="Biaya Lain - Lain" sortable="custom" min-width="170px" header-align="right" align="right">
@@ -163,7 +168,7 @@
             </el-table-column>
             <el-table-column prop="additional_cost_ppn" label="PPN Biaya Lain - Lain" sortable="custom" min-width="170px" header-align="right" align="right">
                 <template slot-scope="scope">
-                    Rp. {{ scope.row.additional_cost_ppn * 0.1 * scope.row.additional_cost | formatNumber }}
+                    Rp. {{ (scope.row.additional_cost_ppn * 0.1 * scope.row.additional_cost).toFixed(0) | formatNumber }}
                 </template>
             </el-table-column>
             <el-table-column prop="total_cost" label="Total Biaya" sortable="custom" min-width="150px" header-align="right" align="right">

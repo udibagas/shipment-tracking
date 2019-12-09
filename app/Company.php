@@ -10,9 +10,11 @@ class Company extends Model
         'code', 'name', 'phone', 'email',
         'address', 'active', 'contact_person',
         'fax', 'website', 'contact_person_email',
-        'contact_person_phone', 'logo',
-        'bank_name', 'bank_branch', 'account_number', 'account_holder',
+        'contact_person_phone', 'logo', 'director_name',
         'smtp_host', 'smtp_port', 'smtp_encryption', 'smtp_username', 'smtp_password',
-        'director_name'
     ];
+
+    public function banks() {
+        return $this->hasMany(CompanyBank::class);
+    }
 }

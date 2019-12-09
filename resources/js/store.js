@@ -24,6 +24,7 @@ export default new Vuex.Store({
             {id: 1, name: 'SIAP KIRIM', type: 'warning' },
             {id: 2, name: 'DALAM PENGIRIMAN', type: 'primary' },
             {id: 3, name: 'TERKIRIM', type: 'success' },
+            {id: 4, name: 'STT DITERIMA', type: 'success' },
             // {id: 4, name: 'Received' },
             // {id: 5, name: 'Invoice Sent' },
             // {id: 6, name: 'Invoice Paid' }

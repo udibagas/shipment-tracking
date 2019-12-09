@@ -28,7 +28,7 @@
         height="calc(100vh - 290px)"
         v-loading="loading"
         @sort-change="sortChange">
-            <el-table-column label="Status" sortable="custom" min-width="80px" align="center" header-align="center">
+            <el-table-column label="Status" sortable="custom" width="100px" align="center" header-align="center">
                 <template slot-scope="scope">
                     <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.status ? 'success' : 'info'">{{scope.row.status ? 'FINAL' : 'DRAFT'}}</el-tag>
                 </template>
@@ -38,7 +38,8 @@
                     {{scope.row.date | readableDate}}
                 </template>
             </el-table-column>
-            <el-table-column prop="number" label="Nomor" sortable="custom" min-width="120"></el-table-column>
+            <el-table-column prop="number" label="Nomor Invoice" sortable="custom" min-width="150"></el-table-column>
+            <el-table-column prop="faktur" label="Nomor Faktur" sortable="custom" min-width="150"></el-table-column>
             <el-table-column prop="customer" label="Customer" sortable="custom" min-width="120"></el-table-column>
             <el-table-column prop="service_type" label="Layanan" sortable="custom" min-width="100"></el-table-column>
             <el-table-column prop="total" label="Total" sortable="custom" align="right" header-align="right" min-width="120">
@@ -52,7 +53,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="User" prop="user" sortable="custom" min-width="120"></el-table-column>
-            <el-table-column width="40px">
+            <el-table-column fixed="right" width="40px">
                 <template slot-scope="scope">
                     <el-dropdown>
                         <span class="el-dropdown-link">
@@ -89,7 +90,7 @@
 
             <el-form label-width="150px" label-position="left">
                 <el-row :gutter="30">
-                    <el-col :span="12">
+                    <el-col :span="8">
                         <el-form-item label="Customer" :class="formErrors.customer_id ? 'is-error' : ''">
                             <el-select @change="getItems" v-model="formModel.customer_id" placeholder="Customer" style="width:100%">
                                 <el-option v-for="c in $store.state.customerList" :key="c.id" :value="c.id" :label="c.name"></el-option>
@@ -100,12 +101,18 @@
                             <el-date-picker format="dd-MMM-yyyy" value-format="yyyy-MM-dd" v-model="formModel.date" placeholder="Tanggal" style="width:100%"></el-date-picker>
                             <div class="el-form-item__error" v-if="formErrors.date">{{formErrors.date[0]}}</div>
                         </el-form-item>
-                        <el-form-item label="Nomor" :class="formErrors.number ? 'is-error' : ''">
-                            <el-input placeholder="Nomor" v-model="formModel.number"></el-input>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Nomor Invoice" :class="formErrors.number ? 'is-error' : ''">
+                            <el-input placeholder="Nomor Invoice" v-model="formModel.number"></el-input>
                             <div class="el-form-item__error" v-if="formErrors.number">{{formErrors.number[0]}}</div>
                         </el-form-item>
+                        <el-form-item label="Nomor Faktur" :class="formErrors.faktur ? 'is-error' : ''">
+                            <el-input placeholder="Nomor Faktur" v-model="formModel.faktur"></el-input>
+                            <div class="el-form-item__error" v-if="formErrors.faktur">{{formErrors.faktur[0]}}</div>
+                        </el-form-item>
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="8">
                         <el-form-item label="Layanan Pengiriman" :class="formErrors.service_type ? 'is-error' : ''">
                             <el-select @change="getItems" v-model="formModel.service_type" placeholder="Layanan Pengiriman" style="width:100%">
                                 <el-option v-for="(l, i) in ['REGULER', 'CHARTER']" :value="l" :label="l" :key="i">
@@ -119,12 +126,13 @@
                             </div>
                             <div class="el-form-item__error" v-if="formErrors.total">{{formErrors.total[0]}}</div>
                         </el-form-item>
-                        <el-form-item label="Terbilang" :class="formErrors.total_said ? 'is-error' : ''">
-                            <el-input disabled placeholder="Terbilang" :value="terbilang(total)"></el-input>
-                            <div class="el-form-item__error" v-if="formErrors.total_said">{{formErrors.total_said[0]}}</div>
-                        </el-form-item>
                     </el-col>
                 </el-row>
+
+                <el-form-item label="Terbilang" :class="formErrors.total_said ? 'is-error' : ''">
+                    <el-input disabled placeholder="Terbilang" :value="terbilang(total)"></el-input>
+                    <div class="el-form-item__error" v-if="formErrors.total_said">{{formErrors.total_said[0]}}</div>
+                </el-form-item>
             </el-form>
 
             <br>
@@ -426,7 +434,7 @@ export default {
             }
 
             let params = {
-                delivery_status_id: 3, // received
+                delivery_status_id: 4, // stt_received
                 invoice_status: 0,
                 customer_id: this.formModel.customer_id,
                 company_id: this.$store.state.user.company_id,

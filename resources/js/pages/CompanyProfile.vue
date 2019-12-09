@@ -1,10 +1,7 @@
 <template>
-    <el-dialog
-    width="680px"
-    v-loading="loading" :visible="show" :show-close="false"
-    title="EDIT PROFIL PERUSAHAAN"
-    :close-on-click-modal="false">
-
+    <div>
+        <el-page-header @back="$emit('back')" content="USERS"> </el-page-header>
+        <el-divider></el-divider>
         <el-alert type="error" title="ERROR"
             :description="error.message"
             v-show="error.message"
@@ -13,7 +10,7 @@
 
         <el-form label-width="160px" label-position="left">
             <el-tabs type="card">
-                <el-tab-pane label="Basic Information">
+                <el-tab-pane label="Informasi Perusahaan">
                     <el-form-item label="Code" :class="formErrors.code ? 'is-error' : ''">
                         <el-input placeholder="Code" v-model="formModel.code"></el-input>
                         <div class="el-form-item__error" v-if="formErrors.code">{{formErrors.code[0]}}</div>
@@ -58,14 +55,14 @@
                     </el-form-item>
 
                 </el-tab-pane>
-                <el-tab-pane label="Address">
-                    <el-form-item label="Address" :class="formErrors.address ? 'is-error' : ''">
-                        <el-input type="textarea" rows="3" placeholder="Address" v-model="formModel.address"></el-input>
+                <el-tab-pane label="Alamat">
+                    <el-form-item label="Alamat" :class="formErrors.address ? 'is-error' : ''">
+                        <el-input type="textarea" rows="3" placeholder="Alamat" v-model="formModel.address"></el-input>
                         <div class="el-form-item__error" v-if="formErrors.address">{{formErrors.address[0]}}</div>
                     </el-form-item>
 
-                    <el-form-item label="Phone" :class="formErrors.phone ? 'is-error' : ''">
-                        <el-input placeholder="Phone" v-model="formModel.phone"></el-input>
+                    <el-form-item label="No Telp." :class="formErrors.phone ? 'is-error' : ''">
+                        <el-input placeholder="No Telp." v-model="formModel.phone"></el-input>
                         <div class="el-form-item__error" v-if="formErrors.phone">{{formErrors.phone[0]}}</div>
                     </el-form-item>
 
@@ -84,40 +81,24 @@
                         <div class="el-form-item__error" v-if="formErrors.website">{{formErrors.website[0]}}</div>
                     </el-form-item>
                 </el-tab-pane>
-                <el-tab-pane label="Bank Information">
-                    <el-form-item label="Nama Bank" :class="formErrors.bank_name ? 'is-error' : ''">
-                        <el-input placeholder="Nama Bank" v-model="formModel.bank_name"></el-input>
-                        <div class="el-form-item__error" v-if="formErrors.bank_name">{{formErrors.bank_name[0]}}</div>
-                    </el-form-item>
+                <el-tab-pane label="Informasi Bank">
 
-                    <el-form-item label="Nama Cabang Bank" :class="formErrors.bank_branch ? 'is-error' : ''">
-                        <el-input placeholder="Nama Cabang Bank" v-model="formModel.bank_branch"></el-input>
-                        <div class="el-form-item__error" v-if="formErrors.bank_branch">{{formErrors.bank_branch[0]}}</div>
-                    </el-form-item>
+                    <CompanyBank :company="$store.state.user.company_id" />
 
-                    <el-form-item label="Nomor Rekening" :class="formErrors.account_number ? 'is-error' : ''">
-                        <el-input placeholder="Nomor Rekening" v-model="formModel.account_number"></el-input>
-                        <div class="el-form-item__error" v-if="formErrors.account_number">{{formErrors.account_number[0]}}</div>
-                    </el-form-item>
-
-                    <el-form-item label="Rekening Atas Nama" :class="formErrors.account_holder ? 'is-error' : ''">
-                        <el-input placeholder="Rekening Atas Nama" v-model="formModel.account_holder"></el-input>
-                        <div class="el-form-item__error" v-if="formErrors.account_holder">{{formErrors.account_holder[0]}}</div>
-                    </el-form-item>
                 </el-tab-pane>
                 <el-tab-pane label="Contact Person">
-                    <el-form-item label="Contact Person Name" :class="formErrors.contact_person ? 'is-error' : ''">
-                        <el-input placeholder="Contact Person Name" v-model="formModel.contact_person"></el-input>
+                    <el-form-item label="Nama Contact Person" :class="formErrors.contact_person ? 'is-error' : ''">
+                        <el-input placeholder="Nama Contact Person" v-model="formModel.contact_person"></el-input>
                         <div class="el-form-item__error" v-if="formErrors.contact_person">{{formErrors.contact_person[0]}}</div>
                     </el-form-item>
 
-                    <el-form-item label="Contact Person Email" :class="formErrors.contact_person_email ? 'is-error' : ''">
-                        <el-input placeholder="Contact Person Email" v-model="formModel.contact_person_email"></el-input>
+                    <el-form-item label="Email Contact Person" :class="formErrors.contact_person_email ? 'is-error' : ''">
+                        <el-input placeholder="Email Contact Person" v-model="formModel.contact_person_email"></el-input>
                         <div class="el-form-item__error" v-if="formErrors.contact_person_email">{{formErrors.contact_person_email[0]}}</div>
                     </el-form-item>
 
-                    <el-form-item label="Contact Person Phone" :class="formErrors.contact_person_phone ? 'is-error' : ''">
-                        <el-input placeholder="Contact Person Phone" v-model="formModel.contact_person_phone"></el-input>
+                    <el-form-item label="No. HP Contact Person" :class="formErrors.contact_person_phone ? 'is-error' : ''">
+                        <el-input placeholder="No. HP Contact Person" v-model="formModel.contact_person_phone"></el-input>
                         <div class="el-form-item__error" v-if="formErrors.contact_person_phone">{{formErrors.contact_person_phone[0]}}</div>
                     </el-form-item>
                 </el-tab-pane>
@@ -149,16 +130,17 @@
 
         </el-form>
 
-        <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="update" icon="el-icon-success">SIMPAN</el-button>
-            <el-button type="info" @click="closeForm()" icon="el-icon-error">TUTUP</el-button>
-        </span>
-    </el-dialog>
+        <el-divider></el-divider>
+        <el-button type="primary" @click="update" icon="el-icon-success">SIMPAN</el-button>
+
+    </div>
 </template>
 
 <script>
+import CompanyBank from '../components/CompanyBank'
+
 export default {
-    props: ['show'],
+    components: { CompanyBank },
     data() {
         return {
             baseUrl: BASE_URL,
@@ -166,23 +148,15 @@ export default {
             formErrors: {},
             error: {},
             loading: false,
-            imageUrl: ''
+            imageUrl: '',
         }
     },
     methods: {
-        closeForm() {
-            this.error = {};
-            this.formErrors = {};
-            if (this.$refs.upload) {
-                this.$refs.upload.clearFiles();
-            }
-            this.imageUrl = ''
-            this.$emit('close');
-        },
         getData() {
             axios.get('/company/' + this.$store.state.user.company_id).then(r => {
                 this.formModel = r.data
                 this.imageUrl = r.data.logo
+                this.$forceUpdate()
             }).catch(e => {
                 this.$message({
                     message: 'Gagal mengambil data.',
@@ -200,9 +174,6 @@ export default {
             this.formErrors.logo = [JSON.parse(err.message).message]
             this.$forceUpdate();
             console.log(err);
-        },
-        handleRemove() {
-
         },
         update() {
             this.loading = true;

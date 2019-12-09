@@ -3,7 +3,6 @@
         <Login v-if="!$store.state.is_logged_in" />
         <el-container v-else>
             <Profile :show="showProfile" @close="showProfile = false" />
-            <CompanyProfile v-if="$store.state.user.role == 21" :show="showCompanyProfile" @close="showCompanyProfile = false" />
             <el-aside width="auto">
                 <div class="brand-box">
                     <img :src="baseUrl + $store.state.company.logo" :style="collapse ? 'height:40px;margin:25px 0' : 'height:60px;margin:25px 0'" alt="">
@@ -25,7 +24,7 @@
                 text-color="#fff"
                 class="sidebar"
                 active-text-color="#cc0000">
-                    <el-menu-item v-for="(m, i) in menus" :index="m.path" :key="i">
+                    <el-menu-item v-for="(m, i) in menus" :index="m.path" :key="i" :disabled="m.disabled">
                         <i :class="m.icon"></i><span slot="title">{{m.label}}</span>
                     </el-menu-item>
                 </el-menu>
@@ -42,7 +41,6 @@
                                 <span class="el-dropdown-link" style="cursor:pointer">Selamat Datang, {{$store.state.user.name}}!</span>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item command="profile"><i class="el-icon-user"></i> Profil Saya</el-dropdown-item>
-                                    <el-dropdown-item v-if="$store.state.user.role == 21" command="company"><i class="el-icon-office-building"></i> Profil Perusahaan</el-dropdown-item>
                                     <el-dropdown-item command="logout"><i class="el-icon-d-arrow-right"></i> Logout</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -62,10 +60,9 @@
 <script>
 import Login from './pages/Login'
 import Profile from './pages/Profile'
-import CompanyProfile from './pages/CompanyProfile'
 
 export default {
-    components: { Login, Profile, CompanyProfile },
+    components: { Login, Profile },
     computed: {
         menus() {
             return this.$store.state.navigation
@@ -101,10 +98,6 @@ export default {
 
             if(command === 'profile') {
                 this.showProfile = true
-            }
-
-            if (command == 'company') {
-                this.showCompanyProfile = true
             }
         },
     },

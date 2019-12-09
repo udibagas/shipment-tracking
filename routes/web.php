@@ -84,7 +84,12 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         Route::resource('vehicleType', 'VehicleTypeController')->except(['create', 'edit', 'show']);
     });
 
-    // Buat admin cmpany & operator
+    // Buat admin company
+    Route::group(['middleware' => 'role: 21'], function() {
+        Route::resource('companyBank', 'CompanyBankController')->except(['create', 'edit', 'show']);
+    });
+
+    // Buat admin company & operator
     Route::group(['middleware' => 'role: 21, 31'], function() {
         Route::post('report/send', 'ReportController@send');
     });

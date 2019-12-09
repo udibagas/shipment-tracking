@@ -15,7 +15,7 @@ class DomesticDelivery extends Model
 
     const STATUS_DELIVERED = 3;
 
-    const STATUS_RECEIVED = 4;
+    const STATUS_STT_RECEIVED = 4;
 
     const STATUS_INVOICE_SENT = 5;
 
@@ -36,7 +36,8 @@ class DomesticDelivery extends Model
         'volume_weight', 'invoice_weight', 'invoice_status',
         'packing_volume', 'delivery_rate', 'packing_rate', 'minimum_weight',
         'created_at', 'updated_at', 'forwarder_cost', 'additional_cost',
-        'additional_cost_description', 'forwarder_cost_ppn', 'additional_cost_ppn'
+        'additional_cost_description', 'forwarder_cost_ppn', 'additional_cost_ppn',
+        'stt_received_date'
     ];
 
     protected $with = ['items', 'vehicleType'];

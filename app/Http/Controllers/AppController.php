@@ -12,12 +12,14 @@ class AppController extends Controller
         // ['label' => 'Pengiriman International', 'icon' => 'el-icon-ship', 'path' => '/international-delivery', 'roles' => [11, 21, 31] ],
         ['label' => 'Invoice', 'icon' => 'el-icon-money', 'path' => '/invoice', 'roles' => [11, 21, 31] ],
         ['label' => 'Laporan', 'icon' => 'el-icon-data-analysis', 'path' => '/report', 'roles' => [11, 21, 31] ],
+        // ['label' => 'Master Data & Setting', 'icon' => 'el-icon-coin', 'path' => '#', 'roles' => [11, 21],'disabled' => true ],
+        ['label' => 'Profil Perusahaan', 'icon' => 'el-icon-office-building', 'path' => '/company-profile', 'roles' => [21] ],
+        ['label' => 'Master Tarif', 'icon' => 'el-icon-s-operation', 'path' => '/master-fare', 'roles' => [11, 21] ],
         ['label' => 'Companies', 'icon' => 'el-icon-office-building', 'path' => '/company', 'roles' => [11] ],
         ['label' => 'Customer', 'icon' => 'el-icon-connection', 'path' => '/customer', 'roles' => [11, 21] ],
-        ['label' => 'Master Tarif', 'icon' => 'el-icon-s-operation', 'path' => '/master-fare', 'roles' => [11, 21] ],
         ['label' => 'Agent', 'icon' => 'el-icon-s-custom', 'path' => '/agent', 'roles' => [11, 21] ],
         ['label' => 'User', 'icon' => 'el-icon-user', 'path' => '/user', 'roles' => [11, 21] ],
-        ['label' => 'Setting', 'icon' => 'el-icon-set-up', 'path' => '/setting', 'roles' => [11] ]
+        ['label' => 'Setting', 'icon' => 'el-icon-set-up', 'path' => '/setting', 'roles' => [11] ],
     ];
 
     /**

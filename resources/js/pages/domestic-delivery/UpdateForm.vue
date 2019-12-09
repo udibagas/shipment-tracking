@@ -102,7 +102,7 @@
             </el-form-item>
 
             <!-- status = Delivered -->
-            <el-form-item v-show="formModel.status == 3" label="Tangal Terima" :class="formErrors.delivered_date ? 'is-error' : ''">
+            <el-form-item v-show="formModel.status == 3" label="Tanggal Terima" :class="formErrors.delivered_date ? 'is-error' : ''">
                 <el-date-picker
                 style="width:100%"
                 type="date"
@@ -114,8 +114,21 @@
                 <div class="el-form-item__error" v-if="formErrors.delivered_date">{{formErrors.delivered_date[0]}}</div>
             </el-form-item>
 
+            <!-- STT diterima -->
+            <el-form-item v-show="formModel.status == 4" label="Tanggal Terima STT" :class="formErrors.stt_received_date ? 'is-error' : ''">
+                <el-date-picker
+                style="width:100%"
+                type="date"
+                format="dd-MMM-yyyy"
+                value-format="yyyy-MM-dd"
+                placeholder="Tangal Terima STT"
+                v-model="formModel.stt_received_date">
+                </el-date-picker>
+                <div class="el-form-item__error" v-if="formErrors.stt_received_date">{{formErrors.stt_received_date[0]}}</div>
+            </el-form-item>
+
             <!-- status = Received -->
-            <el-form-item v-show="formModel.status == 4" label="Received Date" :class="formErrors.received_date ? 'is-error' : ''">
+            <!-- <el-form-item v-show="formModel.status == 4" label="Received Date" :class="formErrors.received_date ? 'is-error' : ''">
                 <el-date-picker
                 style="width:100%"
                 type="date"
@@ -125,16 +138,16 @@
                 v-model="formModel.received_date">
                 </el-date-picker>
                 <div class="el-form-item__error" v-if="formErrors.received_date">{{formErrors.received_date[0]}}</div>
-            </el-form-item>
+            </el-form-item> -->
 
             <!-- status = Received -->
-            <el-form-item v-show="formModel.status == 3 || formModel.status == 4" label="Receiver" :class="formErrors.receiver ? 'is-error' : ''">
+            <!-- <el-form-item v-show="formModel.status == 3 || formModel.status == 4" label="Receiver" :class="formErrors.receiver ? 'is-error' : ''">
                 <el-input placeholder="Receiver" v-model="formModel.receiver"></el-input>
                 <div class="el-form-item__error" v-if="formErrors.receiver">{{formErrors.receiver[0]}}</div>
-            </el-form-item>
+            </el-form-item> -->
 
             <!-- status = Invoice Sent -->
-            <el-form-item v-show="formModel.status == 5" label="Invoice Date" :class="formErrors.invoice_date ? 'is-error' : ''">
+            <!-- <el-form-item v-show="formModel.status == 5" label="Invoice Date" :class="formErrors.invoice_date ? 'is-error' : ''">
                 <el-date-picker
                 style="width:100%"
                 type="date"
@@ -144,10 +157,10 @@
                 v-model="formModel.invoice_date">
                 </el-date-picker>
                 <div class="el-form-item__error" v-if="formErrors.invoice_date">{{formErrors.invoice_date[0]}}</div>
-            </el-form-item>
+            </el-form-item> -->
 
             <!-- status = Invoice Paid -->
-            <el-form-item v-show="formModel.status == 6" label="Payment Date" :class="formErrors.payment_date ? 'is-error' : ''">
+            <!-- <el-form-item v-show="formModel.status == 6" label="Payment Date" :class="formErrors.payment_date ? 'is-error' : ''">
                 <el-date-picker
                 style="width:100%"
                 type="date"
@@ -157,7 +170,7 @@
                 v-model="formModel.payment_date">
                 </el-date-picker>
                 <div class="el-form-item__error" v-if="formErrors.payment_date">{{formErrors.payment_date[0]}}</div>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="Note" :class="formErrors.note ? 'is-error' : ''">
                 <el-input type="textarea" rows="4" placeholder="Note" v-model="formModel.note"></el-input>

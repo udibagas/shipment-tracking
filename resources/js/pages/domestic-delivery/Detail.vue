@@ -43,7 +43,7 @@
                                 {{!!data.receiver ? ' oleh ' + data.receiver : ''}}
                             </td>
                         </tr>
-                        <!-- <tr><td class="td-label">Received Date</td><td class="td-value">{{data.received_date}}</td></tr> -->
+                        <tr><td class="td-label">Tanggal Terima STT</td><td class="td-value">{{data.stt_received_date | readableDate}}</td></tr>
                         <!-- <tr><td class="td-label">Invoice Date</td><td class="td-value">{{data.invoice_date}}</td></tr> -->
                         <!-- <tr><td class="td-label">Payment Date</td><td class="td-value">{{data.payment_date}}</td></tr> -->
                         <tr><td class="td-label">Status</td><td class="td-value">{{data.statusName}}</td></tr>

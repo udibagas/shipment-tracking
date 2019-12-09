@@ -11,6 +11,7 @@ import User from './pages/User'
 import Company from './pages/Company'
 import MasterFare from './pages/MasterFare'
 import Invoice from './pages/Invoice'
+import CompanyProfile from './pages/CompanyProfile'
 
 Vue.use(VueRouter)
 
@@ -65,6 +66,11 @@ const router = new VueRouter({
             path: '/user',
             component: User,
             name: 'user',
+        },
+        {
+            path: '/company-profile',
+            component: CompanyProfile,
+            name: 'company-profile',
         },
         {
             path: '*',
