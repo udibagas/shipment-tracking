@@ -25,7 +25,8 @@ class InvoiceRequest extends FormRequest
     {
         return [
             'date' => 'required|date',
-            'number' => 'required',
+            'number' => 'required|unique:invoices,number,'.$this->id,
+            'faktur' => 'required|unique:invoices,faktur,'.$this->id,
             'customer_id' => 'required|exists:customers,id',
             'total' => 'required|numeric',
             'total_said' => 'required',
@@ -36,8 +37,9 @@ class InvoiceRequest extends FormRequest
     public function attributes()
     {
         return [
-            'date' => 'Tanggal',
-            'number' => 'Nomor',
+            'date' => 'Tanggal Invoice',
+            'number' => 'Nomor Invoice',
+            'faktur' => 'Nomor Faktur',
             'customer_id' => 'Customer',
             'total' => 'Total',
             'total_said' => 'Terbilang',
