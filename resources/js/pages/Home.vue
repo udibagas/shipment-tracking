@@ -51,6 +51,7 @@
                 <el-table-column label="Ready for Delivery" prop="ready_for_delivery" header-align="center" align="center"></el-table-column>
                 <el-table-column label="On Delivery" prop="on_delivery" header-align="center" align="center"></el-table-column>
                 <el-table-column label="Delivered" prop="delivered" header-align="center" align="center"></el-table-column>
+                <el-table-column label="STT Diterima" prop="stt_received" header-align="center" align="center"></el-table-column>
                 <el-table-column label="Total" prop="total" header-align="center" align="center"></el-table-column>
             </el-table>
         </el-card>
@@ -101,6 +102,10 @@ export default {
                 }
 
                 if (index == 6) {
+                    sums[index] = this.summary.reduce((prev, curr) => prev + Number(curr.stt_received), 0)
+                }
+
+                if (index == 7) {
                     sums[index] = this.summary.reduce((prev, curr) => prev + Number(curr.total), 0)
                 }
             })
