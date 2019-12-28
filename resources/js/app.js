@@ -23,6 +23,10 @@ Vue.filter('readableDate', function(v) {
     return v ? moment(v).format('DD-MMM-YYYY') : ''
 })
 
+Vue.filter('readableDateShort', function(v) {
+    return v ? moment(v).format('DD/MM/YY') : ''
+})
+
 Vue.filter('formatNumber', function (v) {
     // return v;
     try {

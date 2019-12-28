@@ -86,10 +86,12 @@ export default {
         },
         handleCommand(command) {
             if (command === 'logout') {
-                axios.get('/logout').then(r => {
+                axios.post('/logout').then(r => {
+
+                }).finally(() => {
                     this.$router.push({path: '/'})
                     window.localStorage.removeItem('user')
-                    window.localStorage.removeItem('token')
+                    // window.localStorage.removeItem('token')
                     this.$store.state.user = {}
                     this.$store.state.token = ''
                     this.$store.state.is_logged_in = false

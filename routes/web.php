@@ -23,7 +23,7 @@ ROLE USER:
 Route::post('login', 'AuthController@login');
 Route::get('deliveryProgress', 'DeliveryProgressController@index');
 
-Route::group(['middleware' => 'auth.jwt'], function () {
+Route::group(['middleware' => 'auth'], function () {
     // untuk dropdown di form
     Route::get('agent/getList', 'AgentController@getList');
     Route::get('city/getList', 'CityController@getList');
@@ -105,4 +105,5 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('logout', 'AuthController@logout');
 });
 
+Route::get('/', 'AppController@index')->name('login'); // ini buat redirect kalau unauthorized
 Route::get('/{any}', 'AppController@index')->where('any', '.*');

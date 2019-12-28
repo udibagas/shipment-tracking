@@ -9,55 +9,99 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['login']]);
+    }
+
+    /**
+     * Get a JWT via given credentials.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
-        $input = $request->only('email', 'password');
-        $input['active'] = 1;
-        $jwt_token = null;
+        $credentials = $request->only(['email', 'password']);
+        $credentials['active'] = 1;
 
-        if (!$jwt_token = JWTAuth::attempt($input)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid Email or Password',
-            ], 401);
+        if (! $token = auth()->attempt($credentials)) {
+            return response()->json(['message' => 'Invalid Email or Password'], 401);
         }
 
+        return $this->respondWithToken($token);
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
         return response()->json([
-            'success' => true,
-            'token' => $jwt_token,
-            'user' => auth()->user()
-        ]);
+            'user' => auth()->user(),
+            // 'token_type' => 'bearer',
+            // 'expires_in' => auth()->factory()->getTTL() * 60
+        ])->cookie('token', $token);
     }
 
-    public function logout(Request $request)
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
     {
-        $this->validate($request, [
-            'token' => 'required'
-        ]);
+        auth()->logout();
 
-        try {
-            JWTAuth::invalidate($request->token);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'User logged out successfully'
-            ]);
-        } catch (JWTException $exception) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sorry, the user cannot be logged out'
-            ], 500);
-        }
+        return response()->json(['message' => 'Successfully logged out']);
     }
 
-    public function getAuthUser(Request $request)
+    // public function logout(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'token' => 'required'
+    //     ]);
+
+    //     try {
+    //         JWTAuth::invalidate($request->token);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'User logged out successfully'
+    //         ]);
+    //     } catch (JWTException $exception) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Sorry, the user cannot be logged out'
+    //         ], 500);
+    //     }
+    // }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
     {
-        $this->validate($request, [
-            'token' => 'required'
-        ]);
+        return response()->json(auth()->user());
+    }
 
-        $user = JWTAuth::authenticate($request->token);
-
-        return response()->json(['user' => $user]);
+    /**
+     * Refresh a token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(auth()->refresh());
     }
 }
