@@ -33,6 +33,7 @@
             <el-form>
                 <el-form-item label="Pilih Tanggal:">
                     <el-date-picker
+                    size="small"
                     @change="requestData"
                     clearable
                     start-placeholder="Dari"
@@ -47,10 +48,10 @@
             <el-table :data="summary" show-summary :summary-method="getSummaryItem" stripe border>
                 <el-table-column type="index"></el-table-column>
                 <el-table-column label="Customer" prop="customer" show-overflow-tooltip></el-table-column>
-                <el-table-column label="Registered" prop="registered" header-align="center" align="center"></el-table-column>
-                <el-table-column label="Ready for Delivery" prop="ready_for_delivery" header-align="center" align="center"></el-table-column>
-                <el-table-column label="On Delivery" prop="on_delivery" header-align="center" align="center"></el-table-column>
-                <el-table-column label="Delivered" prop="delivered" header-align="center" align="center"></el-table-column>
+                <el-table-column label="Terdaftar" prop="registered" header-align="center" align="center"></el-table-column>
+                <el-table-column label="Siap Kirim" prop="ready_for_delivery" header-align="center" align="center"></el-table-column>
+                <el-table-column label="Dalam Pengiriman" prop="on_delivery" header-align="center" align="center"></el-table-column>
+                <el-table-column label="Terkirim" prop="delivered" header-align="center" align="center"></el-table-column>
                 <el-table-column label="STT Diterima" prop="stt_received" header-align="center" align="center"></el-table-column>
                 <el-table-column label="Total" prop="total" header-align="center" align="center"></el-table-column>
             </el-table>

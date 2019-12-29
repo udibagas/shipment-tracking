@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-page-header @back="$emit('back')" content="CUSTOMER"> </el-page-header>
-        <el-divider></el-divider>
+        <br>
         <CustomerList :selection="false" />
     </div>
 </template>

@@ -1,8 +1,7 @@
 <template>
     <div>
         <el-page-header @back="$emit('back')" content="MASTER TARIF"> </el-page-header>
-        <el-divider></el-divider>
-
+        <br>
         <el-tabs type="card">
             <el-tab-pane lazy label="KOTA"><City /></el-tab-pane>
             <el-tab-pane lazy label="JENIS ARMADA"><VehicleType /></el-tab-pane>

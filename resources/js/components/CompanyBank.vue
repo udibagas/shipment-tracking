@@ -3,7 +3,7 @@
         <el-table :data="banks" stripe>
             <el-table-column label="Status" sortable="custom" width="100px" align="center" header-align="center">
                 <template slot-scope="scope">
-                    <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'AKTIF' : 'NONAKTIF'}}</el-tag>
+                    <el-tag class="full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'AKTIF' : 'NONAKTIF'}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="Nama Bank" prop="bank_name"> </el-table-column>
@@ -11,9 +11,9 @@
             <el-table-column label="Nomor Rekening" prop="account_number"> </el-table-column>
             <el-table-column label="Pemegang Rekening" prop="account_holder"> </el-table-column>
 
-            <el-table-column fixed="right" width="70px" align="center" header-align="center">
+            <el-table-column fixed="right" width="40px" align="center" header-align="center">
                 <template slot="header">
-                    <el-button icon="el-icon-plus" type="primary" size="small" @click="() => { formModel = {}; showForm = true;}"></el-button>
+                    <el-button icon="el-icon-plus" type="text" class="text-white" @click="() => { formModel = {}; showForm = true;}"></el-button>
                 </template>
                 <template slot-scope="scope">
                     <el-dropdown>

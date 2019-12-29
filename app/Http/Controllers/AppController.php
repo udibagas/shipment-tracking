@@ -41,7 +41,8 @@ class AppController extends Controller
             return response(['message' => 'Anda tidak berhak mengakses halaman ini.'], 403);
         }
 
-        return ['message' => 'ok'];
+        return response(['message' => 'ok']);
+            // ->cookie('token', auth()->refresh());
     }
 
     public function getNavigation()

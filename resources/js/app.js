@@ -12,6 +12,7 @@ import ElementUI from 'element-ui';
 import locale from 'element-ui/lib/locale/lang/en'
 import router from './router'
 import store from './store'
+import App from './App'
 
 Vue.use(ElementUI, { locale });
 
@@ -45,13 +46,14 @@ Vue.filter('formatNumber', function (v) {
 
 });
 
+import AppLayout from './layouts/AppLayout'
+import SimpleLayout from './layouts/SimpleLayout'
 
-Vue.component('App', require('./App').default)
+Vue.component('app-layout', AppLayout)
+Vue.component('simple-layout', SimpleLayout)
 
 const app = new Vue({
     el: '#app',
     store, router,
-    render: function(createElement) {
-        return createElement('App')
-    }
+    render: h => h(App),
 });

@@ -49,6 +49,8 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['role_name'];
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -82,6 +84,7 @@ class User extends Authenticatable implements JWTSubject
     public static function roleList()
     {
         $list = [
+            self::ROLE_ADMIN => 'ADMIN',
             self::ROLE_OPERATOR => 'OPERATOR',
             self::ROLE_CUSTOMER => 'CUSTOMER',
             self::ROLE_AGENT => 'AGENT'
@@ -89,10 +92,14 @@ class User extends Authenticatable implements JWTSubject
 
         if (auth()->user()->role == self::ROLE_SUPERADMIN) {
             $list[self::ROLE_SUPERADMIN] = 'SUPER ADMIN';
-            $list[self::ROLE_ADMIN] = 'ADMIN';
         }
 
         return $list;
+    }
+
+    public function getRoleNameAttribute()
+    {
+        return self::roleList()[$this->role];
     }
 
     public function company() {

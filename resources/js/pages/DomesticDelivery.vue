@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-page-header @back="$emit('back')" content="PENGIRIMAN DOMESTIK"> </el-page-header>
-        <el-divider></el-divider>
+        <br>
         <DomesticDeliveryListCustomer v-if="$store.state.user.role == 41" />
         <DomesticDeliveryList v-else />
     </div>

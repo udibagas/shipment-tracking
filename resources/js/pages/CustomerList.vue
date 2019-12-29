@@ -1,25 +1,40 @@
 <template>
     <div>
-        <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
-            <el-form-item>
-                <el-button icon="el-icon-plus" @click="openForm({role: 0, password: ''})" type="primary">TAMBAH CUSTOMER</el-button>
+        <el-form inline class="text-right" @submit.native.prevent="() => { return }">
+            <el-form-item class="margin-bottom-10">
+                <el-button size="small" icon="el-icon-plus" @click="openForm({})" type="primary">TAMBAH CUSTOMER</el-button>
             </el-form-item>
-            <el-form-item style="margin-right:0;">
-                <el-input v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" :clearable="true" @change="(v) => { keyword = v; requestData(); }">
-                    <el-button @click="() => { page = 1; keyword = ''; requestData(); }" slot="append" icon="el-icon-refresh"></el-button>
+            <el-form-item class="margin-bottom-10">
+                <el-input
+                size="small"
+                v-model="keyword"
+                placeholder="Cari"
+                prefix-icon="el-icon-search"
+                clearable
+                @change="(v) => { keyword = v; requestData(); }">
                 </el-input>
+            </el-form-item>
+            <el-form-item class="margin-bottom-10">
+                <el-pagination background
+                @current-change="(p) => { page = p; requestData(); }"
+                @size-change="(s) => { pageSize = s; requestData(); }"
+                layout="total, sizes, prev, next"
+                :page-size="pageSize"
+                :page-sizes="[10, 25, 50, 100]"
+                :total="tableData.total">
+                </el-pagination>
             </el-form-item>
         </el-form>
 
         <el-table :data="tableData.data" stripe
         @row-dblclick="(row, column, event) => { selectedData = row; showDetail = true; }"
         :default-sort = "{prop: sort, order: order}"
-        height="calc(100vh - 290px)"
+        height="calc(100vh - 205px)"
         v-loading="loading"
         @sort-change="sortChange">
             <el-table-column label="Status" sortable="custom" min-width="100px" align="center" header-align="center">
                 <template slot-scope="scope">
-                    <el-tag class="rounded full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'AKTIF' : 'NONAKTIF'}}</el-tag>
+                    <el-tag class="full-width text-center" size="small" effect="dark" :type="scope.row.active ? 'success' : 'info'">{{scope.row.active ? 'AKTIF' : 'NONAKTIF'}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column prop="code" label="Kode" sortable="custom" min-width="80px"></el-table-column>
@@ -37,7 +52,15 @@
                 </template>
             </el-table-column>
 
-            <el-table-column fixed="right" width="40px">
+            <el-table-column fixed="right" width="40px" align="center" header-align="center">
+                <template slot="header">
+                    <el-button
+                    type="text"
+                    class="text-white"
+                    @click="() => { page = 1; keyword = ''; requestData(); }"
+                    icon="el-icon-refresh">
+                    </el-button>
+                </template>
                 <template slot-scope="scope">
                     <el-dropdown>
                         <span class="el-dropdown-link">
@@ -52,17 +75,6 @@
                 </template>
             </el-table-column>
         </el-table>
-
-        <br>
-
-        <el-pagination background
-        @current-change="(p) => { page = p; requestData(); }"
-        @size-change="(s) => { pageSize = s; requestData(); }"
-        layout="prev, pager, next, sizes, total"
-        :page-size="pageSize"
-        :page-sizes="[10, 25, 50, 100]"
-        :total="tableData.total">
-        </el-pagination>
 
         <el-dialog append-to-body title="DETAIL CUSTOMER" center :visible.sync="showDetail">
             <table class="table table-sm table-striped" v-if="!!selectedData.id">

@@ -1,11 +1,12 @@
 <template>
     <div>
-        <el-form :inline="true" style="text-align:right" @submit.native.prevent="() => { return }">
-            <el-form-item v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
-                <el-button type="primary" icon="el-icon-plus" @click="openForm({ items: [] })">PENGIRIMAN DOMESTIK BARU</el-button>
+        <el-form inline class="text-right" @submit.native.prevent="() => { return }">
+            <el-form-item class="margin-bottom-10" v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
+                <el-button size="small" type="primary" icon="el-icon-plus" @click="openForm({ items: [] })">PENGIRIMAN DOMESTIK BARU</el-button>
             </el-form-item>
-            <el-form-item>
+            <el-form-item class="margin-bottom-10">
                 <el-date-picker
+                size="small"
                 @change="requestData"
                 type="daterange"
                 format="dd-MMM-yyyy"
@@ -14,17 +15,20 @@
                 end-placeholder="Sampai"
                 v-model="dateRange"></el-date-picker>
             </el-form-item>
-            <el-form-item>
+            <el-form-item class="margin-bottom-10">
                 <el-input
+                size="small"
                 v-model="keyword"
                 placeholder="Cari"
                 prefix-icon="el-icon-search"
-                :clearable="true" @change="(v) => { keyword = v; requestData(); }"> </el-input>
+                clearable
+                @change="(v) => { keyword = v; requestData(); }">
+                </el-input>
             </el-form-item>
-            <el-form-item v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
+            <el-form-item class="margin-bottom-10" v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
                 <el-button-group>
-                    <el-button type="primary" @click="exportToExcel" icon="el-icon-download" title="EXPORT KE EXCEL"></el-button>
-                    <el-button type="primary" @click="showReportForm = true" icon="el-icon-message" title="KIRIM REPORT"></el-button>
+                    <el-button size="small" type="primary" @click="exportToExcel" icon="el-icon-download" title="EXPORT KE EXCEL"></el-button>
+                    <el-button size="small" type="primary" @click="showReportForm = true" icon="el-icon-message" title="KIRIM REPORT"></el-button>
                 </el-button-group>
             </el-form-item>
         </el-form>
@@ -33,7 +37,7 @@
         ref="deliveryList"
         @row-dblclick="(row, column, event) => { selectedData = row; showDetailDialog = true; }"
         :default-sort = "{prop: sort, order: order}"
-        height="calc(100vh - 290px)"
+        height="calc(100vh - 245px)"
         v-loading="loading"
         @filter-change="(f) => { let c = Object.keys(f)[0]; filters[c] = Object.values(f[c]); page = 1; requestData(); }"
         @sort-change="sortChange">
@@ -47,7 +51,7 @@
             min-width="150px"
             :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
                 <template slot-scope="scope">
-                    <el-tag effect="dark" size="small" class="rounded full-width text-center"
+                    <el-tag effect="dark" size="small" class="full-width text-center"
                     :type="$store.state.deliveryStatusList[scope.row.delivery_status_id].type">
                         {{scope.row.statusName.toUpperCase()}}
                     </el-tag>
@@ -197,7 +201,12 @@
             <el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px"></el-table-column>
             <el-table-column fixed="right" width="40px">
                 <template slot="header">
-                    <el-button @click="() => { page = 1; keyword = ''; requestData(); }" type="text" icon="el-icon-refresh"></el-button>
+                    <el-button
+                    class="text-white"
+                    @click="() => { page = 1; keyword = ''; requestData(); }"
+                    type="text"
+                    icon="el-icon-refresh">
+                    </el-button>
                 </template>
                 <template slot-scope="scope">
                     <el-dropdown>
@@ -222,7 +231,7 @@
         <el-pagination background
         @current-change="(p) => { page = p; requestData(); }"
         @size-change="(s) => { pageSize = s; requestData(); }"
-        layout="prev, pager, next, sizes, total"
+        layout="total, sizes, prev, next"
         :page-size="pageSize"
         :page-sizes="[10, 25, 50, 100]"
         :total="tableData.total">

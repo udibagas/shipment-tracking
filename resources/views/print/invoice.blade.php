@@ -55,18 +55,18 @@
             <tr>
                 <th>#</th>
                 <th>Tgl Kirim</th>
-                {{-- <th>Tgl Terima</th> --}}
+                <th>Tgl Terima</th>
                 <th>Surat Pengantar</th>
                 {{-- <th>Asal</th> --}}
                 <th>Tujuan</th>
                 <th>Layanan</th>
                 @if ($data->service_type == 'REGULER')
-                <th>Jumlah</th>
-                <th>Satuan</th>
+                <th>Koli</th>
+                <th>KG/M<sup>3</sup></th>
                 @endif
                 <th style="width:100px">Tarif</th>
                 <th style="width:100px">Biaya</th>
-                <th style="width:100px">PPN</th>
+                <th style="width:100px">PPN 10%</th>
                 <th style="width:100px">Sub Total</th>
             </tr>
         </thead>
@@ -76,8 +76,8 @@
             <tr>
                 @if ($i == 0)
                 <td rowspan="{{count($items)}}">{{$loop->index + 1}}</td>
-                <td rowspan="{{count($items)}}" class="text-center">{{date('d/m/Y', strtotime($item->description['delivery_date']))}}</td>
-                {{-- <td rowspan="{{count($item)}}">{{$item->description['delivered_date']}}</td> --}}
+                <td rowspan="{{count($items)}}" class="text-center">{{date('d/m/y', strtotime($item->description['delivery_date']))}}</td>
+                <td rowspan="{{count($items)}}" class="text-center">{{date('d/m/y', strtotime($item->description['delivered_date']))}}</td>
                 <td rowspan="{{count($items)}}">{{$item->description['spb_number']}}</td>
                 {{-- <td rowspan="{{count($item)}}">{{$item->description['origin']}}</td> --}}
                 <td style="width:150px" rowspan="{{count($items)}}">{{$item->description['destination']}}</td>
@@ -86,8 +86,11 @@
                     {{$item->description['service_type'] == 'CHARTER' ? 'CHARTER - ' . $item->description['vehicle_type'] : $item->description['service_type']}}
                 </td>
                 @if ($data->service_type == 'REGULER')
-                <td class="text-right">{{number_format($item->quantity, 3, ',', '.')}}</td>
-                <td class="text-center">{{$item->unit}}</td>
+                <td class="text-center">{{$item->description['total_coli']}}</td>
+                <td class="text-right">
+                    {{number_format($item->quantity, $item->unit == 'M3' ? 3 : 0, ',', '.')}}
+                    {!! $item->unit == 'M3' ? 'M<sup>3</sup>' : $item->unit !!}
+                </td>
                 @endif
                 <td class="text-right">Rp. {{number_format($item->fare, 0, ',', '.')}}</td>
                 <td class="text-right">Rp. {{number_format($item->price, 0, ',', '.')}}</td>
@@ -99,13 +102,13 @@
         </tbody>
         <tfoot style="background-color:#eee;">
             <tr>
-                <th colspan="{{ $data->service_type == 'REGULER' ? '8' : '6' }}" class="text-right">TOTAL</th>
+                <th colspan="{{ $data->service_type == 'REGULER' ? '9' : '7' }}" class="text-right">TOTAL</th>
                 <th class="text-right">Rp. {{ number_format(array_reduce($data->items->toArray(), function($prev, $curr) { return $prev + $curr['price']; }, 0), 0, ',', '.') }}</th>
                 <th class="text-right">Rp. {{ number_format(array_reduce($data->items->toArray(), function($prev, $curr) { return $prev + $curr['tax']; }, 0), 0, ',', '.') }}</th>
                 <th class="text-right">Rp. {{number_format($data->total, 0, ',', '.')}}</th>
             </tr>
             <tr>
-                <th colspan="11" class="text-bold text-left">
+                <th colspan="12" class="text-bold text-left">
                     Terbilang : {{$data->total_said}}
                 </th>
             </tr>

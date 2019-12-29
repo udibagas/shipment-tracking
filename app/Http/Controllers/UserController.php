@@ -121,6 +121,12 @@ class UserController extends Controller
 
     public function getRoleList()
     {
-        return User::roleList();
+        $roles = [];
+
+        foreach (User::roleList() as $id => $role) {
+            $roles[] = ['id' => $id, 'role' => $role];
+        }
+
+        return $roles;
     }
 }

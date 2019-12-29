@@ -1,15 +1,9 @@
-- Dashboard customer
-- Dashboard agent
-- Logo di company
-- Create user ga boleh role admin
+- masih muncul NaN pada saat create pengiriman domestic baru
+- Dashboard agent ==> nanti aja
 - Foreign key!!!
-
-- Input Data
-    - PT JJ LAPP
-        - kereta
-        - truck
-    - Hexindo
-        - reguler
+- tambah tombol refresh di progress
+- otomatis trigger email kalau sudah delivered => nanti aja kalo diminta lagi
+- Super admin dikit aja hak akses-nya => atur di routingnya
 
 Hak akses
 
@@ -29,16 +23,10 @@ Hak akses
 
 System Requirements
 
-- Domestic Delivery
-    => Customer menyerahkan SPB (Surat Pengiriman Barang)
-    => Rubarta create resi penerimaan
-        - Nomor resi (untuk tracking)
-
 - Internatinal Delivery
     - PLB
     - Non PLB
     - Bikin Master Proses (urutan )
-
 
 Dashboard
     - Halaman utama aplikasi.
@@ -49,11 +37,6 @@ Dashboard
     - Menampilkan 10 pengiriman terkahir
     - dsb
 
-Domestic Delivery
-    - Halaman untuk input domestic Delivery
-        - Input pengiriman baru
-        - Update progress pengiriman
-
 International
     - Halaman untuk input international Delivery
         - Input pengiriman baru
@@ -61,13 +44,6 @@ International
         - Print resi
 
 Report : Manampilkan semua bentuk report
-Agents : Data Master untuk agent / vendor / forwarders
-Companies : Data master perushaan (milsa KLM, Rubarta Prima Abadi, Rubarta Logistic Indonesia)
-Customer : Data master customer (contoh: Hexindo)
-Delivery Status : Data master Status pengiriman (misal : PICK UP, ON DELIVERY, ON TRANSIT, DELIVERED)
-Delivery Services : Data master jenis layanan pengiriman
-Delivery Type : Data master Jenis pengiriman (Darat, Laut, Udara)
-Users : Master data pengguna aplikasi
 
 » HDD: 1 x 1 TB HDD
 » RAM: 16 GB

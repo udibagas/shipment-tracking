@@ -12,6 +12,7 @@ import Company from './pages/Company'
 import MasterFare from './pages/MasterFare'
 import Invoice from './pages/Invoice'
 import CompanyProfile from './pages/CompanyProfile'
+import Login from './pages/Login'
 
 Vue.use(VueRouter)
 
@@ -73,6 +74,12 @@ const router = new VueRouter({
             name: 'company-profile',
         },
         {
+            path: '/login',
+            component: Login,
+            name: 'login',
+            meta: { layout: 'simple' }
+        },
+        {
             path: '*',
             component: Home
         },
@@ -80,22 +87,22 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.path == '/') {
+    if (to.path == '/login') {
         next()
     }
 
     else {
         let params = { route: to.path }
-        axios.get('/checkAuth', { params: params }).then(r => {
+        axios.get('/checkAuth', { params }).then(r => {
             next()
         }).catch(e => {
+            next('/login')
             Message({
                 message: 'Anda tidak berhak mengakses halaman ini atau sesi anda telah berakhir. Silakan login ulang.',
                 type: 'error',
                 showClose: true,
                 duration: 10000
             })
-            next(false)
         })
     }
 

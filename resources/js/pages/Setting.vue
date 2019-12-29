@@ -1,12 +1,12 @@
 <template>
     <div>
         <el-page-header @back="$emit('back')" content="SETTINGS"> </el-page-header>
-        <el-divider></el-divider>
+        <br>
         <el-tabs type="card">
             <!-- <el-tab-pane lazy label="Delivery Statuses"><DeliveryStatus /></el-tab-pane> -->
             <!-- <el-tab-pane lazy label="Delivery Services"><ServiceType /></el-tab-pane> -->
             <el-tab-pane lazy label="Delivery Types"><DeliveryType /></el-tab-pane>
-            <el-tab-pane lazy label="Delay Causes"><DelayCause /></el-tab-pane>
+            <!-- <el-tab-pane lazy label="Delay Causes"><DelayCause /></el-tab-pane> -->
         </el-tabs>
 
     </div>
