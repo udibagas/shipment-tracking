@@ -45,7 +45,7 @@
                             ref="upload"
                             class="avatar-uploader"
                             :action="baseUrl + '/company/uploadLogo'"
-                            :headers="{'Authorization': 'bearer ' + $store.state.token, 'Accept': 'application/json, plain/text, */*'}"
+                            :headers="{'Accept': 'application/json, plain/text, */*'}"
                             :show-file-list="false"
                             :on-error="handleUploadImageError"
                             :on-success="handleUploadImageSuccess">

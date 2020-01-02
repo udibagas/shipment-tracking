@@ -533,6 +533,8 @@ export default {
                 if (this.formModel.service_type == 'REGULER') {
                     this.formModel.minimum_weight = r.data.minimum
                 }
+
+                this.$forceUpdate()
             }).catch(e => {
                 this.formModel.delivery_rate = 0
                 this.formModel.delivery_cost_ppn = false
@@ -561,6 +563,7 @@ export default {
             axios.get('/masterFarePacking/search', { params: params }).then(r => {
                 this.formModel.packing_rate = r.data.fare
                 this.formModel.packing_cost_ppn = r.data.ppn
+                this.$forceUpdate()
             }).catch(e => {
                 this.formModel.packing_rate = 0
                 this.formModel.packing_cost_ppn = false

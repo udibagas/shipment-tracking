@@ -94,7 +94,7 @@
         <InvoiceForm v-if="!!formModel" :show="showForm" @close-form="showForm = false" @refresh-data="requestData" :data="formModel" />
 
         <el-dialog :visible.sync="showDetail" :title="selectedData.number" fullscreen center>
-            <iframe v-if="!!selectedData.id" :src="baseUrl + '/invoice/print/' + selectedData.id + '?token= ' + $store.state.token" frameborder="0" style="height:calc(100vh - 150px);width:100%;"></iframe>
+            <iframe v-if="!!selectedData.id" :src="baseUrl + '/invoice/print/' + selectedData.id" frameborder="0" style="height:calc(100vh - 150px);width:100%;"></iframe>
         </el-dialog>
     </div>
 </template>
@@ -128,7 +128,7 @@ export default {
             }
         },
         print(id) {
-            window.open(BASE_URL + '/invoice/print/' + id + '?print=1&token=' + this.$store.state.token, '_blank')
+            window.open(BASE_URL + '/invoice/print/' + id + '?print=1', '_blank')
         },
         openForm(data) {
             this.formModel = JSON.parse(JSON.stringify(data));

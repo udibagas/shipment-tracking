@@ -2,7 +2,13 @@
     <div>
         <el-form inline class="text-right" @submit.native.prevent="() => { return }">
             <el-form-item class="margin-bottom-10" v-if="$store.state.user.role == 21 || $store.state.user.role == 31">
-                <el-button size="small" type="primary" icon="el-icon-plus" @click="openForm({ items: [] })">PENGIRIMAN DOMESTIK BARU</el-button>
+                <el-button
+                size="small"
+                type="primary"
+                icon="el-icon-plus"
+                @click="openForm({ items: [], forwarder_cost: 0, additional_cost: 0 })">
+                    PENGIRIMAN DOMESTIK BARU
+                </el-button>
             </el-form-item>
             <el-form-item class="margin-bottom-10">
                 <el-date-picker
@@ -296,10 +302,10 @@ export default {
             }).catch(() => console.log(e));
         },
         printResi(data) {
-            window.open(BASE_URL + '/domesticDelivery/printResi/' + data.id + '?token=' + this.$store.state.token, '_blank')
+            window.open(BASE_URL + '/domesticDelivery/printResi/' + data.id, '_blank')
         },
         printAwb(data) {
-            window.open(BASE_URL + '/domesticDelivery/printAwb/' + data.id + '?token=' + this.$store.state.token, '_blank')
+            window.open(BASE_URL + '/domesticDelivery/printAwb/' + data.id, '_blank')
         },
         exportToExcel() {
             let params = {

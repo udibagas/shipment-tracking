@@ -97,7 +97,6 @@ export default {
                     this.$router.push('/login')
                     window.localStorage.removeItem('user')
                     this.$store.state.user = {}
-                    this.$store.state.token = ''
                     this.$store.state.is_logged_in = false
                 })
             }
