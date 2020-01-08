@@ -318,12 +318,12 @@ export default {
             return this.formModel.packing_rate * this.totalVolumePacking
         },
         total_cost() {
-            return parseInt(this.formModel.delivery_cost)
-                + parseInt(this.formModel.packing_cost)
+            return parseInt(this.delivery_cost)
+                + parseInt(this.packing_cost)
                 + parseInt(this.formModel.forwarder_cost)
                 + parseInt(this.formModel.additional_cost)
-                + (this.formModel.packing_cost_ppn * 0.1 * parseInt(this.formModel.packing_cost))
-                + (this.formModel.delivery_cost_ppn * 0.1 * parseInt(this.formModel.delivery_cost))
+                + (this.formModel.packing_cost_ppn * 0.1 * parseInt(this.packing_cost))
+                + (this.formModel.delivery_cost_ppn * 0.1 * parseInt(this.delivery_cost))
                 + (this.formModel.forwarder_cost_ppn * 0.1 * parseInt(this.formModel.forwarder_cost))
                 + (this.formModel.additional_cost_ppn * 0.1 * parseInt(this.formModel.additional_cost))
         }

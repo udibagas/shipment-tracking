@@ -6,7 +6,7 @@
                 size="small"
                 type="primary"
                 icon="el-icon-plus"
-                @click="openForm({ items: [], forwarder_cost: 0, additional_cost: 0 })">
+                @click="openForm({ items: [], forwarder_cost: 0, additional_cost: 0, forwarder_cost_ppn: 0, additional_cost_ppn: 0, delivery_cost_ppn: 0 })">
                     PENGIRIMAN DOMESTIK BARU
                 </el-button>
             </el-form-item>
