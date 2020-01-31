@@ -47,6 +47,7 @@ class AuthController extends Controller
     {
         return response()->json([
             'user' => auth()->user(),
+            'token' => $token,
             // 'token_type' => 'bearer',
             // 'expires_in' => auth()->factory()->getTTL() * 60
         ])->cookie('token', $token);

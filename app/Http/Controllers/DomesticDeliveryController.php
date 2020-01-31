@@ -169,6 +169,7 @@ class DomesticDeliveryController extends Controller
     public function destroy(DomesticDelivery $domesticDelivery)
     {
         $domesticDelivery->delete();
+        $domesticDelivery->progress()->delete();
         return ['message' => 'Data telah dihapus'];
     }
 
