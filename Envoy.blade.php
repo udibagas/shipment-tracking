@@ -3,5 +3,5 @@
 @task('deploy', ['on' => 'prod'])
     cd apps/shipment-tracking
     git pull
-    php artisan migrate
+    php artisan migrate --force
 @endtask
