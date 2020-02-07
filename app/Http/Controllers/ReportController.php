@@ -13,8 +13,7 @@ class ReportController extends Controller
 {
     public function leadTime(Request $request)
     {
-        if ($request->type == 'domestic')
-        {
+        if ($request->type == 'domestic') {
             $sql = "SELECT
                 MONTH(pick_up_date) AS `month`,
                 CAST(SUM(CASE WHEN delivered_date <= eta THEN 1 ELSE 0 END) AS UNSIGNED) AS `ontime`,
@@ -95,7 +94,7 @@ class ReportController extends Controller
 
         // return new DomesticDeliveryReport($request);
 
-        Mail::to(explode(', ', $request->email))->send(new DomesticDeliveryReport($request));
+        Mail::to(explode(',', $request->email))->send(new DomesticDeliveryReport($request));
         return ['message' => 'Email berhasil dikirim'];
     }
 }
