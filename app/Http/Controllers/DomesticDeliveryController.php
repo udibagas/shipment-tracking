@@ -34,23 +34,23 @@ class DomesticDeliveryController extends Controller
             ->join('users', 'users.id', '=', 'domestic_deliveries.user_id')
             ->join('agents', 'agents.id', '=', 'domestic_deliveries.agent_id', 'LEFT')
             ->join('vehicle_types', 'vehicle_types.id', '=', 'domestic_deliveries.vehicle_type_id', 'LEFT')
-            ->when(auth()->user()->company_id, function($q) {
+            ->when(auth()->user()->company_id, function ($q) {
                 return $q->where('domestic_deliveries.company_id', auth()->user()->company_id);
-            })->when(auth()->user()->customer_id, function($q) {
+            })->when(auth()->user()->customer_id, function ($q) {
                 return $q->where('domestic_deliveries.customer_id', auth()->user()->customer_id);
-            })->when(auth()->user()->agent_id, function($q) {
+            })->when(auth()->user()->agent_id, function ($q) {
                 return $q->where('domestic_deliveries.agent_id', auth()->user()->agent_id);
-            })->when($request->status, function($q) use ($request) {
+            })->when($request->status, function ($q) use ($request) {
                 return $q->whereIn('delivery_status_id', $request->status);
-            })->when($request->customer_id, function($q) use ($request) {
+            })->when($request->customer_id, function ($q) use ($request) {
                 if (is_array($request->customer_id)) {
                     return $q->whereIn('domestic_deliveries.customer_id', $request->customer_id);
                 }
                 return $q->where('domestic_deliveries.customer_id', $request->customer_id);
-            })->when($request->agent_id, function($q) use ($request) {
+            })->when($request->agent_id, function ($q) use ($request) {
                 return $q->whereIn('domestic_deliveries.agent_id', $request->agent_id);
             })->when($request->keyword, function ($q) use ($request) {
-                return $q->where(function($qq) use ($request) {
+                return $q->where(function ($qq) use ($request) {
                     return $qq->where('spb_number', 'LIKE', '%' . $request->keyword . '%')
                         ->orWhere('resi_number', 'LIKE', '%' . $request->keyword . '%')
                         ->orWhere('users.name', 'LIKE', '%' . $request->keyword . '%')
@@ -62,7 +62,7 @@ class DomesticDeliveryController extends Controller
                         ->orWhere('agents.name', 'LIKE', '%' . $request->keyword . '%')
                         ->orWhere('service_type', 'LIKE', '%' . $request->keyword . '%');
                 });
-            })->when($request->dateRange, function($q) use ($request) {
+            })->when($request->dateRange, function ($q) use ($request) {
                 return $q->whereBetween('pick_up_date', $request->dateRange);
             })->orderBy($sort, $order)->paginate($request->pageSize);
     }
@@ -87,7 +87,7 @@ class DomesticDeliveryController extends Controller
 
                 $id = DB::table('domestic_deliveries')->insertGetId($input);
 
-                DB::table('domestic_delivery_items')->insert(array_map(function($item) use ($id) {
+                DB::table('domestic_delivery_items')->insert(array_map(function ($item) use ($id) {
                     $item['domestic_delivery_id'] = $id;
                     $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
                     $item['volume_weight'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 4000;
@@ -106,7 +106,7 @@ class DomesticDeliveryController extends Controller
                 return DomesticDelivery::find($id);
             });
         } catch (\Exception $e) {
-            return response(['message' => 'Data gagal disimpan. '.$e->getMessage()], 500);
+            return response(['message' => 'Data gagal disimpan. ' . $e->getMessage()], 500);
         }
     }
 
@@ -144,7 +144,7 @@ class DomesticDeliveryController extends Controller
                     ->where('domestic_delivery_id', $domesticDelivery->id)
                     ->delete();
 
-                DB::table('domestic_delivery_items')->insert(array_map(function($item) use ($domesticDelivery) {
+                DB::table('domestic_delivery_items')->insert(array_map(function ($item) use ($domesticDelivery) {
                     $data = array_only($item, (new DomesticDeliveryItem())->getFillable());
                     $data['domestic_delivery_id'] = $domesticDelivery->id;
                     $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
@@ -156,7 +156,7 @@ class DomesticDeliveryController extends Controller
                 return $domesticDelivery;
             });
         } catch (\Exception $e) {
-            return response(['message' => 'Data gagal disimpan. '.$e->getMessage()], 500);
+            return response(['message' => 'Data gagal disimpan. ' . $e->getMessage()], 500);
         }
     }
 
@@ -186,13 +186,13 @@ class DomesticDeliveryController extends Controller
     // untuk ambil data waktu mau generate invoice
     public function search(Request $request)
     {
-        return DomesticDelivery::when($request->customer_id, function($q) use ($request) {
+        return DomesticDelivery::when($request->customer_id, function ($q) use ($request) {
             return $q->where('customer_id', $request->customer_id);
-        })->when($request->company_id, function($q) use ($request) {
+        })->when($request->company_id, function ($q) use ($request) {
             return $q->where('company_id', $request->company_id);
-        })->when($request->delivery_status_id, function($q) use ($request) {
+        })->when($request->delivery_status_id, function ($q) use ($request) {
             return $q->where('delivery_status_id', $request->delivery_status_id);
-        })->when($request->service_type, function($q) use ($request) {
+        })->when($request->service_type, function ($q) use ($request) {
             return $q->where('service_type', $request->service_type);
         })->where('invoice_status', $request->invoice_status)->get();
     }
@@ -204,19 +204,19 @@ class DomesticDeliveryController extends Controller
         ]);
 
         $data = DomesticDelivery::with(['customer'])
-        ->where('company_id', $request->company_id) // cuma user yg ada company-nya yg boleh (company, agent, customer)
-        ->when($request->customer_id, function($q) use ($request) {
-            return $q->where('customer_id', $request->customer_id);
-        })->when($request->agent_id, function($q) use ($request) {
-            return $q->where('agent_id', $request->agent_id);
-        })->when($request->tracking_number, function($q) use ($request) {
-            return $q->where(function($qq) use ($request) {
-                return $qq->where('spb_number', $request->tracking_number)
-                    ->orWhere('resi_number', $request->tracking_number);
-            });
-        })->when($request->delivery_status_id, function($q) use ($request) {
-            return $q->where('delivery_status_id', $request->delivery_status_id);
-        })->first();
+            ->where('company_id', $request->company_id) // cuma user yg ada company-nya yg boleh (company, agent, customer)
+            ->when($request->customer_id, function ($q) use ($request) {
+                return $q->where('customer_id', $request->customer_id);
+            })->when($request->agent_id, function ($q) use ($request) {
+                return $q->where('agent_id', $request->agent_id);
+            })->when($request->tracking_number, function ($q) use ($request) {
+                return $q->where(function ($qq) use ($request) {
+                    return $qq->where('spb_number', $request->tracking_number)
+                        ->orWhere('resi_number', $request->tracking_number);
+                });
+            })->when($request->delivery_status_id, function ($q) use ($request) {
+                return $q->where('delivery_status_id', $request->delivery_status_id);
+            })->first();
 
         if (!$data) {
             return response(['message' => 'Tidak ada data yang cocok'], 404);
@@ -229,15 +229,15 @@ class DomesticDeliveryController extends Controller
     public function cekResi(Request $request)
     {
         $request->validate([
-            'tracking_number' => ['required', function($attribute, $value, $fail) {
+            'tracking_number' => ['required', function ($attribute, $value, $fail) {
                 $exists = DomesticDelivery::where('resi_number', $value)->orWhere('spb_number', $value)->first();
 
                 if (!$exists) {
                     $fail('Nomor resi atau Nomor SPB tidak terdaftar');
                 }
             }],
-            'phone_or_email' => ['required', function($attribute, $value, $fail) {
-                $exists = Customer::where('phone', $value)->orWhere('email', 'LIKE', '%'.$value.'%')->first();
+            'phone_or_email' => ['required', function ($attribute, $value, $fail) {
+                $exists = Customer::where('phone', $value)->orWhere('email', 'LIKE', '%' . $value . '%')->first();
 
                 if (!$exists) {
                     $fail('Email atau No. HP tidak terdaftar');
@@ -250,13 +250,17 @@ class DomesticDeliveryController extends Controller
 
         $data = DomesticDelivery::selectRaw('domestic_deliveries.*')
             ->join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
-            ->where(function($q) use ($request) {
-                return $q->where('customers.phone', $request->phone_or_email)
-                    ->orWhere('customers.email', $request->phone_or_email);
+            ->where(function ($q) use ($request) {
+                return $q->where(function ($qq) use ($request) {
+                    return $qq->where('customers.phone', $request->phone_or_email)
+                        ->orWhere('customers.email', $request->phone_or_email);
+                });
             })
-            ->where(function($q) use ($request) {
-                return $q->where('domestic_deliveries.spb_number', $request->tracking_number)
-                    ->orWhere('domestic_deliveries.resi_number', $request->tracking_number);
+            ->where(function ($q) use ($request) {
+                return $q->where(function ($qq) use ($request) {
+                    return $qq->where('domestic_deliveries.spb_number', $request->tracking_number)
+                        ->orWhere('domestic_deliveries.resi_number', $request->tracking_number);
+                });
             })->first();
 
         if (!$data) {
