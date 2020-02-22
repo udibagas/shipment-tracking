@@ -15,10 +15,10 @@ class DeliveryProgressController extends Controller
     public function index(Request $request)
     {
         return DeliveryProgress::selectRaw('delivery_progresses.*, users.name AS user')
-        ->join('users', 'users.id', '=', 'delivery_progresses.user_id')
-        ->when($request->delivery_id, function($q) use ($request) {
-            return $q->where('delivery_id', $request->delivery_id);
-        })->orderBy('created_at', 'ASC')->get();
+            ->join('users', 'users.id', '=', 'delivery_progresses.user_id')
+            ->when($request->delivery_id, function ($q) use ($request) {
+                return $q->where('delivery_id', $request->delivery_id);
+            })->orderBy('created_at', 'ASC')->get();
     }
 
     public function store(Request $request)
@@ -30,7 +30,7 @@ class DeliveryProgressController extends Controller
             'agent_id' => 'required_if:status,1|exists:agents,id',
             'delivery_date' => 'required_if:status,2|date',
             'eta' => 'required_if:status,2|date',
-            'delivered_date' => 'required_if:status,3|date',
+            // 'delivered_date' => 'required_if:status,3|date',
             'stt_received_date' => 'required_if:status,4|date',
             'receiver' => 'required_if:status,3',
             'invoice_date' => 'required_if:status,5|date',
