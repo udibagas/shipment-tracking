@@ -32,13 +32,13 @@ class DomesticDeliveryRequest extends FormRequest
             'destination' => 'required|exists:cities,name',
             'pick_up_date' => 'required|date',
             // 'spb_number' => 'required|unique:domestic_deliveries,spb_number,'.$this->id,
-            'resi_number' => 'required|unique:domestic_deliveries,resi_number,'.$this->id,
+            'resi_number' => 'required|unique:domestic_deliveries,resi_number,' . $this->id,
             'volume' => 'numeric',
             'weight' => 'numeric',
             'quantity' => 'numeric',
             'delivery_type_id' => 'required|exists:delivery_types,id',
             'delivery_address' => 'required',
-            'minimum_weight' => 'required|numeric'
+            // 'minimum_weight' => 'required|numeric'
         ];
     }
 
