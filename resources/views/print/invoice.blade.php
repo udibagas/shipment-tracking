@@ -11,7 +11,7 @@
                     <h2 style="margin:0">{{$data->company->name}}</h2>
                     {!! nl2br($data->company->address) !!} <br>
                     Telp. : {{$data->company->phone}} <br>
-                    Email : {{$data->company->email}} <br>
+                    {{-- Email : {{$data->company->email}} <br> --}}
                     Website : {{$data->company->website}} <br>
                 </td>
                 <td class="text-right">
@@ -59,12 +59,12 @@
                 <th>Surat Pengantar</th>
                 {{-- <th>Asal</th> --}}
                 <th>Tujuan</th>
-                <th>Layanan</th>
-                @if ($data->service_type == 'REGULER')
+                {{-- <th>Layanan</th> --}}
                 <th>Koli</th>
                 <th>KG/M<sup>3</sup></th>
-                @endif
+                @if ($data->service_type == 'REGULER')
                 <th style="width:100px">Tarif</th>
+                @endif
                 <th style="width:100px">Biaya</th>
                 <th style="width:100px">PPN 10%</th>
                 <th style="width:100px">Sub Total</th>
@@ -80,19 +80,22 @@
                 <td rowspan="{{count($items)}}" class="text-center">{{date('d/m/y', strtotime($item->description['delivered_date']))}}</td>
                 <td rowspan="{{count($items)}}">{{$item->description['spb_number']}}</td>
                 {{-- <td rowspan="{{count($item)}}">{{$item->description['origin']}}</td> --}}
-                <td style="width:150px" rowspan="{{count($items)}}">{{$item->description['destination']}}</td>
+                {{-- <td style="width:150px" rowspan="{{count($items)}}">{{$item->description['destination']}}</td> --}}
                 @endif
                 <td style="width:180px">
-                    {{$item->description['service_type'] == 'CHARTER' ? 'CHARTER - ' . $item->description['vehicle_type'] : $item->description['service_type']}}
+                    @if ($item->description['service_type'] == 'CHARTER')
+                    {{'CHARTER ' . $item->description['vehicle_type'] . ' - ' }}
+                    @endif
+                    {{$item->description['destination']}}
                 </td>
-                @if ($data->service_type == 'REGULER')
                 <td class="text-center">{{$item->description['total_coli']}}</td>
                 <td class="text-right">
                     {{number_format($item->quantity, $item->unit == 'M3' ? 3 : 0, ',', '.')}}
                     {!! $item->unit == 'M3' ? 'M<sup>3</sup>' : $item->unit !!}
                 </td>
-                @endif
+                @if ($data->service_type == 'REGULER')
                 <td class="text-right">Rp. {{number_format($item->fare, 0, ',', '.')}}</td>
+                @endif
                 <td class="text-right">Rp. {{number_format($item->price, 0, ',', '.')}}</td>
                 <td class="text-right">Rp. {{number_format($item->tax, 0, ',', '.')}}</td>
                 <td class="text-right">Rp. {{number_format($item->total, 0, ',', '.')}}</td>
