@@ -16,15 +16,15 @@ import App from './App'
 
 Vue.use(ElementUI, { locale });
 
-Vue.filter('readableDateTime', function(v) {
+Vue.filter('readableDateTime', function (v) {
     return v ? moment(v).format('DD-MMM-YYYY HH:mm') : ''
 })
 
-Vue.filter('readableDate', function(v) {
+Vue.filter('readableDate', function (v) {
     return v ? moment(v).format('DD-MMM-YYYY') : ''
 })
 
-Vue.filter('readableDateShort', function(v) {
+Vue.filter('readableDateShort', function (v) {
     return v ? moment(v).format('DD/MM/YY') : ''
 })
 

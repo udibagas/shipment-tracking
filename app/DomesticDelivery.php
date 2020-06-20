@@ -72,15 +72,23 @@ class DomesticDelivery extends Model
         return strtotime($this->delivered_date) <= strtotime($this->eta);
     }
 
-    public function items() {
+    public function items()
+    {
         return $this->hasMany(DomesticDeliveryItem::class);
     }
 
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
     }
 
-    public function vehicleType() {
+    public function vehicleType()
+    {
         return $this->belongsTo(VehicleType::class);
+    }
+
+    public function progress()
+    {
+        return $this->hasMany(DeliveryProgress::class, 'delivery_id');
     }
 }
