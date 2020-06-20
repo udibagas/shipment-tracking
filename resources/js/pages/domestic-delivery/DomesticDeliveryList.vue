@@ -418,7 +418,6 @@
               >Update Status</el-dropdown-item>
               <el-dropdown-item
                 icon="el-icon-edit-outline"
-                v-if="scope.row.delivery_status_id < 4"
                 divided
                 @click.native.prevent="openForm(scope.row)"
               >Edit</el-dropdown-item>
@@ -439,7 +438,7 @@
       background
       @current-change="(p) => { page = p; requestData(); }"
       @size-change="(s) => { pageSize = s; requestData(); }"
-      layout="total, sizes, prev, next"
+      layout="total, sizes, prev, pager, next"
       :page-size="pageSize"
       :page-sizes="[10, 25, 50, 100]"
       :total="tableData.total"

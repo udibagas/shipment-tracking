@@ -630,7 +630,7 @@ export default {
         .then(r => {
           this.$emit("close");
           this.$message({
-            message: "Data berhasil disimpan.",
+            message: r.data.message,
             type: "success",
             showClose: true
           });
@@ -658,7 +658,7 @@ export default {
         .then(r => {
           this.$emit("close");
           this.$message({
-            message: "Data berhasil disimpan.",
+            message: r.data.message,
             type: "success",
             showClose: true
           });

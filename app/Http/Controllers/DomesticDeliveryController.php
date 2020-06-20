@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
-use App\DeliveryProgress;
 use Illuminate\Http\Request;
 use App\Http\Requests\DomesticDeliveryRequest;
 use App\DomesticDelivery;
-use App\DomesticDeliveryItem;
 use Illuminate\Support\Facades\DB;
 
 class DomesticDeliveryController extends Controller
@@ -75,39 +73,30 @@ class DomesticDeliveryController extends Controller
      */
     public function store(DomesticDeliveryRequest $request)
     {
-        $domesticDelivery = new DomesticDelivery();
+        $domesticDelivery = DB::transaction(function () use ($request) {
+            $domesticDelivery = DomesticDelivery::create(array_merge($request->all(), [
+                'user_id' => $request->user()->id,
+                'company_id' => $request->user()->company_id,
+                'delivery_status_id' => DomesticDelivery::STATUS_REGISTERED,
+            ]));
 
-        try {
-            DB::transaction(function () use ($request, $domesticDelivery) {
-                $input = $request->only($domesticDelivery->getFillable());
-                $input['user_id'] = $request->user()->id;
-                $input['company_id'] = $request->user()->company_id;
-                $input['delivery_status_id'] = DomesticDelivery::STATUS_REGISTERED;
-                $input['created_at'] = $input['updated_at'] = now();
+            $domesticDelivery->items()->createMany(array_map(function ($item) {
+                $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
+                $item['volume_weight'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 4000;
+                $item['invoice_weight'] = $item['weight'] > $item['volume_weight'] ? $item['weight'] : $item['volume_weight'];
+                return $item;
+            }, $request->items));
 
-                $id = DB::table('domestic_deliveries')->insertGetId($input);
+            $domesticDelivery->progress()->create([
+                'status' => 0, // registered
+                'note' => $request->status_note,
+                'user_id' => $request->user()->id
+            ]);
 
-                DB::table('domestic_delivery_items')->insert(array_map(function ($item) use ($id) {
-                    $item['domestic_delivery_id'] = $id;
-                    $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
-                    $item['volume_weight'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 4000;
-                    $item['invoice_weight'] = $item['weight'] > $item['volume_weight'] ? $item['weight'] : $item['volume_weight'];
-                    return $item;
-                }, $request->items));
+            return $domesticDelivery;
+        });
 
-                // create progress
-                DeliveryProgress::create([
-                    'delivery_id' => $id,
-                    'status' => 0, // registered
-                    'note' => $request->status_note,
-                    'user_id' => $request->user()->id
-                ]);
-
-                return DomesticDelivery::find($id);
-            });
-        } catch (\Exception $e) {
-            return response(['message' => 'Data gagal disimpan. ' . $e->getMessage()], 500);
-        }
+        return ['message' => 'Data telah disimpan', 'data' => $domesticDelivery];
     }
 
     /**
@@ -130,34 +119,21 @@ class DomesticDeliveryController extends Controller
      */
     public function update(DomesticDeliveryRequest $request, DomesticDelivery $domesticDelivery)
     {
-        try {
-            DB::transaction(function () use ($request, $domesticDelivery) {
-                $input = $request->only($domesticDelivery->getFillable());
-                $input['updated_at'] = now();
+        $newData = DB::transaction(function () use ($request, $domesticDelivery) {
+            $domesticDelivery->update($request->all());
+            $domesticDelivery->items()->delete();
 
-                DB::table('domestic_deliveries')
-                    ->where('id', $domesticDelivery->id)
-                    ->update($input);
+            $domesticDelivery->items()->createMany(array_map(function ($item) {
+                $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
+                $item['volume_weight'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 4000;
+                $item['invoice_weight'] = $item['weight'] > $item['volume_weight'] ? $item['weight'] : $item['volume_weight'];
+                return $item;
+            }, $request->items));
 
-                // delete item first
-                DB::table('domestic_delivery_items')
-                    ->where('domestic_delivery_id', $domesticDelivery->id)
-                    ->delete();
+            return $domesticDelivery;
+        });
 
-                DB::table('domestic_delivery_items')->insert(array_map(function ($item) use ($domesticDelivery) {
-                    $data = array_only($item, (new DomesticDeliveryItem())->getFillable());
-                    $data['domestic_delivery_id'] = $domesticDelivery->id;
-                    $item['volume'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 1000000;
-                    $item['volume_weight'] = $item['dimension_p'] * $item['dimension_l'] * $item['dimension_t'] / 4000;
-                    $item['invoice_weight'] = $item['weight'] > $item['volume_weight'] ? $item['weight'] : $item['volume_weight'];
-                    return $data;
-                }, $request->items));
-
-                return $domesticDelivery;
-            });
-        } catch (\Exception $e) {
-            return response(['message' => 'Data gagal disimpan. ' . $e->getMessage()], 500);
-        }
+        return ['message' => 'Data telah disimpan', 'data' => $newData];
     }
 
     /**
@@ -169,6 +145,7 @@ class DomesticDeliveryController extends Controller
     public function destroy(DomesticDelivery $domesticDelivery)
     {
         $domesticDelivery->delete();
+        $domesticDelivery->items()->delete();
         $domesticDelivery->progress()->delete();
         return ['message' => 'Data telah dihapus'];
     }
@@ -268,5 +245,25 @@ class DomesticDeliveryController extends Controller
         }
 
         return $data;
+    }
+
+    public function cekResi1(Request $request)
+    {
+        $request->validate([
+            'tracking_number' => 'required'
+        ]);
+
+        $data = DomesticDelivery::where(function ($q) use ($request) {
+            return $q->where(function ($qq) use ($request) {
+                return $qq->where('spb_number', $request->tracking_number)
+                    ->orWhere('resi_number', $request->tracking_number);
+            });
+        })->first();
+
+        if (!$data) {
+            return response(['message' => 'Tidak ada data yang cocok'], 404);
+        }
+
+        return $data->load(['progress']);
     }
 }
