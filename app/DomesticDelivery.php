@@ -59,6 +59,10 @@ class DomesticDelivery extends Model
             'Invoice Sent', 'Invoice Paid'
         ];
 
+        if ($this->delivery_status_id === null) {
+            return 'Draft';
+        }
+
         return $statuses[$this->delivery_status_id];
     }
 

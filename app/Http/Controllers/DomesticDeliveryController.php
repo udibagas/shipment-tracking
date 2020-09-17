@@ -39,7 +39,17 @@ class DomesticDeliveryController extends Controller
             })->when(auth()->user()->agent_id, function ($q) {
                 return $q->where('domestic_deliveries.agent_id', auth()->user()->agent_id);
             })->when($request->status, function ($q) use ($request) {
-                return $q->whereIn('delivery_status_id', $request->status);
+                $q->where(function ($q) use ($request) {
+                    $status = array_filter($request->status, function ($s) {
+                        return $s != "null";
+                    });
+
+                    $q->when(count($status) > 0, function ($q) use ($status) {
+                        $q->whereIn('delivery_status_id', $status);
+                    })->when(in_array("null", $request->status), function ($q) {
+                        $q->orWhereNull('delivery_status_id');
+                    });
+                });
             })->when($request->customer_id, function ($q) use ($request) {
                 if (is_array($request->customer_id)) {
                     return $q->whereIn('domestic_deliveries.customer_id', $request->customer_id);
@@ -77,7 +87,6 @@ class DomesticDeliveryController extends Controller
             $domesticDelivery = DomesticDelivery::create(array_merge($request->all(), [
                 'user_id' => $request->user()->id,
                 'company_id' => $request->user()->company_id,
-                'delivery_status_id' => DomesticDelivery::STATUS_REGISTERED,
             ]));
 
             $domesticDelivery->items()->createMany(array_map(function ($item) {
@@ -87,11 +96,14 @@ class DomesticDeliveryController extends Controller
                 return $item;
             }, $request->items));
 
-            $domesticDelivery->progress()->create([
-                'status' => 0, // registered
-                'note' => $request->status_note,
-                'user_id' => $request->user()->id
-            ]);
+            if ($request->delivery_status_id !== null) {
+                $domesticDelivery->progress()->create([
+                    'status' => 0, // registered
+                    'note' => $request->status_note,
+                    'user_id' => $request->user()->id
+                ]);
+            }
+
 
             return $domesticDelivery;
         });
@@ -120,6 +132,7 @@ class DomesticDeliveryController extends Controller
     public function update(DomesticDeliveryRequest $request, DomesticDelivery $domesticDelivery)
     {
         $newData = DB::transaction(function () use ($request, $domesticDelivery) {
+            $oldStatus = $domesticDelivery->delivery_status_id;
             $domesticDelivery->update($request->all());
             $domesticDelivery->items()->delete();
 
@@ -129,6 +142,14 @@ class DomesticDeliveryController extends Controller
                 $item['invoice_weight'] = $item['weight'] > $item['volume_weight'] ? $item['weight'] : $item['volume_weight'];
                 return $item;
             }, $request->items));
+
+            if ($request->delivery_status_id !== null && $oldStatus === null) {
+                $domesticDelivery->progress()->create([
+                    'status' => 0, // registered
+                    'note' => $request->status_note,
+                    'user_id' => $request->user()->id
+                ]);
+            }
 
             return $domesticDelivery;
         });

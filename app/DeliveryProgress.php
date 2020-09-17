@@ -20,6 +20,10 @@ class DeliveryProgress extends Model
             'STT DITERIMA'
         ];
 
+        if ($this->status === null) {
+            return 'DRAFT';
+        }
+
         return $status[$this->status];
     }
 }

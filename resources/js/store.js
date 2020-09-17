@@ -18,18 +18,44 @@ export default new Vuex.Store({
         deliveryTypeList: [],
         serviceTypeList: [],
         vehicleTypeList: [],
-        deliveryStatusList: [
-            {id: 0, name: 'TERDAFTAR', type: 'info' },
-            {id: 1, name: 'SIAP KIRIM', type: 'warning' },
-            {id: 2, name: 'DALAM PENGIRIMAN', type: 'primary' },
-            {id: 3, name: 'TERKIRIM', type: 'success' },
-            {id: 4, name: 'STT DITERIMA', type: 'success' },
+        deliveryStatusList: [{
+                id: null,
+                name: 'DRAFT',
+                type: 'info'
+            },
+            {
+                id: 0,
+                name: 'TERDAFTAR',
+                type: 'info'
+            },
+            {
+                id: 1,
+                name: 'SIAP KIRIM',
+                type: 'warning'
+            },
+            {
+                id: 2,
+                name: 'DALAM PENGIRIMAN',
+                type: 'primary'
+            },
+            {
+                id: 3,
+                name: 'TERKIRIM',
+                type: 'success'
+            },
+            {
+                id: 4,
+                name: 'STT DITERIMA',
+                type: 'success'
+            },
         ],
         userList: [],
         roleList: [],
         navigation: [],
         filterYearList: [],
-        company: {name: 'Super Admin'}
+        company: {
+            name: 'Super Admin'
+        }
     },
     mutations: {
         getAgentList(state) {

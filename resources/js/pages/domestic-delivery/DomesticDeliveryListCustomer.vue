@@ -41,7 +41,7 @@
             :filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })">
                 <template slot-scope="scope">
                     <el-tag effect="dark" size="small" class="rounded full-width text-center"
-                    :type="$store.state.deliveryStatusList[scope.row.delivery_status_id].type">
+                    :type="$store.state.deliveryStatusList.find(s => s.id === scope.row.delivery_status_id).type">
                         {{scope.row.statusName.toUpperCase()}}
                     </el-tag>
                 </template>
