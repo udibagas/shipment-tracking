@@ -26,7 +26,7 @@ class InvoiceController extends Controller
                 customers.name AS customer,
                 users.name AS user
             ')
-            ->where('company_id', $request->user()->company_id)
+            ->where('invoices.company_id', $request->user()->company_id)
             ->join('customers', 'customers.id', '=', 'invoices.customer_id')
             ->join('users', 'users.id', '=', 'invoices.user_id')
             ->when($request->keyword, function ($q) use ($request) {
