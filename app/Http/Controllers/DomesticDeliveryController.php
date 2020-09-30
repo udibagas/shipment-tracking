@@ -6,6 +6,7 @@ use App\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\DomesticDeliveryRequest;
 use App\DomesticDelivery;
+use App\User;
 use Illuminate\Support\Facades\DB;
 
 class DomesticDeliveryController extends Controller
@@ -235,7 +236,7 @@ class DomesticDeliveryController extends Controller
                 }
             }],
             'phone_or_email' => ['required', function ($attribute, $value, $fail) {
-                $exists = Customer::where('phone', $value)->orWhere('email', 'LIKE', '%' . $value . '%')->first();
+                $exists = User::where('phone', $value)->orWhere('email', 'LIKE', '%' . $value . '%')->first();
 
                 if (!$exists) {
                     $fail('Email atau No. HP tidak terdaftar');
