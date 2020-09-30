@@ -560,33 +560,33 @@ export default {
 			}
 
 			// kalau tarifnya ga ada
-			if (
-				!this.formModel.delivery_rate &&
-				this.formModel.delivery_status_id !== null
-			) {
-				this.$message({
-					message:
-						"Tarif untuk data terkait tidak ada. Silakan lengkapi data master tarif terlebih dahulu.",
-					type: "error",
-					showClose: true,
-				});
-				return;
-			}
+			// if (
+			// 	!this.formModel.delivery_rate &&
+			// 	this.formModel.delivery_status_id !== null
+			// ) {
+			// 	this.$message({
+			// 		message:
+			// 			"Tarif untuk data terkait tidak ada. Silakan lengkapi data master tarif terlebih dahulu.",
+			// 		type: "error",
+			// 		showClose: true,
+			// 	});
+			// 	return;
+			// }
 
 			// kalau volume packing ada tapi tafir packing ga ada
-			if (
-				this.totalVolumePacking > 0 &&
-				!this.formModel.packing_rate &&
-				this.formModel.delivery_status_id !== null
-			) {
-				this.$message({
-					message:
-						"Tarif packing peti untuk data terkait tidak ada. Silakan lengkapi data master tarif terlebih dahulu.",
-					type: "error",
-					showClose: true,
-				});
-				return;
-			}
+			// if (
+			// 	this.totalVolumePacking > 0 &&
+			// 	!this.formModel.packing_rate &&
+			// 	this.formModel.delivery_status_id !== null
+			// ) {
+			// 	this.$message({
+			// 		message:
+			// 			"Tarif packing peti untuk data terkait tidak ada. Silakan lengkapi data master tarif terlebih dahulu.",
+			// 		type: "error",
+			// 		showClose: true,
+			// 	});
+			// 	return;
+			// }
 
 			if (!!this.formModel.id) {
 				this.update();

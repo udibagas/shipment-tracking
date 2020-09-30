@@ -1,6 +1,14 @@
 <template>
 	<div>
-		<el-form inline class="text-right" @submit.native.prevent="() => { return }">
+		<el-form
+			inline
+			class="text-right"
+			@submit.native.prevent="
+				() => {
+					return;
+				}
+			"
+		>
 			<el-form-item
 				class="margin-bottom-10"
 				v-if="$store.state.user.role == 21 || $store.state.user.role == 31"
@@ -9,8 +17,19 @@
 					size="small"
 					type="primary"
 					icon="el-icon-plus"
-					@click="openForm({ items: [], forwarder_cost: 0, additional_cost: 0, forwarder_cost_ppn: 0, additional_cost_ppn: 0, delivery_cost_ppn: 0, delivery_status_id: null })"
-				>PENGIRIMAN DOMESTIK BARU</el-button>
+					@click="
+						openForm({
+							items: [],
+							forwarder_cost: 0,
+							additional_cost: 0,
+							forwarder_cost_ppn: 0,
+							additional_cost_ppn: 0,
+							delivery_cost_ppn: 0,
+							delivery_status_id: null,
+						})
+					"
+					>PENGIRIMAN DOMESTIK BARU</el-button
+				>
 			</el-form-item>
 			<el-form-item class="margin-bottom-10">
 				<el-date-picker
@@ -31,7 +50,12 @@
 					placeholder="Cari"
 					prefix-icon="el-icon-search"
 					clearable
-					@change="(v) => { keyword = v; requestData(); }"
+					@change="
+						(v) => {
+							keyword = v;
+							requestData();
+						}
+					"
 				></el-input>
 			</el-form-item>
 			<el-form-item
@@ -61,11 +85,23 @@
 			:data="tableData.data"
 			stripe
 			ref="deliveryList"
-			@row-dblclick="(row, column, event) => { selectedData = row; showDetailDialog = true; }"
-			:default-sort="{prop: sort, order: order}"
+			@row-dblclick="
+				(row, column, event) => {
+					selectedData = row;
+					showDetailDialog = true;
+				}
+			"
+			:default-sort="{ prop: sort, order: order }"
 			height="calc(100vh - 245px)"
 			v-loading="loading"
-			@filter-change="(f) => { let c = Object.keys(f)[0]; filters[c] = Object.values(f[c]); page = 1; requestData(); }"
+			@filter-change="
+				(f) => {
+					let c = Object.keys(f)[0];
+					filters[c] = Object.values(f[c]);
+					page = 1;
+					requestData();
+				}
+			"
 			@sort-change="sortChange"
 		>
 			<el-table-column
@@ -75,32 +111,65 @@
 				label="Status"
 				sortable="custom"
 				min-width="150px"
-				:filters="$store.state.deliveryStatusList.map(s => { return { value: s.id, text: s.name } })"
+				:filters="
+					$store.state.deliveryStatusList.map((s) => {
+						return { value: s.id, text: s.name };
+					})
+				"
 			>
 				<template slot-scope="scope">
 					<el-tag
 						effect="dark"
 						size="small"
 						class="full-width text-center"
-						:type="$store.state.deliveryStatusList.find(s => s.id === scope.row.delivery_status_id).type"
-					>{{scope.row.statusName.toUpperCase()}}</el-tag>
+						:type="
+							$store.state.deliveryStatusList.find(
+								(s) => s.id === scope.row.delivery_status_id
+							).type
+						"
+						>{{ scope.row.statusName.toUpperCase() }}</el-tag
+					>
 				</template>
 			</el-table-column>
 
-			<el-table-column prop="resi_number" label="Nomor Resi" sortable="custom" min-width="150px"></el-table-column>
-			<el-table-column prop="spb_number" label="Nomor SPB" sortable="custom" min-width="150px"></el-table-column>
+			<el-table-column
+				prop="resi_number"
+				label="Nomor Resi"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
+			<el-table-column
+				prop="spb_number"
+				label="Nomor SPB"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
 
 			<el-table-column
 				prop="customer"
 				label="Customer"
 				sortable="custom"
 				min-width="150px"
-				:filters="$store.state.customerList.map(c => { return { value: c.id, text: c.name } })"
+				:filters="
+					$store.state.customerList.map((c) => {
+						return { value: c.id, text: c.name };
+					})
+				"
 				column-key="customer_id"
 			></el-table-column>
 
-			<el-table-column prop="origin" label="Asal" sortable="custom" min-width="150px"></el-table-column>
-			<el-table-column prop="destination" label="Tujuan" sortable="custom" min-width="150px"></el-table-column>
+			<el-table-column
+				prop="origin"
+				label="Asal"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
+			<el-table-column
+				prop="destination"
+				label="Tujuan"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
 			<el-table-column
 				prop="delivery_address"
 				label="Alamat Pengiriman"
@@ -115,7 +184,9 @@
 				align="center"
 				header-align="center"
 			>
-				<template slot-scope="scope">{{ scope.row.pick_up_date | readableDate }}</template>
+				<template slot-scope="scope">{{
+					scope.row.pick_up_date | readableDate
+				}}</template>
 			</el-table-column>
 			<el-table-column
 				prop="etd"
@@ -125,7 +196,9 @@
 				header-align="center"
 				align="center"
 			>
-				<template slot-scope="scope">{{ scope.row.etd | readableDate }}</template>
+				<template slot-scope="scope">{{
+					scope.row.etd | readableDate
+				}}</template>
 			</el-table-column>
 			<el-table-column
 				prop="eta"
@@ -135,7 +208,9 @@
 				header-align="center"
 				align="center"
 			>
-				<template slot-scope="scope">{{ scope.row.eta | readableDate }}</template>
+				<template slot-scope="scope">{{
+					scope.row.eta | readableDate
+				}}</template>
 			</el-table-column>
 			<el-table-column
 				prop="delivery_date"
@@ -145,7 +220,9 @@
 				header-align="center"
 				align="center"
 			>
-				<template slot-scope="scope">{{ scope.row.delivery_date | readableDate }}</template>
+				<template slot-scope="scope">{{
+					scope.row.delivery_date | readableDate
+				}}</template>
 			</el-table-column>
 			<el-table-column
 				prop="delivered_date"
@@ -155,7 +232,9 @@
 				header-align="center"
 				align="center"
 			>
-				<template slot-scope="scope">{{ scope.row.delivered_date | readableDate }}</template>
+				<template slot-scope="scope">{{
+					scope.row.delivered_date | readableDate
+				}}</template>
 			</el-table-column>
 			<el-table-column
 				prop="stt_received_date"
@@ -165,9 +244,16 @@
 				header-align="center"
 				align="center"
 			>
-				<template slot-scope="scope">{{ scope.row.stt_received_date | readableDate }}</template>
+				<template slot-scope="scope">{{
+					scope.row.stt_received_date | readableDate
+				}}</template>
 			</el-table-column>
-			<el-table-column prop="receiver" label="Penerima" sortable="custom" min-width="100px"></el-table-column>
+			<el-table-column
+				prop="receiver"
+				label="Penerima"
+				sortable="custom"
+				min-width="100px"
+			></el-table-column>
 			<!-- <el-table-column prop="received_date" label="Tgl Terima" sortable="custom" min-width="140px" header-align="center" align="center"></el-table-column> -->
 			<!-- <el-table-column prop="invoice_date" label="Invoice Date" sortable="custom" min-width="140px"></el-table-column> -->
 			<!-- <el-table-column prop="payment_date" label="Payment Date" sortable="custom" min-width="140px"></el-table-column> -->
@@ -232,7 +318,9 @@
 				header-align="right"
 				align="right"
 			>
-				<template slot-scope="scope">{{ scope.row.weight | formatNumber }} KG</template>
+				<template slot-scope="scope"
+					>{{ scope.row.weight | formatNumber }} KG</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="volume_weight"
@@ -242,7 +330,9 @@
 				header-align="right"
 				align="right"
 			>
-				<template slot-scope="scope">{{ scope.row.volume_weight | formatNumber }} KG</template>
+				<template slot-scope="scope"
+					>{{ scope.row.volume_weight | formatNumber }} KG</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="invoice_weight"
@@ -252,7 +342,9 @@
 				header-align="right"
 				align="right"
 			>
-				<template slot-scope="scope">{{ scope.row.invoice_weight | formatNumber }} KG</template>
+				<template slot-scope="scope"
+					>{{ scope.row.invoice_weight | formatNumber }} KG</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="delivery_cost"
@@ -262,7 +354,9 @@
 				header-align="right"
 				align="right"
 			>
-				<template slot-scope="scope">Rp. {{ scope.row.delivery_cost | formatNumber }}</template>
+				<template slot-scope="scope"
+					>Rp. {{ scope.row.delivery_cost | formatNumber }}</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="delivery_cost_ppn"
@@ -272,9 +366,16 @@
 				header-align="right"
 				align="right"
 			>
-				<template
-					slot-scope="scope"
-				>Rp. {{ (scope.row.delivery_cost_ppn * 0.1 * scope.row.delivery_cost).toFixed(0) | formatNumber }}</template>
+				<template slot-scope="scope"
+					>Rp.
+					{{
+						(
+							scope.row.delivery_cost_ppn *
+							0.1 *
+							scope.row.delivery_cost
+						).toFixed(0) | formatNumber
+					}}</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="packing_cost"
@@ -284,7 +385,9 @@
 				header-align="right"
 				align="right"
 			>
-				<template slot-scope="scope">Rp. {{ scope.row.packing_cost | formatNumber }}</template>
+				<template slot-scope="scope"
+					>Rp. {{ scope.row.packing_cost | formatNumber }}</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="packing_cost_ppn"
@@ -294,9 +397,14 @@
 				header-align="right"
 				align="right"
 			>
-				<template
-					slot-scope="scope"
-				>Rp. {{ (scope.row.packing_cost_ppn * 0.1 * scope.row.packing_cost).toFixed(0) | formatNumber }}</template>
+				<template slot-scope="scope"
+					>Rp.
+					{{
+						(scope.row.packing_cost_ppn * 0.1 * scope.row.packing_cost).toFixed(
+							0
+						) | formatNumber
+					}}</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="forwarder_cost"
@@ -306,7 +414,9 @@
 				header-align="right"
 				align="right"
 			>
-				<template slot-scope="scope">Rp. {{ scope.row.forwarder_cost | formatNumber }}</template>
+				<template slot-scope="scope"
+					>Rp. {{ scope.row.forwarder_cost | formatNumber }}</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="forwarder_cost_ppn"
@@ -316,9 +426,16 @@
 				header-align="right"
 				align="right"
 			>
-				<template
-					slot-scope="scope"
-				>Rp. {{ (scope.row.forwarder_cost_ppn * 0.1 * scope.row.forwarder_cost).toFixed(0) | formatNumber }}</template>
+				<template slot-scope="scope"
+					>Rp.
+					{{
+						(
+							scope.row.forwarder_cost_ppn *
+							0.1 *
+							scope.row.forwarder_cost
+						).toFixed(0) | formatNumber
+					}}</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="additional_cost"
@@ -328,7 +445,9 @@
 				header-align="right"
 				align="right"
 			>
-				<template slot-scope="scope">Rp. {{ scope.row.additional_cost | formatNumber }}</template>
+				<template slot-scope="scope"
+					>Rp. {{ scope.row.additional_cost | formatNumber }}</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="additional_cost_ppn"
@@ -338,9 +457,16 @@
 				header-align="right"
 				align="right"
 			>
-				<template
-					slot-scope="scope"
-				>Rp. {{ (scope.row.additional_cost_ppn * 0.1 * scope.row.additional_cost).toFixed(0) | formatNumber }}</template>
+				<template slot-scope="scope"
+					>Rp.
+					{{
+						(
+							scope.row.additional_cost_ppn *
+							0.1 *
+							scope.row.additional_cost
+						).toFixed(0) | formatNumber
+					}}</template
+				>
 			</el-table-column>
 			<el-table-column
 				prop="total_cost"
@@ -351,7 +477,9 @@
 				align="right"
 			>
 				<template slot-scope="scope">
-					<el-tag effect="dark" size="small" type="primary">Rp. {{ scope.row.total_cost | formatNumber }}</el-tag>
+					<el-tag effect="dark" size="small" type="primary"
+						>Rp. {{ scope.row.total_cost | formatNumber }}</el-tag
+					>
 				</template>
 			</el-table-column>
 
@@ -360,27 +488,67 @@
 				label="Agent"
 				sortable="custom"
 				min-width="150px"
-				:filters="$store.state.agentList.map(c => { return { value: c.id, text: c.name } })"
+				:filters="
+					$store.state.agentList.map((c) => {
+						return { value: c.id, text: c.name };
+					})
+				"
 				column-key="agent_id"
 			></el-table-column>
 
-			<el-table-column prop="ship_name" label="Nama Kapal" sortable="custom" min-width="150px"></el-table-column>
+			<el-table-column
+				prop="ship_name"
+				label="Nama Kapal"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
 			<el-table-column
 				prop="vehicle_number"
 				label="No. Plat Armada"
 				sortable="custom"
 				min-width="150px"
 			></el-table-column>
-			<el-table-column prop="driver_name" label="Nama Driver" sortable="custom" min-width="150px"></el-table-column>
-			<el-table-column prop="driver_phone" label="No. HP Driver" sortable="custom" min-width="150px"></el-table-column>
-			<el-table-column prop="user" label="Diupdate Oleh" sortable="custom" min-width="150px"></el-table-column>
-			<el-table-column prop="updated_at" label="Update Terkahir" sortable="custom" min-width="150px"></el-table-column>
-			<el-table-column prop="status_note" label="Note" sortable="custom" min-width="150px"></el-table-column>
+			<el-table-column
+				prop="driver_name"
+				label="Nama Driver"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
+			<el-table-column
+				prop="driver_phone"
+				label="No. HP Driver"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
+			<el-table-column
+				prop="user"
+				label="Diupdate Oleh"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
+			<el-table-column
+				prop="updated_at"
+				label="Update Terkahir"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
+			<el-table-column
+				prop="status_note"
+				label="Note"
+				sortable="custom"
+				min-width="150px"
+			></el-table-column>
 			<el-table-column fixed="right" width="40px">
 				<template slot="header">
 					<el-button
 						class="text-white"
-						@click="() => { page = 1; keyword = ''; requestData(); }"
+						@click="
+							() => {
+								page = 1;
+								keyword = '';
+								requestData();
+							}
+						"
 						type="text"
 						icon="el-icon-refresh"
 					></el-button>
@@ -393,25 +561,40 @@
 						<el-dropdown-menu slot="dropdown">
 							<el-dropdown-item
 								icon="el-icon-zoom-in"
-								@click.native.prevent="() => { selectedData = scope.row; showDetailDialog = true; }"
-							>Lihat Detail</el-dropdown-item>
+								@click.native.prevent="
+									() => {
+										selectedData = scope.row;
+										showDetailDialog = true;
+									}
+								"
+								>Lihat Detail</el-dropdown-item
+							>
 							<!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printResi(scope.row)"><i class="el-icon-printer"></i> Print Receipt</el-dropdown-item> -->
 							<!-- <el-dropdown-item v-if="scope.row.delivery_status_id == 1" @click.native.prevent="printAwb(scope.row)"><i class="el-icon-printer"></i> Print Airway Bill</el-dropdown-item> -->
 							<el-dropdown-item
 								icon="el-icon-warning-outline"
-								v-if="scope.row.delivery_status_id < 4 && scope.row.delivery_status_id !== null"
+								v-if="
+									scope.row.delivery_status_id < 4 &&
+									scope.row.delivery_status_id !== null
+								"
 								@click.native.prevent="openStatusForm(scope.row)"
-							>Update Status</el-dropdown-item>
+								>Update Status</el-dropdown-item
+							>
 							<el-dropdown-item
 								icon="el-icon-edit-outline"
 								divided
 								@click.native.prevent="openForm(scope.row)"
-							>Edit</el-dropdown-item>
+								>Edit</el-dropdown-item
+							>
 							<el-dropdown-item
 								icon="el-icon-delete"
-								v-if="scope.row.delivery_status_id == 0"
+								v-if="
+									scope.row.delivery_status_id == 0 ||
+									scope.row.delivery_status_id
+								"
 								@click.native.prevent="deleteData(scope.row.id)"
-							>Hapus</el-dropdown-item>
+								>Hapus</el-dropdown-item
+							>
 						</el-dropdown-menu>
 					</el-dropdown>
 				</template>
@@ -422,15 +605,29 @@
 
 		<el-pagination
 			background
-			@current-change="(p) => { page = p; requestData(); }"
-			@size-change="(s) => { pageSize = s; requestData(); }"
+			@current-change="
+				(p) => {
+					page = p;
+					requestData();
+				}
+			"
+			@size-change="
+				(s) => {
+					pageSize = s;
+					requestData();
+				}
+			"
 			layout="total, sizes, prev, pager, next"
 			:page-size="pageSize"
 			:page-sizes="[10, 25, 50, 100]"
 			:total="tableData.total"
 		></el-pagination>
 
-		<el-dialog title="DETAIL PENGIRIMAN DOMESTIK" :visible.sync="showDetailDialog" fullscreen>
+		<el-dialog
+			title="DETAIL PENGIRIMAN DOMESTIK"
+			:visible.sync="showDetailDialog"
+			fullscreen
+		>
 			<Detail v-if="!!selectedData" :data="selectedData" />
 		</el-dialog>
 
@@ -452,11 +649,16 @@
 			:visible.sync="showReportForm"
 		/>
 
-		<el-dialog center title="PILIH KOLOM" :visible.sync="selectField" width="300px">
-			<div style="height:500px;overflow:auto">
+		<el-dialog
+			center
+			title="PILIH KOLOM"
+			:visible.sync="selectField"
+			width="300px"
+		>
+			<div style="height: 500px; overflow: auto">
 				<el-checkbox-group v-model="selectedFields">
 					<el-checkbox
-						style="display:block;margin-bottom:5px"
+						style="display: block; margin-bottom: 5px"
 						v-for="(f, i) in fields"
 						:label="f"
 						:key="i"
@@ -464,7 +666,16 @@
 				</el-checkbox-group>
 			</div>
 			<div slot="footer">
-				<el-button type="primary" @click="() => { exportToExcel(); selectField = false; }">DOWNLOAD</el-button>
+				<el-button
+					type="primary"
+					@click="
+						() => {
+							exportToExcel();
+							selectField = false;
+						}
+					"
+					>DOWNLOAD</el-button
+				>
 			</div>
 		</el-dialog>
 	</div>
