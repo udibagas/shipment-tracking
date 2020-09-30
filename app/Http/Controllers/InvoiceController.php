@@ -26,16 +26,17 @@ class InvoiceController extends Controller
                 customers.name AS customer,
                 users.name AS user
             ')
+            ->where('company_id', $request->user()->company_id)
             ->join('customers', 'customers.id', '=', 'invoices.customer_id')
             ->join('users', 'users.id', '=', 'invoices.user_id')
-            ->when($request->keyword, function($q) use ($request) {
-                return $q->where(function($qq) use ($request) {
-                    return $qq->where('customers.name', 'LIKE', '%'.$request->keyword.'%')
-                        ->orWhere('users.name', 'LIKE', '%'.$request->keyword.'%')
-                        ->orWhere('number', 'LIKE', '%'.$request->keyword.'%')
-                        ->orWhere('service_type', 'LIKE', '%'.$request->keyword.'%');
+            ->when($request->keyword, function ($q) use ($request) {
+                return $q->where(function ($qq) use ($request) {
+                    return $qq->where('customers.name', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('users.name', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('number', 'LIKE', '%' . $request->keyword . '%')
+                        ->orWhere('service_type', 'LIKE', '%' . $request->keyword . '%');
                 });
-            })->when($request->dateRange, function($q) use ($request) {
+            })->when($request->dateRange, function ($q) use ($request) {
                 return $q->whereBetween('date', $request->dateRange);
             })->orderBy($sort, $order)->paginate($request->pageSize);
     }
@@ -57,7 +58,7 @@ class InvoiceController extends Controller
 
                 $id = DB::table('invoices')->insertGetId($input);
 
-                DB::table('invoice_items')->insert(array_map(function($item) use ($id) {
+                DB::table('invoice_items')->insert(array_map(function ($item) use ($id) {
                     $data = array_only($item, (new InvoiceItem())->getFillable());
                     $data['invoice_id'] = $id;
                     $data['description'] = json_encode($item['description']);
@@ -65,14 +66,16 @@ class InvoiceController extends Controller
                 }, $request->items));
 
                 if ($request->status == 1) {
-                    $deliveryIds = array_map(function($item) { return $item['description']['delivery_id']; }, $request->items);
+                    $deliveryIds = array_map(function ($item) {
+                        return $item['description']['delivery_id'];
+                    }, $request->items);
                     DomesticDelivery::whereIn('id', $deliveryIds)->update(['invoice_status' => 1]);
                 }
 
                 return Invoice::find($id);
             });
         } catch (\Exception $e) {
-            return response(['message' => 'Data gagal disimpan. '.$e->getMessage()], 500);
+            return response(['message' => 'Data gagal disimpan. ' . $e->getMessage()], 500);
         }
     }
 
@@ -99,7 +102,7 @@ class InvoiceController extends Controller
                     ->where('invoice_id', $invoice->id)
                     ->delete();
 
-                DB::table('invoice_items')->insert(array_map(function($item) use ($invoice) {
+                DB::table('invoice_items')->insert(array_map(function ($item) use ($invoice) {
                     $data = array_only($item, (new InvoiceItem())->getFillable());
                     $data['invoice_id'] = $invoice->id;
                     $data['description'] = json_encode($item['description']);
@@ -107,14 +110,16 @@ class InvoiceController extends Controller
                 }, $request->items));
 
                 if ($request->status == 1) {
-                    $deliveryIds = array_map(function($item) { return $item['description']['delivery_id']; }, $request->items);
+                    $deliveryIds = array_map(function ($item) {
+                        return $item['description']['delivery_id'];
+                    }, $request->items);
                     DomesticDelivery::whereIn('id', $deliveryIds)->update(['invoice_status' => 1]);
                 }
 
                 return $invoice;
             });
         } catch (\Exception $e) {
-            return response(['message' => 'Data gagal disimpan. '.$e->getMessage()], 500);
+            return response(['message' => 'Data gagal disimpan. ' . $e->getMessage()], 500);
         }
     }
 
