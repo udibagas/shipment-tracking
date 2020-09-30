@@ -32,9 +32,9 @@ class MasterFareController extends Controller
                     ->orWhere('master_fares.destination', 'LIKE', '%' . $request->keyword . '%')
                     ->orWhere('vehicle_types.name', 'LIKE', '%' . $request->keyword . '%');
             })->when($request->company_id, function ($q) use ($request) {
-                return $q->whereIn('company_id', $request->company_id);
+                return $q->whereIn('master_fares.company_id', $request->company_id);
             })->when($request->customer_id, function ($q) use ($request) {
-                return $q->whereIn('customer_id', $request->customer_id);
+                return $q->whereIn('master_fares.customer_id', $request->customer_id);
             })->when($request->vehicle_type_id, function ($q) use ($request) {
                 return $q->whereIn('vehicle_type_id', $request->vehicle_type_id);
             })->orderBy($sort, $order)->paginate($request->pageSize);

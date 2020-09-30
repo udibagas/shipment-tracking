@@ -121,7 +121,7 @@
                     <div class="el-form-item__error" v-if="formErrors.role">{{formErrors.role[0]}}</div>
                 </el-form-item>
 
-                <el-form-item v-show="formModel.role == 11" label="Company" :class="formErrors.company_id ? 'is-error' : ''">
+                <el-form-item v-show="formModel.role == 21 || formModel.role == 31" label="Company" :class="formErrors.company_id ? 'is-error' : ''">
                     <el-select v-model="formModel.company_id" placeholder="Company" filterable default-first-option style="width:100%">
                         <el-option v-for="(t, i) in $store.state.companyList"
                         :value="t.id"

@@ -248,10 +248,11 @@ class DomesticDeliveryController extends Controller
 
         $data = DomesticDelivery::selectRaw('domestic_deliveries.*')
             ->join('customers', 'customers.id', '=', 'domestic_deliveries.customer_id')
+            ->join('users', 'users.customer_id', '=', 'customers.customer_id')
             ->where(function ($q) use ($request) {
                 return $q->where(function ($qq) use ($request) {
-                    return $qq->where('customers.phone', $request->phone_or_email)
-                        ->orWhere('customers.email', $request->phone_or_email);
+                    return $qq->where('users.phone', $request->phone_or_email)
+                        ->orWhere('users.email', $request->phone_or_email);
                 });
             })
             ->where(function ($q) use ($request) {

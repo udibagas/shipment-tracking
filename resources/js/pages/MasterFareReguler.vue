@@ -276,6 +276,7 @@ export default {
                 pageSize: this.pageSize,
                 sort: this.sort,
                 order: this.order,
+                company_id: [this.$store.state.user.company_id]
             }
 
             this.loading = true;
