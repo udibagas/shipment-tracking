@@ -1,9 +1,15 @@
 <template>
 	<el-dialog
 		fullscreen
-		:before-close="(done) => { closeForm() }"
+		:before-close="
+			(done) => {
+				closeForm();
+			}
+		"
 		:visible.sync="show"
-		:title="!!formModel.id ? 'EDIT PENGIRIMAN DOMESTIK' : 'PENGIRIMAN DOMESTIK BARU'"
+		:title="
+			!!formModel.id ? 'EDIT PENGIRIMAN DOMESTIK' : 'PENGIRIMAN DOMESTIK BARU'
+		"
 		v-loading="loading"
 	>
 		<el-alert
@@ -11,20 +17,28 @@
 			title="ERROR"
 			:description="error.message"
 			v-show="error.message"
-			style="margin-bottom:15px;"
+			style="margin-bottom: 15px"
 		></el-alert>
 
 		<el-form label-width="150px" label-position="left">
 			<el-row :gutter="30">
 				<el-col :span="8">
-					<el-form-item label="Customer" :class="formErrors.customer_id ? 'is-error' : ''">
+					<el-form-item
+						label="Customer"
+						:class="formErrors.customer_id ? 'is-error' : ''"
+					>
 						<el-select
-							@change="() => { getFare(); getFarePacking(); }"
+							@change="
+								() => {
+									getFare();
+									getFarePacking();
+								}
+							"
 							v-model="formModel.customer_id"
 							placeholder="Customer"
 							filterable
 							default-first-option
-							style="width:100%"
+							style="width: 100%"
 						>
 							<el-option
 								v-for="(t, i) in $store.state.customerList"
@@ -33,80 +47,339 @@
 								:key="i"
 							></el-option>
 						</el-select>
-						<div class="el-form-item__error" v-if="formErrors.customer_id">{{formErrors.customer_id[0]}}</div>
+						<div class="el-form-item__error" v-if="formErrors.customer_id">
+							{{ formErrors.customer_id[0] }}
+						</div>
 					</el-form-item>
 
-					<el-form-item label="Asal" :class="formErrors.origin ? 'is-error' : ''">
+					<el-form-item
+						label="Asal"
+						:class="formErrors.origin ? 'is-error' : ''"
+					>
 						<el-select
 							v-model="formModel.origin"
 							placeholder="Asal"
 							filterable
 							default-first-option
-							style="width:100%"
+							style="width: 100%"
 						>
-							<el-option v-for="(t, i) in $store.state.cityList" :value="t.name" :label="t.name" :key="i"></el-option>
+							<el-option
+								v-for="(t, i) in $store.state.cityList"
+								:value="t.name"
+								:label="t.name"
+								:key="i"
+							></el-option>
 						</el-select>
-						<div class="el-form-item__error" v-if="formErrors.origin">{{formErrors.origin[0]}}</div>
+						<div class="el-form-item__error" v-if="formErrors.origin">
+							{{ formErrors.origin[0] }}
+						</div>
 					</el-form-item>
 
-					<el-form-item label="Tujuan" :class="formErrors.destination ? 'is-error' : ''">
+					<el-form-item
+						label="Tujuan"
+						:class="formErrors.destination ? 'is-error' : ''"
+					>
 						<el-select
 							@change="getFare"
 							v-model="formModel.destination"
 							placeholder="Tujuan"
 							filterable
 							default-first-option
-							style="width:100%"
+							style="width: 100%"
 						>
-							<el-option v-for="(t, i) in $store.state.cityList" :value="t.name" :label="t.name" :key="i"></el-option>
+							<el-option
+								v-for="(t, i) in $store.state.cityList"
+								:value="t.name"
+								:label="t.name"
+								:key="i"
+							></el-option>
 						</el-select>
-						<div class="el-form-item__error" v-if="formErrors.destination">{{formErrors.destination[0]}}</div>
+						<div class="el-form-item__error" v-if="formErrors.destination">
+							{{ formErrors.destination[0] }}
+						</div>
 					</el-form-item>
 
-					<el-form-item label="Alamat Pengiriman" :class="formErrors.delivery_address ? 'is-error' : ''">
+					<el-form-item
+						label="Alamat Pengiriman"
+						:class="formErrors.delivery_address ? 'is-error' : ''"
+					>
 						<el-input
 							type="textarea"
 							rows="5"
 							placeholder="Alamat Pengiriman"
 							v-model="formModel.delivery_address"
 						></el-input>
-						<div
-							class="el-form-item__error"
-							v-if="formErrors.delivery_address"
-						>{{formErrors.delivery_address[0]}}</div>
+						<div class="el-form-item__error" v-if="formErrors.delivery_address">
+							{{ formErrors.delivery_address[0] }}
+						</div>
 					</el-form-item>
 				</el-col>
 				<el-col :span="8">
-					<el-form-item label="Tanggal Pick Up" :class="formErrors.pick_up_date ? 'is-error' : ''">
+					<el-form-item
+						label="Tanggal Pick Up"
+						:class="formErrors.pick_up_date ? 'is-error' : ''"
+					>
 						<el-date-picker
-							style="width:100%"
+							style="width: 100%"
 							type="date"
 							format="dd-MMM-yyyy"
 							value-format="yyyy-MM-dd"
 							placeholder="Tanggal Pick Up"
 							v-model="formModel.pick_up_date"
 						></el-date-picker>
-						<div class="el-form-item__error" v-if="formErrors.pick_up_date">{{formErrors.pick_up_date[0]}}</div>
+						<div class="el-form-item__error" v-if="formErrors.pick_up_date">
+							{{ formErrors.pick_up_date[0] }}
+						</div>
 					</el-form-item>
 
-					<el-form-item label="Nomor Resi" :class="formErrors.resi_number ? 'is-error' : ''">
-						<el-input placeholder="Nomor Resi" v-model="formModel.resi_number"></el-input>
-						<div class="el-form-item__error" v-if="formErrors.resi_number">{{formErrors.resi_number[0]}}</div>
+					<el-form-item
+						label="Nomor Resi"
+						:class="formErrors.resi_number ? 'is-error' : ''"
+					>
+						<el-input
+							placeholder="Nomor Resi"
+							v-model="formModel.resi_number"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.resi_number">
+							{{ formErrors.resi_number[0] }}
+						</div>
 					</el-form-item>
 
-					<el-form-item label="Nomor SPB" :class="formErrors.spb_number ? 'is-error' : ''">
-						<el-input placeholder="Nomor SPB" v-model="formModel.spb_number"></el-input>
-						<div class="el-form-item__error" v-if="formErrors.spb_number">{{formErrors.spb_number[0]}}</div>
+					<el-form-item
+						label="Nomor SPB"
+						:class="formErrors.spb_number ? 'is-error' : ''"
+					>
+						<el-input
+							placeholder="Nomor SPB"
+							v-model="formModel.spb_number"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.spb_number">
+							{{ formErrors.spb_number[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = Ready For Delivery -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 0"
+						label="ETD"
+						:class="formErrors.etd ? 'is-error' : ''"
+					>
+						<el-date-picker
+							style="width: 100%"
+							type="date"
+							format="dd-MMM-yyyy"
+							value-format="yyyy-MM-dd"
+							placeholder="ETD"
+							v-model="formModel.etd"
+						></el-date-picker>
+						<div class="el-form-item__error" v-if="formErrors.etd">
+							{{ formErrors.etd[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = On Delivery -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 0"
+						label="Agent"
+						:class="formErrors.agent_id ? 'is-error' : ''"
+					>
+						<el-select
+							v-model="formModel.agent_id"
+							placeholder="Agent"
+							filterable
+							default-first-option
+							style="width: 100%"
+						>
+							<el-option
+								v-for="(t, i) in $store.state.agentList"
+								:value="t.id"
+								:label="t.code + ' - ' + t.name"
+								:key="i"
+							></el-option>
+						</el-select>
+						<div class="el-form-item__error" v-if="formErrors.agent_id">
+							{{ formErrors.agent_id[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = On Delivery -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 1"
+						label="Tanggal Pengiriman"
+						:class="formErrors.delivery_date ? 'is-error' : ''"
+					>
+						<el-date-picker
+							style="width: 100%"
+							type="date"
+							format="dd-MMM-yyyy"
+							value-format="yyyy-MM-dd"
+							placeholder="Tanggal Pengiriman"
+							v-model="formModel.delivery_date"
+						></el-date-picker>
+						<div class="el-form-item__error" v-if="formErrors.delivery_date">
+							{{ formErrors.delivery_date[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = On Delivery -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 1"
+						label="ETA"
+						:class="formErrors.eta ? 'is-error' : ''"
+					>
+						<el-date-picker
+							style="width: 100%"
+							type="date"
+							format="dd-MMM-yyyy"
+							value-format="yyyy-MM-dd"
+							placeholder="ETA"
+							v-model="formModel.eta"
+						></el-date-picker>
+						<div class="el-form-item__error" v-if="formErrors.eta">
+							{{ formErrors.eta[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = On Delivery -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 1"
+						label="Nama Kapal"
+						:class="formErrors.ship_name ? 'is-error' : ''"
+					>
+						<el-input
+							placeholder="Nama Kapal"
+							v-model="formModel.ship_name"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.ship_name">
+							{{ formErrors.ship_name[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = On Delivery -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 1"
+						label="Plat Nomor Armada"
+						:class="formErrors.vehicle_number ? 'is-error' : ''"
+					>
+						<el-input
+							placeholder="Plat Nomor Armada"
+							v-model="formModel.vehicle_number"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.vehicle_number">
+							{{ formErrors.vehicle_number[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = On Delivery -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 1"
+						label="Nama Driver"
+						:class="formErrors.driver_name ? 'is-error' : ''"
+					>
+						<el-input
+							placeholder="Nama Driver"
+							v-model="formModel.driver_name"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.driver_name">
+							{{ formErrors.driver_name[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = On Delivery -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 1"
+						label="No. HP Driver"
+						:class="formErrors.driver_phone ? 'is-error' : ''"
+					>
+						<el-input
+							placeholder="No. HP Driver"
+							v-model="formModel.driver_phone"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.driver_phone">
+							{{ formErrors.driver_phone[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = Delivered -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 2"
+						label="Tanggal Terima"
+						:class="formErrors.delivered_date ? 'is-error' : ''"
+					>
+						<el-date-picker
+							style="width: 100%"
+							type="date"
+							format="dd-MMM-yyyy"
+							value-format="yyyy-MM-dd"
+							placeholder="Tangal Terima"
+							v-model="formModel.delivered_date"
+						></el-date-picker>
+						<div class="el-form-item__error" v-if="formErrors.delivered_date">
+							{{ formErrors.delivered_date[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- STT diterima -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 3"
+						label="Tanggal Terima STT"
+						:class="formErrors.stt_received_date ? 'is-error' : ''"
+					>
+						<el-date-picker
+							style="width: 100%"
+							type="date"
+							format="dd-MMM-yyyy"
+							value-format="yyyy-MM-dd"
+							placeholder="Tangal Terima STT"
+							v-model="formModel.stt_received_date"
+						></el-date-picker>
+						<div
+							class="el-form-item__error"
+							v-if="formErrors.stt_received_date"
+						>
+							{{ formErrors.stt_received_date[0] }}
+						</div>
+					</el-form-item>
+
+					<!-- status = Received -->
+					<el-form-item
+						v-show="formModel.delivery_status_id > 2"
+						label="Penerima"
+						:class="formErrors.receiver ? 'is-error' : ''"
+					>
+						<el-input
+							placeholder="Penerima"
+							v-model="formModel.receiver"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.receiver">
+							{{ formErrors.receiver[0] }}
+						</div>
+					</el-form-item>
+
+					<el-form-item label="Note" :class="formErrors.note ? 'is-error' : ''">
+						<el-input
+							type="textarea"
+							rows="4"
+							placeholder="Note"
+							v-model="formModel.note"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.note">
+							{{ formErrors.note[0] }}
+						</div>
 					</el-form-item>
 				</el-col>
+
 				<el-col :span="8">
-					<el-form-item label="Jenis Pengiriman" :class="formErrors.delivery_type_id ? 'is-error' : ''">
+					<el-form-item
+						label="Jenis Pengiriman"
+						:class="formErrors.delivery_type_id ? 'is-error' : ''"
+					>
 						<el-select
 							v-model="formModel.delivery_type_id"
 							placeholder="Jenis Pengiriman"
 							filterable
 							default-first-option
-							style="width:100%"
+							style="width: 100%"
 						>
 							<el-option
 								v-for="(t, i) in $store.state.deliveryTypeList"
@@ -115,30 +388,42 @@
 								:key="i"
 							></el-option>
 						</el-select>
-						<div
-							class="el-form-item__error"
-							v-if="formErrors.delivery_type_id"
-						>{{formErrors.delivery_type_id[0]}}</div>
+						<div class="el-form-item__error" v-if="formErrors.delivery_type_id">
+							{{ formErrors.delivery_type_id[0] }}
+						</div>
 					</el-form-item>
 
-					<el-form-item label="Layanan Pengiriman" :class="formErrors.service_type ? 'is-error' : ''">
+					<el-form-item
+						label="Layanan Pengiriman"
+						:class="formErrors.service_type ? 'is-error' : ''"
+					>
 						<el-select
 							@change="getFare"
 							v-model="formModel.service_type"
 							placeholder="Layanan Pengiriman"
-							style="width:100%"
+							style="width: 100%"
 						>
-							<el-option v-for="(l, i) in ['REGULER', 'CHARTER']" :value="l" :label="l" :key="i"></el-option>
+							<el-option
+								v-for="(l, i) in ['REGULER', 'CHARTER']"
+								:value="l"
+								:label="l"
+								:key="i"
+							></el-option>
 						</el-select>
-						<div class="el-form-item__error" v-if="formErrors.service_type">{{formErrors.service_type[0]}}</div>
+						<div class="el-form-item__error" v-if="formErrors.service_type">
+							{{ formErrors.service_type[0] }}
+						</div>
 					</el-form-item>
 
-					<el-form-item label="Jenis Armada" :class="formErrors.vehicle_type_id ? 'is-error' : ''">
+					<el-form-item
+						label="Jenis Armada"
+						:class="formErrors.vehicle_type_id ? 'is-error' : ''"
+					>
 						<el-select
 							@change="getFare"
 							v-model="formModel.vehicle_type_id"
 							placeholder="Jenis Armada"
-							style="width:100%"
+							style="width: 100%"
 						>
 							<el-option
 								v-for="v in $store.state.vehicleTypeList"
@@ -147,18 +432,23 @@
 								:value="v.id"
 							></el-option>
 						</el-select>
-						<div
-							class="el-form-item__error"
-							v-if="formErrors.vehicle_type_id"
-						>{{formErrors.vehicle_type_id[0]}}</div>
+						<div class="el-form-item__error" v-if="formErrors.vehicle_type_id">
+							{{ formErrors.vehicle_type_id[0] }}
+						</div>
 					</el-form-item>
 
-					<el-form-item label="Berat Minimum (KG)" :class="formErrors.minimum_weight ? 'is-error' : ''">
-						<el-input disabled placeholder="Berat Minimum (KG)" v-model="formModel.minimum_weight"></el-input>
-						<div
-							class="el-form-item__error"
-							v-if="formErrors.minimum_weight"
-						>{{formErrors.minimum_weight[0]}}</div>
+					<el-form-item
+						label="Berat Minimum (KG)"
+						:class="formErrors.minimum_weight ? 'is-error' : ''"
+					>
+						<el-input
+							disabled
+							placeholder="Berat Minimum (KG)"
+							v-model="formModel.minimum_weight"
+						></el-input>
+						<div class="el-form-item__error" v-if="formErrors.minimum_weight">
+							{{ formErrors.minimum_weight[0] }}
+						</div>
 					</el-form-item>
 				</el-col>
 			</el-row>
@@ -167,111 +457,239 @@
 		<el-table
 			striped
 			:data="formModel.items"
-			style="margin-top:10px"
+			style="margin-top: 10px"
 			show-summary
 			:summary-method="getSummaryItem"
 		>
 			<el-table-column type="index" label="Koli"></el-table-column>
 			<el-table-column label="Deskripsi">
 				<template slot-scope="scope">
-					<el-input v-model="scope.row.description" size="small" placeholder="Deskripsi"></el-input>
+					<el-input
+						v-model="scope.row.description"
+						size="small"
+						placeholder="Deskripsi"
+					></el-input>
 				</template>
 			</el-table-column>
 			<el-table-column label="P (cm)" width="100" header-align="center">
 				<template slot-scope="scope">
-					<el-input type="number" v-model="scope.row.dimension_p" size="small" placeholder="P"></el-input>
+					<el-input
+						type="number"
+						v-model="scope.row.dimension_p"
+						size="small"
+						placeholder="P"
+					></el-input>
 				</template>
 			</el-table-column>
 			<el-table-column label="L (cm)" width="100" header-align="center">
 				<template slot-scope="scope">
-					<el-input type="number" v-model="scope.row.dimension_l" size="small" placeholder="L"></el-input>
+					<el-input
+						type="number"
+						v-model="scope.row.dimension_l"
+						size="small"
+						placeholder="L"
+					></el-input>
 				</template>
 			</el-table-column>
 			<el-table-column label="T (cm)" width="100" header-align="center">
 				<template slot-scope="scope">
-					<el-input type="number" v-model="scope.row.dimension_t" size="small" placeholder="T"></el-input>
+					<el-input
+						type="number"
+						v-model="scope.row.dimension_t"
+						size="small"
+						placeholder="T"
+					></el-input>
 				</template>
 			</el-table-column>
-			<el-table-column label="Berat (KG)" width="100" header-align="right" align="right">
+			<el-table-column
+				label="Berat (KG)"
+				width="100"
+				header-align="right"
+				align="right"
+			>
 				<template slot-scope="scope">
-					<el-input type="number" v-model="scope.row.weight" size="small" placeholder="Berat (KG)"></el-input>
+					<el-input
+						type="number"
+						v-model="scope.row.weight"
+						size="small"
+						placeholder="Berat (KG)"
+					></el-input>
 				</template>
 			</el-table-column>
-			<el-table-column label="Volume" width="120" header-align="right" align="right">
+			<el-table-column
+				label="Volume"
+				width="120"
+				header-align="right"
+				align="right"
+			>
 				<template slot-scope="scope">
-					{{(scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 1000000).toFixed(3)}} M
+					{{
+						(
+							(scope.row.dimension_p *
+								scope.row.dimension_l *
+								scope.row.dimension_t) /
+							1000000
+						).toFixed(3)
+					}}
+					M
 					<sup>3</sup>
 				</template>
 			</el-table-column>
-			<el-table-column label="Berat Volume" width="120" header-align="right" align="right">
-				<template
-					slot-scope="scope"
-				>{{(scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 4000).toFixed(0)}} KG</template>
+			<el-table-column
+				label="Berat Volume"
+				width="120"
+				header-align="right"
+				align="right"
+			>
+				<template slot-scope="scope"
+					>{{
+						(
+							(scope.row.dimension_p *
+								scope.row.dimension_l *
+								scope.row.dimension_t) /
+							4000
+						).toFixed(0)
+					}}
+					KG</template
+				>
 			</el-table-column>
-			<el-table-column label="Berat Invoice" width="120" header-align="right" align="right">
-				<template
-					slot-scope="scope"
-				>{{scope.row.weight >= (scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 4000) ? scope.row.weight : (scope.row.dimension_p * scope.row.dimension_l * scope.row.dimension_t / 4000).toFixed(0)}} KG</template>
+			<el-table-column
+				label="Berat Invoice"
+				width="120"
+				header-align="right"
+				align="right"
+			>
+				<template slot-scope="scope"
+					>{{
+						scope.row.weight >=
+						(scope.row.dimension_p *
+							scope.row.dimension_l *
+							scope.row.dimension_t) /
+							4000
+							? scope.row.weight
+							: (
+									(scope.row.dimension_p *
+										scope.row.dimension_l *
+										scope.row.dimension_t) /
+									4000
+							  ).toFixed(0)
+					}}
+					KG</template
+				>
 			</el-table-column>
-			<el-table-column label="Packing" header-align="center" align="center" min-width="70">
+			<el-table-column
+				label="Packing"
+				header-align="center"
+				align="center"
+				min-width="70"
+			>
 				<template slot-scope="scope">
 					<el-checkbox v-model="scope.row.packing"></el-checkbox>
 				</template>
 			</el-table-column>
 			<el-table-column label="Keterangan">
 				<template slot-scope="scope">
-					<el-input v-model="scope.row.remark" size="small" placeholder="Keterangan"></el-input>
+					<el-input
+						v-model="scope.row.remark"
+						size="small"
+						placeholder="Keterangan"
+					></el-input>
 				</template>
 			</el-table-column>
 			<el-table-column width="100px" align="right" header-align="right">
 				<template slot="header">
-					<el-button @click="addItem" icon="el-icon-plus" type="primary" size="small"></el-button>
+					<el-button
+						@click="addItem"
+						icon="el-icon-plus"
+						type="primary"
+						size="small"
+					></el-button>
 				</template>
 				<template slot-scope="scope">
-					<el-button @click="copyItem(scope.$index, scope.row)" icon="el-icon-document-copy" type="text"></el-button>
-					<el-button @click="deleteItem(scope.$index, scope.row.id)" icon="el-icon-delete" type="text"></el-button>
+					<el-button
+						@click="copyItem(scope.$index, scope.row)"
+						icon="el-icon-document-copy"
+						type="text"
+					></el-button>
+					<el-button
+						@click="deleteItem(scope.$index, scope.row.id)"
+						icon="el-icon-delete"
+						type="text"
+					></el-button>
 				</template>
 			</el-table-column>
 		</el-table>
 
-		<table style="width:100%;margin-top:20px" class="table" v-if="!!formModel.service_type">
+		<table
+			style="width: 100%; margin-top: 20px"
+			class="table"
+			v-if="!!formModel.service_type"
+		>
 			<thead>
 				<tr>
 					<th>Jenis Biaya</th>
-					<th class="text-right" style="width:200px">Berat/Volume</th>
-					<th class="text-right" style="width:100px">Tarif</th>
-					<th class="text-right" style="width:100px">Biaya</th>
-					<th class="text-right" style="width:100px">PPN</th>
-					<th class="text-right" style="width:100px">Total</th>
+					<th class="text-right" style="width: 200px">Berat/Volume</th>
+					<th class="text-right" style="width: 100px">Tarif</th>
+					<th class="text-right" style="width: 100px">Biaya</th>
+					<th class="text-right" style="width: 100px">PPN</th>
+					<th class="text-right" style="width: 100px">Total</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td class="td-label">{{formModel.service_type}} - {{formModel.destination}}</td>
-					<td class="td-value text-right">{{totalInvoiceWeight | formatNumber}} KG</td>
-					<td class="td-value text-right">Rp. {{ formModel.delivery_rate | formatNumber }}</td>
-					<td class="td-value text-right">Rp. {{delivery_cost | formatNumber}}</td>
-					<td class="td-value text-right">
-						<el-checkbox disabled v-model="formModel.delivery_cost_ppn"></el-checkbox>
+					<td class="td-label">
+						{{ formModel.service_type }} - {{ formModel.destination }}
 					</td>
-					<td
-						class="td-value text-right"
-					>Rp. {{parseInt(delivery_cost) + (formModel.delivery_cost_ppn * 0.1 * parseInt(delivery_cost)) | formatNumber}}</td>
+					<td class="td-value text-right">
+						{{ totalInvoiceWeight | formatNumber }} KG
+					</td>
+					<td class="td-value text-right">
+						Rp. {{ formModel.delivery_rate | formatNumber }}
+					</td>
+					<td class="td-value text-right">
+						Rp. {{ delivery_cost | formatNumber }}
+					</td>
+					<td class="td-value text-right">
+						<el-checkbox
+							disabled
+							v-model="formModel.delivery_cost_ppn"
+						></el-checkbox>
+					</td>
+					<td class="td-value text-right">
+						Rp.
+						{{
+							(parseInt(delivery_cost) +
+								formModel.delivery_cost_ppn * 0.1 * parseInt(delivery_cost))
+								| formatNumber
+						}}
+					</td>
 				</tr>
 				<tr>
 					<td class="td-label">PACKING PETI</td>
 					<td class="td-value text-right">
-						{{totalVolumePacking | formatNumber}} M
+						{{ totalVolumePacking | formatNumber }} M
 						<sup>3</sup>
 					</td>
-					<td class="td-value text-right">Rp. {{ formModel.packing_rate | formatNumber }}</td>
-					<td class="td-value text-right">Rp. {{packing_cost | formatNumber}}</td>
 					<td class="td-value text-right">
-						<el-checkbox disabled v-model="formModel.packing_cost_ppn"></el-checkbox>
+						Rp. {{ formModel.packing_rate | formatNumber }}
 					</td>
-					<td
-						class="td-value text-right"
-					>Rp. {{parseInt(packing_cost) + (formModel.packing_cost_ppn * 0.1 * parseInt(packing_cost)) | formatNumber}}</td>
+					<td class="td-value text-right">
+						Rp. {{ packing_cost | formatNumber }}
+					</td>
+					<td class="td-value text-right">
+						<el-checkbox
+							disabled
+							v-model="formModel.packing_cost_ppn"
+						></el-checkbox>
+					</td>
+					<td class="td-value text-right">
+						Rp.
+						{{
+							(parseInt(packing_cost) +
+								formModel.packing_cost_ppn * 0.1 * parseInt(packing_cost))
+								| formatNumber
+						}}
+					</td>
 				</tr>
 				<tr>
 					<td class="td-label">BIAYA PENERUS</td>
@@ -284,13 +702,22 @@
 							placeholder="Biaya Penerus"
 						></el-input>
 					</td>
-					<td class="td-value text-right">Rp. {{formModel.forwarder_cost | formatNumber}}</td>
+					<td class="td-value text-right">
+						Rp. {{ formModel.forwarder_cost | formatNumber }}
+					</td>
 					<td class="td-value text-right">
 						<el-checkbox v-model="formModel.forwarder_cost_ppn"></el-checkbox>
 					</td>
-					<td
-						class="td-value text-right"
-					>Rp. {{parseInt(formModel.forwarder_cost) + (formModel.forwarder_cost_ppn * 0.1 * parseInt(formModel.forwarder_cost)) | formatNumber}}</td>
+					<td class="td-value text-right">
+						Rp.
+						{{
+							(parseInt(formModel.forwarder_cost) +
+								formModel.forwarder_cost_ppn *
+									0.1 *
+									parseInt(formModel.forwarder_cost))
+								| formatNumber
+						}}
+					</td>
 				</tr>
 				<tr>
 					<td class="td-label">BIAYA LAIN-LAIN</td>
@@ -309,17 +736,28 @@
 							placeholder="Biaya Penerus"
 						></el-input>
 					</td>
-					<td class="td-value text-right">Rp. {{formModel.additional_cost | formatNumber}}</td>
+					<td class="td-value text-right">
+						Rp. {{ formModel.additional_cost | formatNumber }}
+					</td>
 					<td class="td-value text-right">
 						<el-checkbox v-model="formModel.additional_cost_ppn"></el-checkbox>
 					</td>
-					<td
-						class="td-value text-right"
-					>Rp. {{parseInt(formModel.additional_cost) + (formModel.additional_cost_ppn * 0.1 * parseInt(formModel.additional_cost)) | formatNumber}}</td>
+					<td class="td-value text-right">
+						Rp.
+						{{
+							(parseInt(formModel.additional_cost) +
+								formModel.additional_cost_ppn *
+									0.1 *
+									parseInt(formModel.additional_cost))
+								| formatNumber
+						}}
+					</td>
 				</tr>
 				<tr>
 					<td class="td-label">TOTAL</td>
-					<td class="td-value text-right big" colspan="5">Rp. {{total_cost | formatNumber}}</td>
+					<td class="td-value text-right big" colspan="5">
+						Rp. {{ total_cost | formatNumber }}
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -331,13 +769,23 @@
 				plain
 				@click="save(null)"
 				icon="el-icon-success"
-			>DRAFT</el-button>
+				>DRAFT</el-button
+			>
 			<el-button
 				type="primary"
-				@click="save(formModel.delivery_status_id === null ? 0 : formModel.delivery_status_id)"
+				@click="
+					save(
+						formModel.delivery_status_id === null
+							? 0
+							: formModel.delivery_status_id
+					)
+				"
 				icon="el-icon-success"
-			>SIMPAN</el-button>
-			<el-button type="info" @click="closeForm()" icon="el-icon-error">BATAL</el-button>
+				>SIMPAN</el-button
+			>
+			<el-button type="info" @click="closeForm()" icon="el-icon-error"
+				>BATAL</el-button
+			>
 		</span>
 	</el-dialog>
 </template>

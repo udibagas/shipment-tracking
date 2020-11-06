@@ -637,12 +637,15 @@
 			@close="showForm = false"
 			@refresh="requestData"
 		/>
+
 		<UpdateForm
 			@submitted="requestData"
 			@close="showStatusForm = false"
+			:model="updateFormModel"
 			:data="selectedData"
 			:visible.sync="showStatusForm"
 		/>
+
 		<ReportForm
 			@submitted="requestData"
 			@close="showReportForm = false"
@@ -702,6 +705,7 @@ export default {
 			formModel: { items: [] },
 			showForm: false,
 			showStatusForm: false,
+			updateFormModel: {},
 			showReportForm: false,
 			selectedData: {},
 			showDetailDialog: false,
@@ -880,6 +884,7 @@ export default {
 				});
 		},
 		openStatusForm(data) {
+			this.updateFormModel = { delivery_id: data.id };
 			this.selectedData = JSON.parse(JSON.stringify(data));
 			this.showStatusForm = true;
 		},
