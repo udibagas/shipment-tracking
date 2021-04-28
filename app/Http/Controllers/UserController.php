@@ -23,7 +23,7 @@ class UserController extends Controller
             ->join('customers', 'customers.id', '=', 'users.customer_id', 'LEFT')
             ->join('agents', 'agents.id', '=', 'users.agent_id', 'LEFT')
             // user admin hanya boleh manage user dengan level dibawahnya
-            ->when($request->user()->role == User::ROLE_ADMIN, function($q) {
+            ->when($request->user()->role == User::ROLE_ADMIN, function ($q) {
                 return $q->whereIn('role', [
                     User::ROLE_ADMIN,
                     User::ROLE_CUSTOMER,
@@ -48,13 +48,8 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $input = $request->all();
-
-        if ($request->password) {
-            $input['password'] = bcrypt($request->password);
-        }
-
-        return User::create($input);
+        User::create($request->all());
+        return ['message' => 'User telah disimpan'];
     }
 
     /**
@@ -83,13 +78,9 @@ class UserController extends Controller
 
         $input = $request->all();
 
-        if ($request->password) {
-            $input['password'] = bcrypt($request->password);
-        }
-
         $user->update($input);
 
-        return $user;
+        return ['message' => 'User telah diupdate'];
     }
 
     /**
