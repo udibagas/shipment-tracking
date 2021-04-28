@@ -4,12 +4,13 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasApiTokens, SoftDeletes;
 
     const ROLE_SUPERADMIN = 11;
 
@@ -51,33 +52,28 @@ class User extends Authenticatable implements JWTSubject
 
     protected $appends = ['role_name'];
 
-    public function getJWTIdentifier()
+    public function scopeSuperAdmin($q)
     {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
-    public function scopeSuperAdmin($q) {
         return $q->where('role', self::ROLE_SUPERADMIN);
     }
 
-    public function scopeAdmin($q) {
+    public function scopeAdmin($q)
+    {
         return $q->where('role', self::ROLE_ADMIN);
     }
 
-    public function scopeOperator($q) {
+    public function scopeOperator($q)
+    {
         return $q->where('role', self::ROLE_OPERATOR);
     }
 
-    public function scopeCustomer($q) {
+    public function scopeCustomer($q)
+    {
         return $q->where('role', self::ROLE_CUSTOMER);
     }
 
-    public function scopeAgent($q) {
+    public function scopeAgent($q)
+    {
         return $q->where('role', self::ROLE_AGENT);
     }
 
@@ -102,16 +98,23 @@ class User extends Authenticatable implements JWTSubject
         return self::roleList()[$this->role];
     }
 
-    public function company() {
+    public function company()
+    {
         return $this->belongsTo(Company::class);
     }
 
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
     }
 
-    public function agent() {
+    public function agent()
+    {
         return $this->belongsTo(Agent::class);
     }
 
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 }
