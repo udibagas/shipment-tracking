@@ -15,10 +15,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->sort ? $request->sort : 'name';
-        $order = $request->order == 'ascending' ? 'asc' : 'desc';
-
-        return User::selectRaw('users.*, companies.name AS company, customers.name AS customer, agents.name AS agent')
+        // TODO: jangan pake join, pake whereHas
+        $data = User::selectRaw('users.*, companies.name AS company, customers.name AS customer, agents.name AS agent')
             ->join('companies', 'companies.id', '=', 'users.company_id', 'LEFT')
             ->join('customers', 'customers.id', '=', 'users.customer_id', 'LEFT')
             ->join('agents', 'agents.id', '=', 'users.agent_id', 'LEFT')
@@ -37,7 +35,9 @@ class UserController extends Controller
                 return $q->whereIn('role', $request->role);
             })->when($request->status, function ($q) use ($request) {
                 return $q->whereIn('status', $request->status);
-            })->orderBy($sort, $order)->paginate($request->pageSize);
+            })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
+
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
@@ -101,13 +101,6 @@ class UserController extends Controller
 
         $user->delete();
         return ['message' => 'User telah dihapus'];
-    }
-
-    public function getList()
-    {
-        return User::select(['id', 'name'])
-            ->orderBy('name', 'asc')
-            ->get();
     }
 
     public function getRoleList()

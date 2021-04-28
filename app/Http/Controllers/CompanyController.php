@@ -16,18 +16,17 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->sort ? $request->sort : 'name';
-        $order = $request->order == 'ascending' ? 'asc' : 'desc';
+        $data = Company::when($request->keyword, function ($q) use ($request) {
+            return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
+        })->when($request->status, function ($q) use ($request) {
+            return $q->whereIn('status', $request->status);
+        })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
 
-        return Company::when($request->keyword, function ($q) use ($request) {
-                return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
-            })->when($request->status, function ($q) use ($request) {
-                return $q->whereIn('status', $request->status);
-            })->orderBy($sort, $order)->paginate($request->pageSize);
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
@@ -38,7 +37,8 @@ class CompanyController extends Controller
      */
     public function store(CompanyRequest $request)
     {
-        return Company::create($request->all());
+        Company::create($request->all());
+        return ['message' => 'Data telah disimpan'];
     }
 
     /**
@@ -49,6 +49,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
+        // TODO: pindah ke policy
         if (auth()->user()->role == User::ROLE_ADMIN && auth()->user()->company_id != $company->id) {
             return response(['message' => 'Anda tidak berhak mengakses data ini.'], 403);
         }
@@ -65,12 +66,13 @@ class CompanyController extends Controller
      */
     public function update(CompanyRequest $request, Company $company)
     {
+        // TODO: pindah ke policy
         if (auth()->user()->role == User::ROLE_ADMIN && auth()->user()->company_id != $company->id) {
             return response(['message' => 'Anda tidak berhak mengupdate data ini.'], 403);
         }
 
         $company->update($request->all());
-        return $company;
+        return ['message' => 'Data telah diupdate'];
     }
 
     /**
@@ -83,13 +85,6 @@ class CompanyController extends Controller
     {
         $company->delete();
         return ['message' => 'Data telah dihapus'];
-    }
-
-    public function getList()
-    {
-        return Company::select(['id', 'code', 'name'])
-            ->orderBy('code', 'asc')
-            ->get();
     }
 
     public function uploadLogo(Request $request)
@@ -109,13 +104,5 @@ class CompanyController extends Controller
         }
 
         return ['path' => '/uploads/' . $fileName];
-    }
-
-    public function byUser(Request $request)
-    {
-        return Company::selectRaw('companies.*')
-            ->join('users', 'users.company_id', 'companies.id')
-            ->where('users.id', $request->user()->id)
-            ->first();
     }
 }

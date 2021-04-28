@@ -16,22 +16,21 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->sort ? $request->sort : 'name';
-        $order = $request->order == 'ascending' ? 'asc' : 'desc';
+        $data = Customer::when($request->keyword, function ($q) use ($request) {
+            return $q->where(function ($qq) use ($request) {
+                return $qq->where('name', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
+            });
+        })->when(auth()->user()->company_id, function ($q) {
+            return $q->where('company_id', auth()->user()->company_id);
+        })->when($request->status, function ($q) use ($request) {
+            return $q->whereIn('status', $request->status);
+        })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
 
-        return Customer::when($request->keyword, function ($q) use ($request) {
-                return $q->where(function($qq) use ($request) {
-                    return $qq->where('name', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
-                });
-            })->when($request->user()->role == User::ROLE_ADMIN, function($q) {
-                return $q->where('company_id', auth()->user()->company_id);
-            })->when($request->status, function ($q) use ($request) {
-                return $q->whereIn('status', $request->status);
-            })->orderBy($sort, $order)->paginate($request->pageSize);
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
@@ -42,7 +41,8 @@ class CustomerController extends Controller
      */
     public function store(CustomerRequest $request)
     {
-        return Customer::create($request->all());
+        Customer::create($request->all());
+        return ['message' => 'Data telah disimpan'];
     }
 
     /**
@@ -66,7 +66,7 @@ class CustomerController extends Controller
     public function update(CustomerRequest $request, Customer $customer)
     {
         $customer->update($request->all());
-        return $customer;
+        return ['message' => 'Data telah diupdate'];
     }
 
     /**
@@ -79,13 +79,5 @@ class CustomerController extends Controller
     {
         $customer->delete();
         return ['message' => 'Data telah dihapus'];
-    }
-
-    public function getList()
-    {
-        return Customer::select(['id', 'code', 'name', 'email', 'company_id'])
-            ->when(auth()->user()->company_id, function($q) {
-                return $q->where('company_id', auth()->user()->company_id);
-            })->orderBy('code', 'asc')->get();
     }
 }

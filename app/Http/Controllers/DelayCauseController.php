@@ -15,15 +15,14 @@ class DelayCauseController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->sort ? $request->sort : 'code';
-        $order = $request->order == 'ascending' ? 'asc' : 'desc';
+        $data = DelayCause::when($request->keyword, function ($q) use ($request) {
+            return $q->where('code', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('description', 'LIKE', '%' . $request->keyword . '%');
+        })->when($request->status, function ($q) use ($request) {
+            return $q->whereIn('status', $request->status);
+        })->orderBy($request->sort ?: 'code', $request->order ?: 'asc');
 
-        return DelayCause::when($request->keyword, function ($q) use ($request) {
-                return $q->where('code', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('description', 'LIKE', '%' . $request->keyword . '%');
-            })->when($request->status, function ($q) use ($request) {
-                return $q->whereIn('status', $request->status);
-            })->orderBy($sort, $order)->paginate($request->pageSize);
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
@@ -34,7 +33,8 @@ class DelayCauseController extends Controller
      */
     public function store(DelayCauseRequest $request)
     {
-        return DelayCause::create($request->all());
+        DelayCause::create($request->all());
+        return ['message' => 'Data telah disimpan'];
     }
 
     /**
@@ -47,7 +47,7 @@ class DelayCauseController extends Controller
     public function update(DelayCauseRequest $request, DelayCause $delayCause)
     {
         $delayCause->update($request->all());
-        return $delayCause;
+        return ['message' => 'Data telah diupdate'];
     }
 
     /**
@@ -60,12 +60,5 @@ class DelayCauseController extends Controller
     {
         $delayCause->delete();
         return ['message' => 'Data telah dihapus'];
-    }
-
-    public function getList()
-    {
-        return DelayCause::select(['id', 'code', 'description'])
-            ->orderBy('code', 'asc')
-            ->get();
     }
 }

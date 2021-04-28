@@ -30,7 +30,8 @@ class CityController extends Controller
      */
     public function store(CityRequest $request)
     {
-        return City::create($request->all());
+        City::create($request->all());
+        return ['message' => 'Data telah disimpan'];
     }
 
     /**
@@ -43,7 +44,7 @@ class CityController extends Controller
     public function update(CityRequest $request, City $city)
     {
         $city->update($request->all());
-        return $city;
+        return ['message' => 'Data telah diupdate'];
     }
 
     /**

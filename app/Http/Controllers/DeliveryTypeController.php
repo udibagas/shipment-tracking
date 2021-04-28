@@ -15,16 +15,15 @@ class DeliveryTypeController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->sort ? $request->sort : 'name';
-        $order = $request->order == 'ascending' ? 'asc' : 'desc';
+        $data = DeliveryType::when($request->keyword, function ($q) use ($request) {
+            return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('description', 'LIKE', '%' . $request->keyword . '%');
+        })->when($request->status, function ($q) use ($request) {
+            return $q->whereIn('status', $request->status);
+        })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
 
-        return DeliveryType::when($request->keyword, function ($q) use ($request) {
-                return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('description', 'LIKE', '%' . $request->keyword . '%');
-            })->when($request->status, function ($q) use ($request) {
-                return $q->whereIn('status', $request->status);
-            })->orderBy($sort, $order)->paginate($request->pageSize);
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
@@ -35,7 +34,8 @@ class DeliveryTypeController extends Controller
      */
     public function store(DeliveryTypeRequest $request)
     {
-        return DeliveryType::create($request->all());
+        DeliveryType::create($request->all());
+        return ['message' => 'Data telah disimpan'];
     }
 
     /**
@@ -48,7 +48,7 @@ class DeliveryTypeController extends Controller
     public function update(DeliveryTypeRequest $request, DeliveryType $deliveryType)
     {
         $deliveryType->update($request->all());
-        return $deliveryType;
+        return ['message' => 'Data telah diupdate'];
     }
 
     /**
@@ -61,12 +61,5 @@ class DeliveryTypeController extends Controller
     {
         $deliveryType->delete();
         return ['message' => 'Data telah dihapus'];
-    }
-
-    public function getList()
-    {
-        return DeliveryType::select(['id', 'code', 'name'])
-            ->orderBy('code', 'asc')
-            ->get();
     }
 }

@@ -15,18 +15,17 @@ class DeliveryStatusController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->sort ? $request->sort : 'name';
-        $order = $request->order == 'ascending' ? 'asc' : 'desc';
+        $data = DeliveryStatus::when($request->keyword, function ($q) use ($request) {
+            return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
+                ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
+        })->when($request->status, function ($q) use ($request) {
+            return $q->whereIn('status', $request->status);
+        })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
 
-        return DeliveryStatus::when($request->keyword, function ($q) use ($request) {
-                return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
-            })->when($request->status, function ($q) use ($request) {
-                return $q->whereIn('status', $request->status);
-            })->orderBy($sort, $order)->paginate($request->pageSize);
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
@@ -37,7 +36,8 @@ class DeliveryStatusController extends Controller
      */
     public function store(DeliveryStatusRequest $request)
     {
-        return DeliveryStatus::create($request->all());
+        DeliveryStatus::create($request->all());
+        return ['message' => 'Data telah disimpan'];
     }
 
     /**
@@ -50,7 +50,7 @@ class DeliveryStatusController extends Controller
     public function update(DeliveryStatusRequest $request, DeliveryStatus $deliveryStatus)
     {
         $deliveryStatus->update($request->all());
-        return $deliveryStatus;
+        return ['message' => 'Data telah diupdate'];
     }
 
     /**
@@ -63,12 +63,5 @@ class DeliveryStatusController extends Controller
     {
         $deliveryStatus->delete();
         return ['message' => 'Data telah dihapus'];
-    }
-
-    public function getList()
-    {
-        return DeliveryStatus::select(['id', 'code', 'name'])
-            ->orderBy('code', 'asc')
-            ->get();
     }
 }

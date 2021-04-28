@@ -26,7 +26,8 @@ class CompanyBankController extends Controller
      */
     public function store(CompanyBankRequest $request)
     {
-        return CompanyBank::create($request->all());
+        CompanyBank::create($request->all());
+        return ['message' => 'Data telah disimpan'];
     }
 
     /**
@@ -39,7 +40,7 @@ class CompanyBankController extends Controller
     public function update(CompanyBankRequest $request, CompanyBank $companyBank)
     {
         $companyBank->update($request->all());
-        return $companyBank;
+        return ['message' => 'Data telah diupdate'];
     }
 
     /**
