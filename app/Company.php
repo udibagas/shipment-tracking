@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'code', 'name', 'phone', 'email',
         'address', 'active', 'contact_person',
@@ -14,7 +17,8 @@ class Company extends Model
         'smtp_host', 'smtp_port', 'smtp_encryption', 'smtp_username', 'smtp_password',
     ];
 
-    public function banks() {
+    public function banks()
+    {
         return $this->hasMany(CompanyBank::class);
     }
 }
