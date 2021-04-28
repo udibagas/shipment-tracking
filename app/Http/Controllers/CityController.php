@@ -15,12 +15,11 @@ class CityController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->sort ? $request->sort : 'name';
-        $order = $request->order == 'ascending' ? 'asc' : 'desc';
+        $data = City::when($request->keyword, function ($q) use ($request) {
+            return $q->where('name', 'LIKE', '%' . $request->keyword . '%');
+        })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
 
-        return City::when($request->keyword, function ($q) use ($request) {
-                return $q->where('name', 'LIKE', '%' . $request->keyword . '%');
-            })->orderBy($sort, $order)->paginate($request->pageSize);
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
@@ -57,9 +56,5 @@ class CityController extends Controller
     {
         $city->delete();
         return ['message' => 'Data telah dihapus'];
-    }
-
-    public function getList() {
-        return City::select(['id', 'name'])->orderBy('name', 'asc')->get();
     }
 }

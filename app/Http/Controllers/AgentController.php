@@ -16,22 +16,23 @@ class AgentController extends Controller
      */
     public function index(Request $request)
     {
-        $sort = $request->sort ? $request->sort : 'name';
-        $order = $request->order == 'ascending' ? 'asc' : 'desc';
+        $data = Agent::when($request->keyword, function ($q) use ($request) {
+            return $q->where(function ($qq) use ($request) {
+                return $qq->where('name', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
+            });
+        })->when($request->user()->role == User::ROLE_ADMIN, function ($q) {
+            return $q->where('company_id', auth()->user()->company_id);
+        })->when($request->status, function ($q) use ($request) {
+            return $q->whereIn('status', $request->status);
+        })->when(auth()->user()->company_id, function ($q) {
+            return $q->where('company_id', auth()->user()->company_id);
+        })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
 
-        return Agent::when($request->keyword, function ($q) use ($request) {
-                return $q->where(function($qq) use ($request) {
-                    return $qq->where('name', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('address', 'LIKE', '%' . $request->keyword . '%')
-                        ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
-                });
-            })->when($request->user()->role == User::ROLE_ADMIN, function($q) {
-                return $q->where('company_id', auth()->user()->company_id);
-            })->when($request->status, function ($q) use ($request) {
-                return $q->whereIn('status', $request->status);
-            })->orderBy($sort, $order)->paginate($request->pageSize);
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
@@ -42,7 +43,8 @@ class AgentController extends Controller
      */
     public function store(AgentRequest $request)
     {
-        return Agent::create($request->all());
+        Agent::create($request->all());
+        return ['message' => 'Data telah disimpan'];
     }
 
     /**
@@ -66,7 +68,7 @@ class AgentController extends Controller
     public function update(AgentRequest $request, Agent $agent)
     {
         $agent->update($request->all());
-        return $agent;
+        return ['message' => 'Data telah diupdate'];
     }
 
     /**
@@ -79,13 +81,5 @@ class AgentController extends Controller
     {
         $agent->delete();
         return ['message' => 'Data telah dihapus'];
-    }
-
-    public function getList()
-    {
-        return Agent::select(['id', 'code', 'name', 'company_id'])
-            ->when(auth()->user()->company_id, function($q) {
-                return $q->where('company_id', auth()->user()->company_id);
-            })->orderBy('code', 'asc')->get();
     }
 }
