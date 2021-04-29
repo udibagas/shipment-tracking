@@ -11,4 +11,5 @@ if (token) {
 }
 
 window.axios.defaults.baseURL = BASE_URL;
+window.axios.defaults.withCredentials = true
 window.moment = require('moment');

@@ -1,109 +1,103 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\AgentController;
+use App\Http\Controllers\AppController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\CompanyBankController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DelayCauseController;
+use App\Http\Controllers\DeliveryProgressController;
+use App\Http\Controllers\DeliveryStatusController;
+use App\Http\Controllers\DeliveryTypeController;
+use App\Http\Controllers\DomesticDeliveryController;
+use App\Http\Controllers\DomesticDeliveryItemController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\MasterFareCharterController;
+use App\Http\Controllers\MasterFareController;
+use App\Http\Controllers\MasterFarePackingController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleTypeController;
+use App\Models\User;
+use Illuminate\Support\Facades\Route;
 
-/*
-ROLE USER:
-11 : SUPER ADMIN
-21 : ADMIN
-31 : OPERATOR
-41 : CUSTOMER
-51 : AGENT
-*/
-
-Route::post('login', 'AuthController@login');
-Route::get('deliveryProgress', 'DeliveryProgressController@index');
-
-Route::group(['middleware' => 'auth'], function () {
-    // untuk dropdown di form
-    Route::get('agent/getList', 'AgentController@getList');
-    Route::get('city/getList', 'CityController@getList');
-    Route::get('company/byUser', 'CompanyController@byUser');
-    Route::get('company/getList', 'CompanyController@getList');
-    Route::get('customer/getList', 'CustomerController@getList');
-    Route::get('deliveryStatus/getList', 'DeliveryStatusController@getList');
-    Route::get('serviceType/getList', 'ServiceTypeController@getList');
-    Route::get('delayCause/getList', 'DelayCauseController@getList');
-    Route::get('deliveryType/getList', 'DeliveryTypeController@getList');
-    Route::get('vehicleType/getList', 'VehicleTypeController@getList');
-    Route::get('user/getList', 'UserController@getList');
-    Route::get('user/getRoleList', 'UserController@getRoleList');
-    Route::get('report/leadTime', 'ReportController@leadTime');
-    Route::get('report/summary', 'ReportController@summary');
-    Route::get('report/getFilterYear', 'ReportController@getFilterYear');
+Route::post('login', [AuthController::class, 'login']);
+Route::post('cekResi', [DomesticDeliveryController::class, 'cekResi']);
+Route::post('cekResi1', [DomesticDeliveryController::class, 'cekResi1']);
 
 
-    // super admin only
-    Route::group(['middleware' => 'role:11'], function () {
-        Route::resource('company', 'CompanyController')->only(['index', 'store', 'destroy']);
-        Route::resource('deliveryStatus', 'DeliveryStatusController')->except(['create', 'edit', 'show']);
-        Route::resource('serviceType', 'ServiceTypeController')->except(['create', 'edit', 'show']);
-        Route::resource('delayCause', 'DelayCauseController')->except(['create', 'edit', 'show']);
-        Route::resource('deliveryType', 'DeliveryTypeController')->except(['create', 'edit', 'show']);
+Route::middleware('api:sanctum')->group(function () {
+    // auth related
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('me', [AuthController::class, 'me']);
+    Route::get('checkAuth', [AppController::class, 'checkAuth']);
+    Route::get('getNavigation', [AppController::class, 'getNavigation']);
+
+    Route::post('deliveryProgress', [DeliveryProgressController::class, 'store']);
+    Route::get('domesticDelivery/search', [DomesticDeliveryController::class, 'searchApi']);
+    Route::get('report/getFilterYear', [ReportController::class, 'getFilterYear']);
+    Route::get('report/leadTime', [ReportController::class, 'leadTime']);
+    Route::get('report/summary', [ReportController::class, 'summary']);
+    Route::get('user/getRoleList', [UserController::class, 'getRoleList']);
+
+    Route::middleware('role:' . User::ROLE_SUPERADMIN)->group(function () {
+        Route::apiResources([
+            'company' => CompanyController::class,
+            'delayCause' => DelayCauseController::class,
+            'deliveryStatus' => DeliveryStatusController::class,
+            'deliveryType' => DeliveryTypeController::class,
+            'serviceType' => ServiceTypeController::class,
+        ]);
     });
 
-    // superadmin & admin
-    Route::group(['middleware' => 'role:11, 21'], function () {
-        Route::resource('city', 'CityController')->only(['index', 'store', 'update', 'destroy']);
-        Route::post('company/uploadLogo', 'CompanyController@uploadLogo');
-        Route::resource('company', 'CompanyController')->only(['show', 'update']);
-        Route::resource('user', 'UserController')->except(['create', 'edit']);
-        Route::resource('agent', 'AgentController')->except(['create', 'edit']);
-        Route::resource('customer', 'CustomerController')->except(['create', 'edit']);
+    Route::middleware('role:' . User::ROLE_ADMIN)->group(function () {
+        Route::apiResource('companyBank', CompanyBankController::class);
     });
 
-    // superadmin, admin, operator only
-    Route::group(['middleware' => 'role:11, 21, 31'], function () {
-        Route::resource('deliveryProgress', 'DeliveryProgressController')->only(['store', 'update']);
-        Route::delete('domesticDeliveryItem/{domesticDeliveryItem}', 'DomesticDeliveryItemController@destroy');
-        Route::get('domesticDelivery/search', 'DomesticDeliveryController@search');
-        Route::get('domesticDelivery/printResi/{domesticDelivery}', 'DomesticDeliveryController@printResi');
-        Route::get('domesticDelivery/printAwb/{domesticDelivery}', 'DomesticDeliveryController@printAwb');
-        Route::resource('domesticDelivery', 'DomesticDeliveryController')->only(['store', 'update', 'destroy']);
-        Route::get('invoice/print/{invoice}', 'InvoiceController@print');
-        Route::resource('invoice', 'InvoiceController')->except(['create', 'edit']);
+    Route::middleware('role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_ADMIN)->group(function () {
+        Route::apiResources([
+            'agent' => AgentController::class,
+            'city' => CityController::class,
+            'company' => CompanyController::class,
+            'customer' => CustomerController::class,
+            'user' => UserController::class,
+        ]);
 
-        Route::get('masterFare/search', 'MasterFareController@search');
-        Route::resource('masterFare', 'MasterFareController')->except(['create', 'edit']);
-
-        Route::get('masterFareCharter/search', 'MasterFareCharterController@search');
-        Route::resource('masterFareCharter', 'MasterFareCharterController')->except(['create', 'edit']);
-
-        Route::get('masterFarePacking/search', 'MasterFarePackingController@search');
-        Route::resource('masterFarePacking', 'MasterFarePackingController')->except(['create', 'edit']);
-
-        Route::resource('vehicleType', 'VehicleTypeController')->except(['create', 'edit', 'show']);
+        Route::post('company/uploadLogo', [CompanyController::class, 'uploadLogo']);
     });
 
-    // Buat admin company
-    Route::group(['middleware' => 'role: 21'], function () {
-        Route::resource('companyBank', 'CompanyBankController')->except(['create', 'edit', 'show']);
+    Route::middleware('role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_ADMIN . ', ' . User::ROLE_OPERATOR)->group(function () {
+        Route::delete('domesticDeliveryItem/{domesticDeliveryItem}', [DomesticDeliveryItemController::class, 'destroy']);
+        Route::get('domesticDelivery/search', [DomesticDeliveryController::class, 'search']);
+        Route::get('domesticDelivery/printResi/{domesticDelivery}', [DomesticDeliveryController::class, 'printResi']);
+        Route::get('domesticDelivery/printAwb/{domesticDelivery}', [DomesticDeliveryController::class, 'printAwb']);
+        Route::get('invoice/print/{invoice}', [InvoiceController::class, 'print']);
+        Route::get('masterFare/search', [MasterFareController::class, 'search']);
+        Route::get('masterFareCharter/search', [MasterFareCharterController::class, 'search']);
+        Route::get('masterFarePacking/search', [MasterFarePackingController::class, 'search']);
+
+        Route::apiResources([
+            'deliveryProgress' => DeliveryProgressController::class,
+            'domesticDelivery' => DomesticDeliveryController::class,
+            'invoice' => InvoiceController::class,
+            'masterFare' => MasterFareController::class,
+            'masterFareCharter' => MasterFareCharterController::class,
+            'masterFarePacking' => MasterFarePackingController::class,
+            'vehicleType' => VehicleTypeController::class,
+        ]);
     });
 
-    // Buat admin company & operator
-    Route::group(['middleware' => 'role: 21, 31'], function () {
-        Route::post('report/send', 'ReportController@send');
+    Route::middleware('role:' . User::ROLE_ADMIN . ',' . User::ROLE_OPERATOR)->group(function () {
+        Route::post('report/send', [ReportController::class, 'send']);
     });
 
-    // TODO : menu buat operator, customer & agent
-    Route::group(['middleware' => 'role:11, 21, 31, 41, 51'], function () {
-        Route::get('domesticDelivery', 'DomesticDeliveryController@index');
-        // Route::get('deliveryProgress', 'DeliveryProgressController@index');
+    Route::middleware('role:11, 21, 31, 41, 51')->group(function () {
+        Route::get('domesticDelivery', [DomesticDeliveryController::class, 'index']);
     });
-
-    Route::get('checkAuth', 'AppController@checkAuth');
-    Route::get('getNavigation', 'AppController@getNavigation');
-    Route::post('logout', 'AuthController@logout');
 });
 
-Route::get('/', 'AppController@index')->name('login'); // ini buat redirect kalau unauthorized
-Route::get('/{any}', 'AppController@index')->where('any', '.*');
+Route::get('/', [AppController::class, 'index'])->name('login'); // ini buat redirect kalau unauthorized
+Route::get('/{any}', [AppController::class, 'index'])->where('any', '.*');

@@ -1,15 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import auth from './auth'
 
 Vue.use(Vuex)
 
-let currentUser = JSON.parse(window.localStorage.getItem('user'))
-
 export default new Vuex.Store({
+    modules: { auth },
     state: {
         base_url: BASE_URL,
-        user: currentUser || {},
-        is_logged_in: !!currentUser,
         agentList: [],
         cityList: [],
         companyList: [],

@@ -93,7 +93,7 @@ router.beforeEach((to, from, next) => {
 
     else {
         let params = { route: to.path }
-        axios.get('/checkAuth', { params }).then(r => {
+        axios.get('/api/checkAuth', { params }).then(r => {
             next()
         }).catch(e => {
             next('/login')
