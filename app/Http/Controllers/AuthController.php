@@ -15,7 +15,11 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $auth = Auth::attempt($request->only(['email', 'password']));
+        $auth = Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+            'active' => 1,
+        ]);
 
         if ($auth) {
             $user = User::find(auth()->id());
