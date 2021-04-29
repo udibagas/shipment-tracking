@@ -1,11 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DeliveryProgress extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['delivery_id', 'status', 'note', 'user_id', 'image'];
 
     protected $appends = ['status_name'];
@@ -25,5 +28,10 @@ class DeliveryProgress extends Model
         }
 
         return $status[$this->status];
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

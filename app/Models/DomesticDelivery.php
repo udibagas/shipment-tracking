@@ -1,11 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DomesticDelivery extends Model
 {
+    use SoftDeletes;
 
     const STATUS_REGISTERED = 0;
 
@@ -94,5 +96,10 @@ class DomesticDelivery extends Model
     public function progress()
     {
         return $this->hasMany(DeliveryProgress::class, 'delivery_id');
+    }
+
+    public function agent()
+    {
+        return $this->belongsTo(Agent::class);
     }
 }

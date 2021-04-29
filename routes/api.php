@@ -7,29 +7,40 @@ use App\Http\Controllers\CompanyBankController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DelayCauseController;
+use App\Http\Controllers\DeliveryProgressController;
 use App\Http\Controllers\DeliveryStatusController;
 use App\Http\Controllers\DeliveryTypeController;
+use App\Http\Controllers\DomesticDeliveryController;
+use App\Http\Controllers\DomesticDeliveryItemController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\MasterFareCharterController;
+use App\Http\Controllers\MasterFareController;
+use App\Http\Controllers\MasterFarePackingController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleTypeController;
 use App\User;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
-
-
-Route::group(['middleware' => 'auth'], function () {
-    Route::post('logout', 'AuthController@logout');
-    Route::get('domesticDelivery/search', 'DomesticDeliveryController@searchApi');
-    Route::post('deliveryProgress', 'DeliveryProgressController@store');
-});
-
-Route::post('cekResi', 'DomesticDeliveryController@cekResi');
-Route::post('cekResi1', 'DomesticDeliveryController@cekResi1');
+Route::post('cekResi', [DomesticDeliveryController::class, 'cekResi']);
+Route::post('cekResi1', [DomesticDeliveryController::class, 'cekResi1']);
 
 
 Route::middleware('api:sanctum')->group(function () {
+    // auth related
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
+    Route::get('checkAuth', [AppController::class, 'checkAuth']);
+    Route::get('getNavigation', [AppController::class, 'getNavigation']);
+
+    Route::post('deliveryProgress', [DeliveryProgressController::class, 'store']);
+    Route::get('domesticDelivery/search', [DomesticDeliveryController::class, 'searchApi']);
+    Route::get('report/getFilterYear', [ReportController::class, 'getFilterYear']);
+    Route::get('report/leadTime', [ReportController::class, 'leadTime']);
+    Route::get('report/summary', [ReportController::class, 'summary']);
+    Route::get('user/getRoleList', [UserController::class, 'getRoleList']);
 
     Route::middleware('role:' . User::ROLE_SUPERADMIN)->group(function () {
         Route::apiResources([
@@ -58,8 +69,31 @@ Route::middleware('api:sanctum')->group(function () {
     });
 
     Route::middleware('role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_ADMIN . ', ' . User::ROLE_OPERATOR)->group(function () {
+        Route::delete('domesticDeliveryItem/{domesticDeliveryItem}', [DomesticDeliveryItemController::class, 'destroy']);
+        Route::get('domesticDelivery/search', [DomesticDeliveryController::class, 'search']);
+        Route::get('domesticDelivery/printResi/{domesticDelivery}', [DomesticDeliveryController::class, 'printResi']);
+        Route::get('domesticDelivery/printAwb/{domesticDelivery}', [DomesticDeliveryController::class, 'printAwb']);
+        Route::get('invoice/print/{invoice}', [InvoiceController::class, 'print']);
+        Route::get('masterFare/search', [MasterFareController::class, 'search']);
+        Route::get('masterFareCharter/search', [MasterFareCharterController::class, 'search']);
+        Route::get('masterFarePacking/search', [MasterFarePackingController::class, 'search']);
+
         Route::apiResources([
-            // TODO
+            'deliveryProgress' => DeliveryProgressController::class,
+            'domesticDelivery' => DomesticDeliveryController::class,
+            'invoice' => InvoiceController::class,
+            'masterFare' => MasterFareController::class,
+            'masterFareCharter' => MasterFareCharterController::class,
+            'masterFarePacking' => MasterFarePackingController::class,
+            'vehicleType' => VehicleTypeController::class,
         ]);
+    });
+
+    Route::middleware('role:' . User::ROLE_ADMIN . ',' . User::ROLE_OPERATOR)->group(function () {
+        Route::post('report/send', [ReportController::class, 'send']);
+    });
+
+    Route::middleware('role:11, 21, 31, 41, 51')->group(function () {
+        Route::get('domesticDelivery', [DomesticDeliveryController::class, 'index']);
     });
 });

@@ -1,11 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'company_id', 'customer_id', 'user_id',
         'date', 'number', 'total', 'status',
@@ -15,7 +18,8 @@ class Invoice extends Model
 
     protected $with = ['items'];
 
-    public function items() {
+    public function items()
+    {
         return $this->hasMany(InvoiceItem::class);
     }
 
@@ -30,16 +34,18 @@ class Invoice extends Model
         return $items;
     }
 
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
     }
 
-    public function company() {
+    public function company()
+    {
         return $this->belongsTo(Company::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-
 }

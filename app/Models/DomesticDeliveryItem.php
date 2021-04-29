@@ -1,11 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DomesticDeliveryItem extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'domestic_delivery_id', 'description', 'weight',
         'remark', 'dimension_p', 'dimension_l', 'dimension_t',

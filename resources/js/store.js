@@ -53,48 +53,45 @@ export default new Vuex.Store({
         roleList: [],
         navigation: [],
         filterYearList: [],
-        company: {
-            name: 'Super Admin'
-        }
     },
     mutations: {
         getAgentList(state) {
-            axios.get('/agent/getList').then(r => {
+            axios.get('/agent').then(r => {
                 state.agentList = r.data
             }).catch(e => console.log(e))
         },
         getCompanyList(state) {
-            axios.get('/company/getList').then(r => {
+            axios.get('/company').then(r => {
                 state.companyList = r.data
             }).catch(e => console.log(e))
         },
         getCityList(state) {
-            axios.get('/city/getList').then(r => {
+            axios.get('/city').then(r => {
                 state.cityList = r.data
             }).catch(e => console.log(e))
         },
         getCustomerList(state) {
-            axios.get('/customer/getList').then(r => {
+            axios.get('/customer').then(r => {
                 state.customerList = r.data
             }).catch(e => console.log(e))
         },
         getDeliveryTypeList(state) {
-            axios.get('/deliveryType/getList').then(r => {
+            axios.get('/deliveryType').then(r => {
                 state.deliveryTypeList = r.data
             }).catch(e => console.log(e))
         },
         getDelayCauseList(state) {
-            axios.get('/delayCause/getList').then(r => {
+            axios.get('/delayCause').then(r => {
                 state.delayCauseList = r.data
             }).catch(e => console.log(e))
         },
         getServiceTypeList(state) {
-            axios.get('/serviceType/getList').then(r => {
+            axios.get('/serviceType').then(r => {
                 state.serviceTypeList = r.data
             }).catch(e => console.log(e))
         },
         getVehicleTypeList(state) {
-            axios.get('/vehicleType/getList').then(r => {
+            axios.get('/vehicleType').then(r => {
                 state.vehicleTypeList = r.data
             }).catch(e => console.log(e))
         },
@@ -104,7 +101,7 @@ export default new Vuex.Store({
         //     }).catch(e => console.log(e))
         // },
         getUserList(state) {
-            axios.get('/user/getList').then(r => {
+            axios.get('/user').then(r => {
                 state.userList = r.data
             }).catch(e => console.log(e))
         },
@@ -122,11 +119,6 @@ export default new Vuex.Store({
             axios.get('/getNavigation').then(r => {
                 state.navigation = r.data
             }).catch(e => console.log(e))
-        },
-        getCompanyByUser(state) {
-            axios.get('company/byUser')
-                .then(r => state.company = r.data)
-                .catch(e => console.log(e))
         }
     }
 })

@@ -1,11 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CompanyBank extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'company_id',
         'bank_name',
@@ -15,4 +18,8 @@ class CompanyBank extends Model
         'active'
     ];
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

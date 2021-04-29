@@ -48,3 +48,23 @@ Report : Manampilkan semua bentuk report
 » HDD: 1 x 1 TB HDD
 » RAM: 16 GB
 » Bandwidth: 20Mbps IIX/OpenIXP Shared + 10 Mb Internasional Shared
+
+
+============
+
+rapikan backend
+    - Model
+        - move to models
+        - foreign key
+        - benerin relation di tiap model
+    - Controller
+        - method index paginated & all
+        - apply policy
+        - Message di response
+        - remove method get list
+        - benerin transaction yg pake try catch
+
+
+rapikan frontend
+    - migrate ke nuxt??
+    - pake mixins untuk crud

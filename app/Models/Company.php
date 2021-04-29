@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Agent extends Model
+class Company extends Model
 {
     use SoftDeletes;
 
@@ -13,6 +13,12 @@ class Agent extends Model
         'code', 'name', 'phone', 'email',
         'address', 'active', 'contact_person',
         'fax', 'website', 'contact_person_email',
-        'contact_person_phone', 'company_id'
+        'contact_person_phone', 'logo', 'director_name',
+        'smtp_host', 'smtp_port', 'smtp_encryption', 'smtp_username', 'smtp_password',
     ];
+
+    public function banks()
+    {
+        return $this->hasMany(CompanyBank::class);
+    }
 }
