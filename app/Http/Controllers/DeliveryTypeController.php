@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DeliveryType;
+use App\Models\DeliveryType;
 use App\Http\Requests\DeliveryTypeRequest;
 
 class DeliveryTypeController extends Controller

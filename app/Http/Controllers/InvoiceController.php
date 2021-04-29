@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\DomesticDelivery;
-use App\Invoice;
+use App\Models\DomesticDelivery;
+use App\Models\Invoice;
 use App\Http\Requests\InvoiceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\InvoiceItem;
+use App\Models\InvoiceItem;
 
 class InvoiceController extends Controller
 {

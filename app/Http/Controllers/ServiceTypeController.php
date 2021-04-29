@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\ServiceType;
+use App\Models\ServiceType;
 use App\Http\Requests\ServiceTypeRequest;
 
 class ServiceTypeController extends Controller

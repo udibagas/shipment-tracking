@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MasterFarePackingRequest;
-use App\MasterFarePacking;
+use App\Models\MasterFarePacking;
 use Illuminate\Http\Request;
 
 class MasterFarePackingController extends Controller

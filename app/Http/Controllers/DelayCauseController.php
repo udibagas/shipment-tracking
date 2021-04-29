@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DelayCause;
+use App\Models\DelayCause;
 use App\Http\Requests\DelayCauseRequest;
 
 class DelayCauseController extends Controller

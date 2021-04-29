@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DeliveryProgress;
-use App\DomesticDelivery;
+use App\Models\DeliveryProgress;
+use App\Models\DomesticDelivery;
 use App\Http\Requests\DeliveryProgressRequest;
 use Illuminate\Support\Facades\DB;
 

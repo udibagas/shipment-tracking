@@ -20,7 +20,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleTypeController;
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);

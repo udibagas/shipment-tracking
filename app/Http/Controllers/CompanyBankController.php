@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CompanyBank;
+use App\Models\CompanyBank;
 use App\Http\Requests\CompanyBankRequest;
 use Illuminate\Http\Request;
 

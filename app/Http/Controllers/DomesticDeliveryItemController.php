@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DomesticDeliveryItem;
+use App\Models\DomesticDeliveryItem;
 use Illuminate\Http\Request;
 
 class DomesticDeliveryItemController extends Controller

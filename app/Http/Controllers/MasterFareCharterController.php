@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MasterFareCharterRequest;
-use App\MasterFareCharter;
+use App\Models\MasterFareCharter;
 use Illuminate\Http\Request;
 
 class MasterFareCharterController extends Controller

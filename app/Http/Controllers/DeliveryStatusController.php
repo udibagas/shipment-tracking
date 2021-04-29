@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DeliveryStatus;
+use App\Models\DeliveryStatus;
 use App\Http\Requests\DeliveryStatusRequest;
 
 class DeliveryStatusController extends Controller

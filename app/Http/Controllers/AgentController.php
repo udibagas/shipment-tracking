@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Agent;
-use App\User;
+use App\Models\Agent;
+use App\Models\User;
 use App\Http\Requests\AgentRequest;
 
 class AgentController extends Controller

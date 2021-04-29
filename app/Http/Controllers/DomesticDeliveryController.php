@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\DomesticDeliveryRequest;
-use App\DomesticDelivery;
-use App\User;
+use App\Models\DomesticDelivery;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class DomesticDeliveryController extends Controller

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Company;
+use App\Models\Company;
 use App\Http\Requests\CompanyRequest;
-use App\User;
+use App\Models\User;
 
 class CompanyController extends Controller
 {

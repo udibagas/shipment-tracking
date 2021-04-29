@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Customer;
+use App\Models\Customer;
 use App\Http\Requests\CustomerRequest;
-use App\User;
 
 class CustomerController extends Controller
 {
