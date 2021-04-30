@@ -109,11 +109,10 @@ export default {
 		};
 	},
 
-	...mapActions({
-		signIn: "auth/signIn"
-	}),
-
 	methods: {
+		...mapActions({
+			signIn: "auth/signIn"
+		}),
 		cekResi() {
 			const data = {
 				tracking_number: this.tracking_number,
