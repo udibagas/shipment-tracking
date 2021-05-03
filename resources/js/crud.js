@@ -1,4 +1,4 @@
-import XLSX from 'xlsx'
+// import XLSX from 'xlsx'
 import exportFromJson from 'export-from-json'
 
 export default {
@@ -8,9 +8,10 @@ export default {
       loading: false,
       keyword: '',
       showForm: false,
-      form: {},
-      selectedData: [],
-      errors: {},
+      formModel: {},
+      selectedData: {},
+      formErrors: {},
+      error: {},
       filters: {},
       sort: 'name',
       order: 'asc',
@@ -40,11 +41,10 @@ export default {
 
       this.loading = true
 
-      this.$axios
-        .$get(this.url, { params })
+      axios.get(this.url, { params })
         .then((r) => {
-          this.tableData = r.data
-          const { from, to, total, per_page, current_page } = r
+          this.tableData = r.data.data
+          const { from, to, total, per_page, current_page } = r.data
           this.pagination = {
             from,
             to,
@@ -69,6 +69,20 @@ export default {
       this.getData()
     },
 
+    sortChange(c) {
+      if (c.prop != this.sort || c.order != this.order) {
+        this.sort = c.prop;
+
+        if (c.order == 'ascending') {
+          this.order = 'asc'
+        } else {
+          this.order = 'desc'
+        }
+
+        this.getData()
+      }
+    },
+
     onCurrentChange(c) {
       this.pagination.current_page = c
       this.getData()
@@ -79,36 +93,30 @@ export default {
       this.getData()
     },
 
-    onSelectionChange(selection) {
-      this.selectedData = selection
-      console.log(selection)
-    },
+    // deleteMany() {
+    //   this.$confirm('Anda yakin?', 'Konfirmasi', { type: 'warning' })
+    //     .then(() => {
+    //       const params = { ids: this.selectedData.map((d) => d.id) }
 
-    deleteMany() {
-      this.$confirm('Anda yakin?', 'Konfirmasi', { type: 'warning' })
-        .then(() => {
-          const params = { ids: this.selectedData.map((d) => d.id) }
-
-          this.$axios
-            .$delete(`${this.url}/deleteMany`, { params })
-            .then((r) => {
-              this.$message({
-                message: r.message,
-                type: 'success',
-                showClose: true,
-              })
-              this.getData()
-            })
-            .catch((e) => {
-              this.$message({
-                message: e.response.data.message,
-                type: 'error',
-                showClose: true,
-              })
-            })
-        })
-        .catch((e) => console.log(e))
-    },
+    //       axios.delete(`${this.url}/deleteMany`, { params })
+    //         .then((r) => {
+    //           this.$message({
+    //             message: r.message,
+    //             type: 'success',
+    //             showClose: true,
+    //           })
+    //           this.getData()
+    //         })
+    //         .catch((e) => {
+    //           this.$message({
+    //             message: e.response.data.message,
+    //             type: 'error',
+    //             showClose: true,
+    //           })
+    //         })
+    //     })
+    //     .catch((e) => console.log(e))
+    // },
 
     closeForm() {
       this.errors = {}
@@ -118,9 +126,9 @@ export default {
     deleteData(id) {
       this.$confirm('Anda yakin?', 'Konfirmasi', { type: 'warning' })
         .then(() => {
-          this.$axios.$delete(`${this.url}/${id}`).then((r) => {
+          axios.delete(`${this.url}/${id}`).then((r) => {
             this.$message({
-              message: r.message,
+              message: r.data.message,
               type: 'success',
               showClose: true,
             })
@@ -137,16 +145,18 @@ export default {
     },
 
     openForm(data) {
-      this.form = JSON.parse(JSON.stringify(data))
-      this.showForm = true
+      this.error = {};
+			this.formErrors = {};
+			this.formModel = JSON.parse(JSON.stringify(data));
+      this.showForm = true;
     },
 
     saveData() {
       this.loading = true
-      this.$axios({
-        method: this.form.id ? 'put' : 'post',
-        url: this.form.id ? `${this.url}/${this.form.id}` : this.url,
-        data: this.form,
+      axios({
+        method: this.formModel.id ? 'put' : 'post',
+        url: this.formModel.id ? `${this.url}/${this.formModel.id}` : this.url,
+        data: this.formModel,
       })
         .then((r) => {
           this.$message({
@@ -159,99 +169,16 @@ export default {
         })
         .catch((e) => {
           if (e.response.status == 422) {
-            this.errors = e.response.data.errors
-          }
+						this.error = {};
+						this.formErrors = e.response.data.errors;
+					}
 
-          this.$message({
-            message: e.response.data.message,
-            type: 'error',
-            showClose: true,
-          })
+					if (e.response.status == 500) {
+						this.formErrors = {};
+						this.error = e.response.data;
+					}
         })
         .finally(() => (this.loading = false))
-    },
-
-    exportData(fileName = 'data', exportType = 'xls') {
-      const params = { keyword: this.keyword }
-      this.loading = true
-
-      this.$axios
-        .$get(`${this.url}/export`, { params })
-        .then((data) => {
-          exportFromJson({
-            data,
-            fileName,
-            exportType,
-          })
-        })
-        .catch((e) => {
-          this.$message({
-            message: e.response.data.message,
-            type: 'error',
-            showClose: true,
-          })
-        })
-        .finally(() => (this.loading = false))
-    },
-
-    importData() {
-      const el = document.createElement('input')
-      el.type = 'file'
-
-      el.addEventListener('change', (event) => {
-        const file = event.target.files[0]
-        const reader = new FileReader()
-
-        reader.onload = (e) => {
-          var data = e.target.result
-          data = new Uint8Array(data)
-          var workbook = XLSX.read(data, { type: 'array' })
-          // see the result, caution: it works after reader event is done.
-          var res = XLSX.utils
-            .sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {
-              header: 1,
-            })
-            .filter((r) => !!r[0]) // cuma yg ada datanya
-
-          // remove header
-          res.splice(0, 1)
-
-          // PISAH INI SESUAI TABLE
-          var dataToImport = res.map((r) => {
-            return {
-              number: r[1],
-              name: r[2] || '',
-              remark: r[3] || '',
-            }
-          })
-
-          console.log('raw data: ', dataToImport.length)
-
-          this.loading = true
-          this.$axios
-            .$post(`${this.url}/import`, { rows: dataToImport })
-            .then((r) => {
-              this.$message({
-                message: r.message,
-                type: 'success',
-                showClose: true,
-              })
-              this.getData()
-            })
-            .catch((e) => {
-              this.$message({
-                message: e.response.data.message,
-                type: 'error',
-                showClose: true,
-              })
-            })
-            .finally(() => (this.loading = false))
-        }
-
-        reader.readAsArrayBuffer(file)
-      })
-
-      el.click()
     },
   },
 }

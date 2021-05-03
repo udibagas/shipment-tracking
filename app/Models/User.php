@@ -52,6 +52,8 @@ class User extends Authenticatable
 
     protected $appends = ['role_name'];
 
+    protected $with = ['company'];
+
     public function scopeSuperAdmin($q)
     {
         return $q->where('role', self::ROLE_SUPERADMIN);

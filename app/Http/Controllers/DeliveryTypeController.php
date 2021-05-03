@@ -16,11 +16,11 @@ class DeliveryTypeController extends Controller
     public function index(Request $request)
     {
         $data = DeliveryType::when($request->keyword, function ($q) use ($request) {
-            return $q->where('name', 'LIKE', '%' . $request->keyword . '%')
+            $q->where('name', 'LIKE', '%' . $request->keyword . '%')
                 ->orWhere('code', 'LIKE', '%' . $request->keyword . '%')
                 ->orWhere('description', 'LIKE', '%' . $request->keyword . '%');
         })->when($request->status, function ($q) use ($request) {
-            return $q->whereIn('status', $request->status);
+            $q->whereIn('status', $request->status);
         })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
 
         return $request->paginated ? $data->paginate($request->per_page) : $data->get();

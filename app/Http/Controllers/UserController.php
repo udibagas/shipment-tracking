@@ -16,25 +16,24 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // TODO: jangan pake join, pake whereHas
-        $data = User::selectRaw('users.*, companies.name AS company, customers.name AS customer, agents.name AS agent')
-            ->join('companies', 'companies.id', '=', 'users.company_id', 'LEFT')
-            ->join('customers', 'customers.id', '=', 'users.customer_id', 'LEFT')
-            ->join('agents', 'agents.id', '=', 'users.agent_id', 'LEFT')
+        $data = User::with(['customer', 'company', 'agent'])
             // user admin hanya boleh manage user dengan level dibawahnya
             ->when($request->user()->role == User::ROLE_ADMIN, function ($q) {
-                return $q->whereIn('role', [
+                $q->whereIn('role', [
                     User::ROLE_ADMIN,
                     User::ROLE_CUSTOMER,
                     User::ROLE_AGENT,
                     User::ROLE_OPERATOR,
-                ])->where('users.company_id', auth()->user()->company_id);
+                ])->whereHas('company', function ($q) {
+                    $q->where('id', auth()->user()->company_id);
+                });
             })->when($request->keyword, function ($q) use ($request) {
-                return $q->where('users.name', 'LIKE', '%' . $request->keyword . '%')
-                    ->orWhere('users.email', 'LIKE', '%' . $request->keyword . '%');
+                $q->where('name', 'LIKE', '%' . $request->keyword . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->keyword . '%');
             })->when($request->role, function ($q) use ($request) {
-                return $q->whereIn('role', $request->role);
+                $q->whereIn('role', $request->role);
             })->when($request->status, function ($q) use ($request) {
-                return $q->whereIn('status', $request->status);
+                $q->whereIn('status', $request->status);
             })->orderBy($request->sort ?: 'name', $request->order ?: 'asc');
 
         return $request->paginated ? $data->paginate($request->per_page) : $data->get();

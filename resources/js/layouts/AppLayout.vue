@@ -3,14 +3,15 @@
 		<el-aside width="auto">
 			<div class="brand-box">
 				<img
-					:src="baseUrl + $store.state.company.logo"
+					v-if="user.company"
+					:src="baseUrl + user.company.logo"
 					:style="
 						collapse ? 'height:40px;margin:25px 0' : 'height:60px;margin:25px 0'
 					"
 					alt=""
 				/>
 
-				<div v-show="!collapse">
+				<div v-show="!collapse" style="margin-top: 25px">
 					<el-avatar :size="50" icon="el-icon-user"></el-avatar>
 					<br />
 					<strong>{{ user.name }}</strong
@@ -94,7 +95,7 @@ export default {
 			return this.$store.state.navigation;
 		},
 		appName() {
-			return APP_NAME + " - " + this.$store.state.company.name;
+			return APP_NAME;
 		},
 		...mapGetters({
 			authenticated: "auth/authenticated",
@@ -119,8 +120,7 @@ export default {
 
 		async signOut() {
 			await this.signOutAction();
-
-			this.$router.replace({ name: "home" });
+			this.$route.push("/");
 		},
 
 		handleCommand(command) {
@@ -133,9 +133,9 @@ export default {
 			}
 		}
 	},
+
 	mounted() {
 		this.$store.commit("getNavigation");
-		this.$store.commit("getCompanyByUser");
 	}
 };
 </script>

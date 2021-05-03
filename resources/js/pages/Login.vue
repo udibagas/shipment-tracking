@@ -113,6 +113,7 @@ export default {
 		...mapActions({
 			signIn: "auth/signIn"
 		}),
+
 		cekResi() {
 			const data = {
 				tracking_number: this.tracking_number,
@@ -145,6 +146,7 @@ export default {
 					this.loading = false;
 				});
 		},
+
 		async login() {
 			if (!this.email || !this.password) {
 				return;
@@ -158,8 +160,6 @@ export default {
 			await this.signIn(data);
 
 			this.$router.push({ path: "/" });
-			this.$store.commit("getNavigation");
-			this.$store.commit("getCompanyByUser");
 		}
 	},
 	mounted() {

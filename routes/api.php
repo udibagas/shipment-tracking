@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyBankController;
@@ -28,7 +29,7 @@ Route::post('cekResi', [DomesticDeliveryController::class, 'cekResi']);
 Route::post('cekResi1', [DomesticDeliveryController::class, 'cekResi1']);
 
 
-Route::middleware('api:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     // auth related
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
