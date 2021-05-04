@@ -15,8 +15,9 @@
 					icon="el-icon-plus"
 					@click="openForm({})"
 					type="primary"
-					>TAMBAH TARIF CHARTER</el-button
 				>
+					TAMBAH TARIF CHARTER
+				</el-button>
 			</el-form-item>
 			<el-form-item class="margin-bottom-10">
 				<el-input
@@ -28,7 +29,7 @@
 					@change="
 						(v) => {
 							keyword = v;
-							requestData();
+							getData();
 						}
 					"
 				>
@@ -39,27 +40,27 @@
 					background
 					@current-change="
 						(p) => {
-							page = p;
-							requestData();
+							pagination.current_page = p;
+							getData();
 						}
 					"
 					@size-change="
 						(s) => {
-							pageSize = s;
-							requestData();
+							pagination.per_page = s;
+							getData();
 						}
 					"
 					layout="total, sizes, prev, next"
-					:page-size="pageSize"
+					:page-size="pagination.per_page"
 					:page-sizes="[10, 25, 50, 100]"
-					:total="tableData.total"
+					:total="pagination.total"
 				>
 				</el-pagination>
 			</el-form-item>
 		</el-form>
 
 		<el-table
-			:data="tableData.data"
+			:data="tableData"
 			stripe
 			:default-sort="{ prop: sort, order: order }"
 			height="calc(100vh - 260px)"
@@ -69,13 +70,13 @@
 					let c = Object.keys(f)[0];
 					filters[c] = Object.values(f[c]);
 					page = 1;
-					requestData();
+					getData();
 				}
 			"
 			@sort-change="sortChange"
 		>
 			<el-table-column
-				v-if="$store.state.user.role == 11"
+				v-if="user.role == 11"
 				prop="company"
 				label="Company"
 				sortable="custom"
@@ -84,7 +85,7 @@
 
 			<el-table-column
 				:filters="
-					$store.state.customerList.map((c) => {
+					customerList.map((c) => {
 						return { value: c.id, text: c.name };
 					})
 				"
@@ -105,7 +106,7 @@
 
 			<el-table-column
 				:filters="
-					$store.state.vehicleTypeList.map((c) => {
+					vehicleTypeList.map((c) => {
 						return { value: c.id, text: c.name };
 					})
 				"
@@ -172,7 +173,7 @@
 							() => {
 								page = 1;
 								keyword = '';
-								requestData();
+								getData();
 							}
 						"
 						icon="el-icon-refresh"
@@ -226,7 +227,7 @@
 						style="width: 100%"
 					>
 						<el-option
-							v-for="(t, i) in $store.state.customerList"
+							v-for="(t, i) in customerList"
 							:value="t.id"
 							:label="t.code + ' - ' + t.name"
 							:key="i"
@@ -250,7 +251,7 @@
 						style="width: 100%"
 					>
 						<el-option
-							v-for="(t, i) in $store.state.cityList"
+							v-for="(t, i) in cityList"
 							:value="t.name"
 							:label="t.name"
 							:key="i"
@@ -274,7 +275,7 @@
 						style="width: 100%"
 					>
 						<el-option
-							v-for="(t, i) in $store.state.vehicleTypeList"
+							v-for="(t, i) in vehicleTypeList"
 							:value="t.id"
 							:label="t.name"
 							:key="i"
@@ -333,167 +334,31 @@
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-				<el-button
-					type="primary"
-					@click="() => (!!formModel.id ? update() : store())"
-					icon="el-icon-success"
-					>SIMPAN</el-button
-				>
-				<el-button type="info" @click="showForm = false" icon="el-icon-error"
-					>BATAL</el-button
-				>
+				<el-button type="primary" @click="saveData" icon="el-icon-success">
+					SIMPAN
+				</el-button>
+				<el-button type="info" @click="showForm = false" icon="el-icon-error">
+					BATAL
+				</el-button>
 			</span>
 		</el-dialog>
 	</div>
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex";
+import crud from "../crud";
+
 export default {
+	mixins: [crud],
 	data() {
 		return {
-			showForm: false,
-			formErrors: {},
-			error: {},
-			formModel: {},
-			keyword: "",
-			page: 1,
-			pageSize: 10,
-			tableData: {},
-			sort: "customer",
-			order: "ascending",
-			loading: false,
-			filters: {},
+			url: "/api/masterFareCharter"
 		};
 	},
-	methods: {
-		sortChange(c) {
-			if (c.prop != this.sort || c.order != this.order) {
-				this.sort = c.prop;
-				this.order = c.order;
-				this.requestData();
-			}
-		},
-		openForm(data) {
-			this.error = {};
-			this.formErrors = {};
-			this.formModel = JSON.parse(JSON.stringify(data));
-			this.showForm = true;
-		},
-		store() {
-			this.loading = true;
-			axios
-				.post("/masterFareCharter", this.formModel)
-				.then((r) => {
-					this.showForm = false;
-					this.$message({
-						message: "Data berhasil disimpan.",
-						type: "success",
-						showClose: true,
-					});
-					this.requestData();
-				})
-				.catch((e) => {
-					if (e.response.status == 422) {
-						this.error = {};
-						this.formErrors = e.response.data.errors;
-					}
-
-					if (e.response.status == 500) {
-						this.formErrors = {};
-						this.error = e.response.data;
-					}
-				})
-				.finally(() => {
-					this.loading = false;
-				});
-		},
-		update() {
-			this.loading = true;
-			axios
-				.put("/masterFareCharter/" + this.formModel.id, this.formModel)
-				.then((r) => {
-					this.showForm = false;
-					this.$message({
-						message: "Data berhasil disimpan.",
-						type: "success",
-						showClose: true,
-					});
-					this.requestData();
-				})
-				.catch((e) => {
-					if (e.response.status == 422) {
-						this.error = {};
-						this.formErrors = e.response.data.errors;
-					}
-
-					if (e.response.status == 500) {
-						this.formErrors = {};
-						this.error = e.response.data;
-					}
-				})
-				.finally(() => {
-					this.loading = false;
-				});
-		},
-		deleteData(id) {
-			this.$confirm("Anda yakin akan menghapus data ini?", "Warning", {
-				type: "warning",
-			})
-				.then(() => {
-					axios
-						.delete("/masterFareCharter/" + id)
-						.then((r) => {
-							this.requestData();
-							this.$message({
-								message: r.data.message,
-								type: "success",
-								showClose: true,
-							});
-						})
-						.catch((e) => {
-							this.$message({
-								message: e.response.data.message,
-								type: "error",
-								showClose: true,
-							});
-						});
-				})
-				.catch(() => console.log(e));
-		},
-		requestData() {
-			let params = {
-				page: this.page,
-				keyword: this.keyword,
-				pageSize: this.pageSize,
-				sort: this.sort,
-				order: this.order,
-				company_id: [this.$store.state.user.company_id],
-			};
-
-			this.loading = true;
-			axios
-				.get("/masterFareCharter", {
-					params: Object.assign(params, this.filters),
-				})
-				.then((r) => {
-					this.tableData = r.data;
-				})
-				.catch((e) => {
-					if (e.response.status == 500) {
-						this.$message({
-							message: e.response.data.message,
-							type: "error",
-							showClose: true,
-						});
-					}
-				})
-				.finally(() => {
-					this.loading = false;
-				});
-		},
-	},
-	mounted() {
-		this.requestData();
-	},
+	computed: {
+		...mapState(["vehicleTypeList", "customerList", "cityList"]),
+		...mapGetters({ user: "auth/user" })
+	}
 };
 </script>
