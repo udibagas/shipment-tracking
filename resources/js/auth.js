@@ -37,8 +37,6 @@ export default {
 
     async signOut ({ dispatch }) {
       await axios.post('/api/logout')
-
-      return dispatch('me')
     },
 
     me ({ commit }) {

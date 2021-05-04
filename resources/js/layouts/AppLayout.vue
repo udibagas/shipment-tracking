@@ -120,7 +120,7 @@ export default {
 
 		async signOut() {
 			await this.signOutAction();
-			this.$route.push("/");
+			this.$router.push("/login");
 		},
 
 		handleCommand(command) {
