@@ -15,8 +15,9 @@
 					icon="el-icon-plus"
 					@click="openForm({})"
 					type="primary"
-					>TAMBAH JENIS ARMADA</el-button
 				>
+					TAMBAH JENIS ARMADA
+				</el-button>
 			</el-form-item>
 			<el-form-item class="margin-bottom-10">
 				<el-input
