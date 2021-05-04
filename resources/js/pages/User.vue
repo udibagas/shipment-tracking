@@ -451,7 +451,6 @@ export default {
 	mixins: [crud],
 	data() {
 		return {
-			showDetail: false,
 			url: "/api/user"
 		};
 	},

@@ -33,8 +33,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // auth related
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
-    Route::get('checkAuth', [AppController::class, 'checkAuth']);
-    Route::get('getNavigation', [AppController::class, 'getNavigation']);
+    Route::get('auth/check', [AuthController::class, 'check']);
+    Route::get('getNavigation', [AuthController::class, 'getNavigation']);
 
     Route::post('deliveryProgress', [DeliveryProgressController::class, 'store']);
     Route::get('domesticDelivery/search', [DomesticDeliveryController::class, 'searchApi']);

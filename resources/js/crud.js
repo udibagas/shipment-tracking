@@ -1,5 +1,5 @@
 // import XLSX from 'xlsx'
-import exportFromJson from 'export-from-json'
+// import exportFromJson from 'export-from-json'
 
 export default {
   data() {
@@ -8,6 +8,7 @@ export default {
       loading: false,
       keyword: '',
       showForm: false,
+      showDetail: false,
       formModel: {},
       selectedData: {},
       formErrors: {},
