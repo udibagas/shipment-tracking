@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  app:
+    image: shipment_tracking
+    container_name: shipment_tracking
+    hostname: shipment_tracking
+    depends_on:
+      - db
+    build:
+      context: ./
+    ports:
+      - 8001:8001
+    volumes:
+      - .:/app
+      - /app/vendor
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=shipment_tracking
+      - DB_USERNAME=root
+      - DB_PASSWORD=bismillah
+    command: php artisan serve --host 0.0.0.0 --port 8001
+
+  db:
+    image: mysql
+    restart: always
+    container_name: shipment_tracking_db
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=bismillah
+      - MYSQL_DATABASE=shipment_tracking

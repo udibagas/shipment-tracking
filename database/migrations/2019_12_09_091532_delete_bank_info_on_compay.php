@@ -1,7 +1,7 @@
 <?php
 
-use App\CompanyBank;
-use App\Company;
+use App\Models\CompanyBank;
+use App\Models\Company;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -15,18 +15,18 @@ class DeleteBankInfoOnCompay extends Migration
      */
     public function up()
     {
-        $companies = Company::all();
+        // $companies = Company::all();
 
-        foreach ($companies as $c) {
-            CompanyBank::create([
-                'company_id' => $c->id,
-                'bank_name' => $c->bank_name,
-                'bank_branch' => $c->bank_branch,
-                'account_number' => $c->account_number,
-                'account_holder' => $c->account_holder,
-                'active' => 1
-            ]);
-        }
+        // foreach ($companies as $c) {
+        //     CompanyBank::create([
+        //         'company_id' => $c->id,
+        //         'bank_name' => $c->bank_name,
+        //         'bank_branch' => $c->bank_branch,
+        //         'account_number' => $c->account_number,
+        //         'account_holder' => $c->account_holder,
+        //         'active' => 1
+        //     ]);
+        // }
 
         Schema::table('companies', function (Blueprint $table) {
             $table->dropColumn(['bank_name', 'bank_branch', 'account_number', 'account_holder']);

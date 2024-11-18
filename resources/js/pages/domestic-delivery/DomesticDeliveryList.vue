@@ -11,7 +11,7 @@
 		>
 			<el-form-item
 				class="margin-bottom-10"
-				v-if="$store.state.user.role == 21 || $store.state.user.role == 31"
+				v-if="$store.state.auth.user.role == 21 || $store.state.auth.user.role == 31"
 			>
 				<el-button
 					size="small"
@@ -60,7 +60,7 @@
 			</el-form-item>
 			<el-form-item
 				class="margin-bottom-10"
-				v-if="$store.state.user.role == 21 || $store.state.user.role == 31"
+				v-if="$store.state.auth.user.role == 21 || $store.state.auth.user.role == 31"
 			>
 				<el-button-group>
 					<el-button

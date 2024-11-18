@@ -27,14 +27,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('cekResi', [DomesticDeliveryController::class, 'cekResi']);
 Route::post('cekResi1', [DomesticDeliveryController::class, 'cekResi1']);
-
+Route::post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // auth related
-    Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
-    Route::get('auth/check', [AuthController::class, 'check']);
-    Route::get('getNavigation', [AuthController::class, 'getNavigation']);
+    Route::get('auth/check', [AppController::class, 'checkAuth']);
+    Route::get('getNavigation', [AppController::class, 'getNavigation']);
 
     Route::post('deliveryProgress', [DeliveryProgressController::class, 'store']);
     Route::get('domesticDelivery/search', [DomesticDeliveryController::class, 'searchApi']);

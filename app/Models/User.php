@@ -28,8 +28,15 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'active', 'phone',
-        'customer_id', 'company_id', 'agent_id'
+        'name',
+        'email',
+        'password',
+        'role',
+        'active',
+        'phone',
+        'customer_id',
+        'company_id',
+        'agent_id'
     ];
 
     /**
@@ -38,7 +45,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -88,9 +96,9 @@ class User extends Authenticatable
             self::ROLE_AGENT => 'AGENT'
         ];
 
-        if (auth()->user()->role == self::ROLE_SUPERADMIN) {
-            $list[self::ROLE_SUPERADMIN] = 'SUPER ADMIN';
-        }
+        // if (auth()->user()->role == self::ROLE_SUPERADMIN) {
+        $list[self::ROLE_SUPERADMIN] = 'SUPER ADMIN';
+        // }
 
         return $list;
     }

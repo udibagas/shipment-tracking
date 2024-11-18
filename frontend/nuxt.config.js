@@ -39,7 +39,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.API_URL || 'http://localhost:8000',
+    baseURL: process.env.API_URL || 'http://localhost:8001',
     credentials: true,
   },
 
@@ -48,7 +48,7 @@ export default {
       localStorage: false,
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: process.env.BASE_URL || 'http://localhost:8000',
+        url: process.env.BASE_URL || 'http://localhost:8001',
         endpoints: {
           login: { url: '/api/login' },
           logout: { url: '/api/logout' },
